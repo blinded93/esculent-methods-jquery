@@ -1,0 +1,2 @@
+class FavoritedRecipe < ApplicationRecord
+end
