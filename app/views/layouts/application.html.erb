@@ -10,6 +10,28 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-light">
+      <a class="navbar-brand" href="#">EsculentMethods</a>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a class="link" href="#">Recipes</a></li>
+      </ol>
+      <form class="form-inline my-2 my-lg-0 ml-auto">
+        <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">
+          Search
+        </button>
+      </form>
+      <div class="dropdown">
+        <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">My Recipes</a>
+          <a class="dropdown-item" href="#">Friends</a>
+          <a class="dropdown-item" href="#">Logout</a>
+        </div>
+      </div>
+    </nav>
     <%= yield %>
   </body>
 </html>
