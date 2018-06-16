@@ -1,2 +1,12 @@
 class User < ApplicationRecord
+  has_many :recipes
+  has_many :favorited_recipes
+  has_many :favorites, through: :favorited_recipes, source: :recipe
+  has_and_belongs_to_many :friends,
+    class_name: "User",
+    join_table: :friendships,
+    foreign_key: :user_id,
+    association_foreign_key: :friend_id
+
+  has_secure_password
 end
