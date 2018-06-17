@@ -5,5 +5,7 @@ class Recipe < ApplicationRecord
   has_many :ingredient_amounts
   has_many :ingredients, through: :ingredient_amounts
 
+  serialize :directions, Array
+
   scope :for, -> (user) { where(user_id: user.id) }
 end
