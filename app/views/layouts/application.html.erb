@@ -10,28 +10,46 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-light">
-      <a class="navbar-brand" href="#">EsculentMethods</a>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="link" href="#">Recipes</a></li>
-      </ol>
-      <form class="form-inline my-2 my-lg-0 ml-auto">
-        <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">
-          Search
-        </button>
-      </form>
-      <div class="dropdown">
-        <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">My Recipes</a>
-          <a class="dropdown-item" href="#">Friends</a>
-          <a class="dropdown-item" href="#">Logout</a>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-1">
+        </div>
+        <div id="navigation" class="col-10">
+          <nav class="navbar navbar-light">
+            <a class="navbar-brand" href="#">EsculentMethods</a>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a class="link" href="#">Recipes</a></li>
+            </ol>
+            <form class="form-inline my-2 my-lg-0 ml-auto">
+              <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">
+                Search
+              </button>
+            </form>
+            <div class="dropdown">
+              <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">My Recipes</a>
+                <a class="dropdown-item" href="#">Friends</a>
+                <a class="dropdown-item" href="#">Logout</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div class="col-1">
         </div>
       </div>
-    </nav>
-    <%= yield %>
+      <div class="row">
+        <div class="col-1">
+        </div>
+        <div id="content" class="col-10">
+          <%= yield %>
+        </div>
+        <div class="col-1">
+        </div>
+      </div>
+    </div>
   </body>
 </html>
