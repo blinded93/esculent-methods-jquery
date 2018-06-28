@@ -17,7 +17,7 @@
 //= require jquery3
 //= require jquery_ujs
 //= require handlebars
-//= require tree ./templates
+//= require_tree ./templates
 //= require_tree .
 //= require popper
 //= require bootstrap-sprockets
