@@ -6,6 +6,9 @@ class Recipe < ApplicationRecord
   has_many :ingredients, through: :ingredient_amounts
 
   serialize :directions, Array
-
+  
+  default_scope { left_joins(:favorited_recipes)
+    .group(:id)
+    .order(Arel.sql('COUNT(favorited_recipes.id) DESC')) }
   scope :for, -> (user) { where(user_id: user.id) }
 end
