@@ -1,12 +1,18 @@
 $cornflower: lighten(#1c4587, 20%);
 
-#mainDiv {
+body {
   margin:auto;
+  max-width: 1000px;
+}
+.centered {
+  margin: auto;
   width: 70%;
 }
 .breadcrumb {
+  font-size: 80%;
   background-color: transparent;
-  margin-top: 1.2rem;
+  margin: 0.25rem;
+  margin-left:0.75rem;
   padding: 0;
 }
 
@@ -22,10 +28,15 @@ button:focus {
   outline: 0;
 }
 
-.link {
+a {
   color:$cornflower;
   &:hover {
     text-decoration:none;
     color: #1c4587;
   }
+}
+
+hr {
+  margin-top:0;
+  margin-bottom:0;
 }
