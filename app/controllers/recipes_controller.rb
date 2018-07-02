@@ -6,6 +6,9 @@ class RecipesController < ApplicationController
 
   def show
     recipe = Recipe.find(params[:id])
-    render json: recipe, status: 200
+    render json: recipe,
+           serializer: RecipeIngredientsSerializer,
+           include:['ingredient_amounts.ingredient'],
+           status: 200
   end
 end
