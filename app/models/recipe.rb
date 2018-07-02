@@ -1,12 +1,12 @@
 class Recipe < ApplicationRecord
-  belongs_to :user
+  belongs_to :owner, class_name: "User", foreign_key: "user_id"
   has_many :favorited_recipes
   has_many :favoriters, through: :favorited_recipes, source: :user
   has_many :ingredient_amounts
   has_many :ingredients, through: :ingredient_amounts
 
   serialize :directions, Array
-  
+
   default_scope { left_joins(:favorited_recipes)
     .group(:id)
     .order(Arel.sql('COUNT(favorited_recipes.id) DESC')) }
