@@ -1,14 +1,4 @@
 function Recipe(json) {
-  this.assignIngredients = (ingredients) => {
-    const array = [];
-    if (ingredients) {
-      ingredients.forEach((ingredient) => {
-        array.push(ingredient);
-      });
-    }
-    return array;
-  };
-
   this.name = json.name;
   this.directions = json.directions;
   this.cookTime = json.cook_time;
@@ -16,27 +6,38 @@ function Recipe(json) {
   this.servings = json.servings;
   this.skillLevel = json.skill_level;
   this.ingredients = this.assignIngredients(json.ingredient_amounts);
-  this.user = new User(json.user)
+  this.owner = this.assignUser(json.owner);
 }
 
-Recipe.createObjs = (recipes) => {
-  recipes.recipes.forEach((recipe) => {
-    recipeObjs.push(new Recipe(recipe));
+Recipe.getAllRecipes = function(route="/recipes") {
+  $.get(route, recipes => {
+    let objs = recipes.map(recipe => {
+      return new Recipe(recipe)
+    });
+    Display.fromTemplate("recipe_results", {recipes:objs});
+    Display.linkListeners();
   });
+};
+
+Recipe.get = function(userId, recipeId) {
+  $.get(`/users/${userId}/recipes/${recipeId}`, recipe => {
+    debugger;
+  })
 }
+// Recipe.links = function() {
+//   // $(".recipeLink").each((i, link) => {
+//   //   const $link = $(link);
+//   //   $link.click({link:$link}, (e) => {
+//   //     e.preventDefault();
+//   //     User.getRecipes($link.data("id"));
+//   //   });
+//   // });
+// };
 
-Recipe.getJson = () => {
-  recipeObjs = [];
-  $.get("/recipes", Recipe.createObjs);
-  return recipeObjs;
+Recipe.prototype.assignUser = function(user) {
+  return user ? new User(user) : undefined;
 };
 
-Recipe.displayAll = (recipeObjs) => {
-  $("#mainContent")
-    .append(HandlebarsTemplates.recipe_results({recipes:recipeObjs}));
+Recipe.prototype.assignIngredients = function(ingredients) {
+  return ingredients ? ingredients.map(i => new Ingredient(i)) : [];
 };
-
-$(function() {
-  $("#esculentMethods").click(() => {})
-  Recipe.displayAll();
-})
