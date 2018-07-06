@@ -1,4 +1,22 @@
-<div id="ingredients">
-  <div class="">
+<div id="recipe-{{id}}">
+  <div class="recipeTitle">
+    <h5>{{name}}</h5>
+  </div>
+  <div id="ingredients">
+    <ul id="ingredientList" class="small">
+      {{#each ingredients}}
+        {{#with this}}
+          <li>{{quantity}} {{unit}} {{name}}, {{state}}</li>
+        {{/with}}
+      {{/each}}
+    </ul>
+  </div>
+
+  <div id="directions">
+    <ol id="directionList">
+      {{#each directions}}
+        <li>{{this}}</li>
+      {{/each}}
+    </ol>
   </div>
 </div>
