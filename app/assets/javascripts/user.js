@@ -5,32 +5,35 @@ function User(json) {
   this.recipes = this.assignRecipes(json.recipes);
 }
 
-// User.linkListeners = function() {
-//   User.link();
-//   User.recipeLink();
-// };
-//
-// User.links = function() {
-//   $(".userLink").each((i, link) => {
-//     const $link = $(link);
-//     $link.click({link:$link}, (e) => {
-//       e.preventDefault();
-//       User.getRecipes($link.data("id"));
-//     });
-//   });
-// };
-
 User.prototype.assignRecipes = function(recipes) {
   return recipes ? recipes.map(r => new Recipe(r)): [];
 };
 
-User.getRecipes = function(id) {
-  $.get(`/users/${id}/recipes`, owner => {
-    let objs = owner.recipes.map(recipe => {
-      return new Recipe(recipe);
-    });
-    Display.adjustBreacrumb();
+User.prototype.listener = function(parentDiv) {
+  const user = this;
+  $(parentDiv).find(".userLink").click(function(e) {
+    e.preventDefault();
+    user.getRecipes();
+  }).addClass("linkCursor");
+};
+
+User.prototype.getRecipes = function() {
+  const user = this;
+  $.get(`/users/${user.id}/recipes`, owner => {
+    let objs = owner.recipes.map(recipe => new Recipe(recipe));
     Display.fromTemplate("recipe_results", {recipes:objs});
-    Display.linkListeners();
-  })
+    objs.forEach(recipe => {
+      recipe.owner = user;
+      recipe.listener(`#recipe-${recipe.id}`);
+    });
+    user.adjustBreadcrumb();
+  });
+};
+
+User.prototype.adjustBreadcrumb = function() {
+  $bc = $(".breadcrumb");
+  const $li = $("<li>", {"class": "breadcrumb-item userLink"}).html(this.username);
+  Display.homeListener();
+  $bc.children(".userLink").remove();
+  $bc.append($li);
 };
