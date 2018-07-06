@@ -2,6 +2,8 @@
   padding-top:1rem;
   .result {
     padding-bottom:1rem;
+    display: flex;
+    align-items:center;
   }
 }
 
@@ -11,7 +13,6 @@
   height:90px;
 }
 
-.resultDesc {
-  display: flex;
-  align-items:center;
+#ingredientList {
+  list-style-type:none;
 }
