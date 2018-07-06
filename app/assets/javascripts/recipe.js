@@ -1,4 +1,5 @@
 function Recipe(json) {
+  this.id = json.id;
   this.name = json.name;
   this.directions = json.directions;
   this.cookTime = json.cook_time;
@@ -9,30 +10,39 @@ function Recipe(json) {
   this.owner = this.assignUser(json.owner);
 }
 
-Recipe.getAllRecipes = function(route="/recipes") {
-  $.get(route, recipes => {
-    let objs = recipes.map(recipe => {
-      return new Recipe(recipe)
-    });
+Recipe.getAllRecipes = function(scope) {
+  //adjust scope into data hash
+  $.get("/recipes", recipes => {
+    const objs = recipes.map(recipe => new Recipe(recipe));
     Display.fromTemplate("recipe_results", {recipes:objs});
-    Display.linkListeners();
+    objs.forEach(recipe => {
+      recipe.resultListeners();
+    })
   });
 };
 
-Recipe.get = function(userId, recipeId) {
-  $.get(`/users/${userId}/recipes/${recipeId}`, recipe => {
-    debugger;
-  })
-}
-// Recipe.links = function() {
-//   // $(".recipeLink").each((i, link) => {
-//   //   const $link = $(link);
-//   //   $link.click({link:$link}, (e) => {
-//   //     e.preventDefault();
-//   //     User.getRecipes($link.data("id"));
-//   //   });
-//   // });
-// };
+Recipe.prototype.get = function() {
+  const owner = this.owner;
+  $.get(`/users/${owner.id}/recipes/${this.id}`, recipe => {
+    const obj = new Recipe(recipe);
+    Display.fromTemplate("recipe", obj);
+    owner.adjustBreadcrumb();
+    owner.listener(".breadcrumb");
+  });
+};
+
+Recipe.prototype.resultListeners = function() {
+  this.listener(`#recipe-${this.id}`);
+  this.owner.listener(`#recipe-${this.id}`);
+};
+
+Recipe.prototype.listener = function(recipeDiv) {
+  const recipe = this;
+  $(recipeDiv).find(".recipeLink").click(function(e) {
+    e.preventDefault();
+    recipe.get();
+  });
+};
 
 Recipe.prototype.assignUser = function(user) {
   return user ? new User(user) : undefined;
