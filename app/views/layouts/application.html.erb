@@ -11,12 +11,12 @@
 
   <body>
     <div class="container-fluid">
-      <div class="row">
+      <div id="navRow" class="row">
         <div class="col-1">
         </div>
         <div id="navigation" class="col-10">
           <nav class="navbar navbar-light">
-            <a id="esculentMethods" class="navbar-brand" href="#">EsculentMethods</a>
+            <a id="esculentMethods" class="navbar-brand">EsculentMethods</a>
             <form id="searchForm" class="form-inline my-2 my-lg-0 ml-auto">
               <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search">
               <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">
@@ -38,7 +38,7 @@
         <div class="col-1">
         </div>
       </div>
-      <div class="row">
+      <div id="contentRow" class="row">
         <div id="content" class="col">
           <%= yield %>
         </div>
