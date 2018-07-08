@@ -3,21 +3,13 @@ $(function() {
   Recipe.getAllRecipes();
 });
 
-function setSearchForm(path) {
-  $("#searchForm").off("submit");
-  $("#searchForm").submit(function(e) {
-    e.preventDefault();
-    console.log($("#searchBar").val());
-  });
-}
-
 function Display() {
 }
 
 Display.templates = HandlebarsTemplates;
 
 Display.attachListeners = function() {
-  setSearchForm();
+  Display.searchListener();
 };
 
 Display.fromTemplate = function(template, obj) {
@@ -34,6 +26,18 @@ Display.homeListener = function() {
     Recipe.getAllRecipes();
     $home.removeClass("linkCursor");
     $home.off("click");
+  });
+};
+
+Display.searchListener = function() {
+  const $form = $("#search");
+  $form.submit(function(e) {
+    e.preventDefault();
+    const params = $form.serialize();
+    $.post("/search", params)
+      .done(function(resp) {
+        debugger;
+      });
   });
 };
 
