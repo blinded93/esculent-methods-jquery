@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   def index
-    recipes = Recipe.all
+    recipes = Recipe.by_favorites
     render json: recipes, status: 200
   end
 
