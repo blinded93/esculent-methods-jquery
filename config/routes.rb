@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root 'home#index'
+  post '/search' => 'search#index'
   # resources :ingredient_amounts
   # resources :ingredients
   resources :recipes, only: [:index]
