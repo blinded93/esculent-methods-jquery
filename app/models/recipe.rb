@@ -7,8 +7,26 @@ class Recipe < ApplicationRecord
 
   serialize :directions, Array
 
-  default_scope { left_joins(:favorited_recipes)
+  scope :by_favorites, -> {
+    left_joins(:favorited_recipes)
     .group(:id)
-    .order(Arel.sql('COUNT(favorited_recipes.id) DESC')) }
+    .order(Arel.sql('COUNT(favorited_recipes.id) DESC'))
+  }
+  scope :with_ingredient, -> (ingredient_id) {
+    joins(:ingredient_amounts).
+    where(ingredient_amounts: {ingredient_id: 27})
+  }
+  scope :search, -> (query) { where("name like ?", "%#{query}%") }
   scope :for, -> (user) { where(user_id: user.id) }
+
+  def self.with_ingredients(ingredient_ids)
+    recipes = []
+    ingredient_ids.each do |id|
+      if id
+        r = Recipe.with_ingredient(id)
+        recipes.push(r)
+      end
+    end
+    recipes.reduce(:&)
+  end
 end
