@@ -17,12 +17,16 @@
         <div id="navigation" class="col-10">
           <nav class="navbar navbar-light">
             <a id="esculentMethods" class="navbar-brand">EsculentMethods</a>
-            <form id="searchForm" class="form-inline my-2 my-lg-0 ml-auto">
-              <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search">
+            <%= form_tag :search, id:"search", class:"form-inline my-2 my-lg-0 ml-auto" do %>
+              <%= text_field_tag :query, "", class:"form-control form-control-sm mr-sm-2", placeholder:"Search" %>
+              <%= submit_tag :Search, class:"btn btn-sm btn-outline-primary my-2 my-sm-0" %>
+            <% end %>
+            <!-- <form id="searchForm" class="form-inline my-2 my-lg-0 ml-auto">
+              <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" name="searchTerm">
               <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">
                 Search
               </button>
-            </form>
+            </form> -->
             <div class="dropdown">
               <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
                 <span class="navbar-toggler-icon"></span>
