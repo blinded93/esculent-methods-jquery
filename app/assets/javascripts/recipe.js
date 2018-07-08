@@ -12,8 +12,8 @@ function Recipe(json) {
 
 Recipe.getAllRecipes = function(scope) {
   //adjust scope into data hash
-  $.get("/recipes", recipes => {
-    const objs = recipes.map(recipe => new Recipe(recipe));
+  $.get("/recipes", data => {
+    const objs = data.recipes.map(recipe => new Recipe(recipe));
     Display.fromTemplate("recipe_results", {recipes:objs});
     objs.forEach(recipe => {
       recipe.resultListeners();
@@ -23,8 +23,8 @@ Recipe.getAllRecipes = function(scope) {
 
 Recipe.prototype.get = function() {
   const owner = this.owner;
-  $.get(`/users/${owner.id}/recipes/${this.id}`, recipe => {
-    const obj = new Recipe(recipe);
+  $.get(`/users/${owner.id}/recipes/${this.id}`, data => {
+    const obj = new Recipe(data.recipe);
     Display.fromTemplate("recipe", obj);
     owner.adjustBreadcrumb();
     owner.listener(".breadcrumb");

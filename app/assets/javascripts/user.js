@@ -19,8 +19,8 @@ User.prototype.listener = function(parentDiv) {
 
 User.prototype.getRecipes = function() {
   const user = this;
-  $.get(`/users/${user.id}/recipes`, owner => {
-    let objs = owner.recipes.map(recipe => new Recipe(recipe));
+  $.get(`/users/${user.id}/recipes`, data => {
+    let objs = data.user.recipes.map(recipe => new Recipe(recipe));
     Display.fromTemplate("recipe_results", {recipes:objs});
     objs.forEach(recipe => {
       recipe.owner = user;
