@@ -9,4 +9,7 @@ class User < ApplicationRecord
     association_foreign_key: :friend_id
 
   has_secure_password
+
+  scope :from_email, -> (email) { where("email like ?", "%#{email}%") }
+  scope :from_username, -> (username) { where("username like ?", "%#{username}%") }
 end
