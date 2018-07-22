@@ -9,7 +9,8 @@ function Display() {
 Display.templates = HandlebarsTemplates;
 
 Display.attachListeners = function() {
-  Display.searchListener();
+  Search.setup();
+  Menu.setup();
 };
 
 Display.fromTemplate = function(template, obj) {
@@ -29,20 +30,9 @@ Display.homeListener = function() {
   });
 };
 
-Display.searchListener = function() {
-  const $form = $("#search");
-  $form.submit(function(e) {
-    e.preventDefault();
-    const params = $form.serialize();
-    $.post("/search", params)
-      .done(function(resp) {
-        debugger;
-      });
-  });
+Display.removeLastBreadcrumb = function() {
+  $bc = $(".breadcrumb");
+  if ($bc.children()[1]) {
+    $bc.children().last().remove();
+  }
 };
-
-// Menu
-
-function loadMenu() {
-
-}
