@@ -1,7 +1,7 @@
 class SearchController < ApplicationController
   def index
-    search = SearchService.parse_and_create(params[:query])
-    results = search.find_results
+    search = SearchService.create(search_params)
+    results =  search.valid? ? search.find_results : {search:search}
     render json: results, status: 200
   end
 end
