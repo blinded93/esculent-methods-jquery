@@ -124,6 +124,66 @@ RECIPES = [ {
         name:"Spinach"
       }
     ]
+  }, {
+    name: "Sweet Corn and Green Chile Baked Flautas",
+    cook_time:25,
+    prep_time:10,
+    servings:12,
+    skill_level:"Easy",
+    directions:[
+      "Crank your oven to 400 degrees F. Grab a large baking sheet and coat it with a little cooking spray.", "Heat up the oil in a large saute pan over medium heat and throw in the onion. Cook until the onion starts to brown, about 5 minutes. Add the chili powder, cumin, salt and garlic and cook for another 30 seconds and then turn off the heat.", "Throw the beans, chiles and lime juice together in a big-ass bowl. Mash them up using a potato masher or a spoon until a paste forms. It's cool if there are some whole beans left here and there; you don't need to spend the whole goddamn day mashing. Fold in the sauteed onions and corn and stir that motherfucker up. Your filling is ready.", "Using a griddle, your oven or the microwave, warm up the tortillas. Grab about 2 heaping tablespoons of the filling and spread that shit in a nice line toward the edge of the left side of one of the tortillas from top to bottom. Then roll that shit up nice and tight from left to right. You could even put a small smear of beans toward the other end of the tortilla to help that fucker stay shut. Place the flauta seam side down on the baking sheet about an inch or two away from it's flauta brethren. Make sure the filling got all the way to the ends and then adjust how you distribute the filling the next time. Damn. Keep going until you run out of tortillas or filling.", "Lightly coat them all with cooking spray and bake for 10 minutes.When you pull them out, the bottoms should be golden brown-if not, stick them in for another couple minutes. When the bottoms look good, turn them over and bake those bitches until golden and crispy on both sides, another 5.7 minutes. Serve warm topped with lettuce and salsa if you want to impress some motherfuckers."
+    ]
+  }, {
+    ingredient_amounts = [ {
+        unit:"tsp",
+        quantity:1,
+        name:"Olive Oil"
+      }, {
+        unit:"cup",
+        quantity:1,
+        state:"chopped",
+        name:"Onion"
+      }, {
+        unit:"tsp",
+        quantity:2,
+        name:"Chili Powder"
+      }, {
+        unit:"tsp",
+        quantity:0.75,
+        state:"ground",
+        name:"Cumin"
+      }, {
+        unit:"tsp",
+        quantity:0.5,
+        name:"Salt"
+      }, {
+        unit:"tbsp",
+        quantity:2,
+        state:"chopped",
+        name:"Garlic"
+      }, {
+        unit:"cups",
+        quantity:3,
+        state:"cooked",
+        name:"Pinto Beans"
+      }, {
+        unit:"ounces",
+        quantity:4,
+        name:"Green Chile"
+      }, {
+        unit:"tbsp",
+        quantity:1,
+        name:"Lime Juice"
+      }, {
+        unit:"cup",
+        quantity:1,
+        name:"Sweet Corn"
+      }, {
+        unit:"",
+        quantity:12,
+        name:"Flour Tortilla"
+      }
+    ]
   }
 ]
 
