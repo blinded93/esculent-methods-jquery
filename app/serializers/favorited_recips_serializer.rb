@@ -1,3 +1,3 @@
 class FavoritedRecipsSerializer < ActiveModel::Serializer
-  attributes :id, :notes
+  attributes :id
 end
