@@ -1,11 +1,16 @@
 Rails.application.routes.draw do
   root 'home#index'
   post '/search' => 'search#index'
-  # resources :ingredient_amounts
-  # resources :ingredients
-  resources :recipes, only: [:index]
-  resources :users, except: [:index, :show] do
-    get '/recipes' => 'users#show'
+  post '/login' => 'sessions#create'
+  post '/signup' => 'users#create'
+  delete '/logout' => 'sessions#destroy'
+  get '/current_user' => 'sessions#current_session_user'
+  resources :recipes, only: [:index] do
+    get '/favorited' => 'recipes#favorited'
+    post '/favorite' => 'recipes#favorite'
+  end
+  resources :users, except: [:index] do
+    get '/recipes' => 'recipes#index'
     resources :recipes, except: [:index, :new, :edit]
   end
 end
