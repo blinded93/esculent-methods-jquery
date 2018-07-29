@@ -6,5 +6,8 @@ class Ingredient < ApplicationRecord
     joins(:ingredient_amounts).
     where(ingredient_amounts: {recipe_id: recipe_id})
   }
-  scope :by_name, -> (name) { where("name like ?", "%#{name}%").take }
+  scope :from_name, -> (name) { where(name:name).take }
+  scope :id_from_name, -> (name) { from_name(name).pluck(:id) }
+
+
 end
