@@ -14,19 +14,17 @@ class Recipe < ApplicationRecord
   }
   scope :with_ingredient, -> (ingredient_id) {
     joins(:ingredient_amounts).
-    where(ingredient_amounts: {ingredient_id: 27})
+    where(ingredient_amounts: {ingredient_id: ingredient_id})
   }
+  scope :for, -> (user_id) { where(user_id: user_id) }
   scope :search, -> (query) { where("name like ?", "%#{query}%") }
-  scope :for, -> (user) { where(user_id: user.id) }
 
   def self.with_ingredients(ingredient_ids)
     recipes = []
     ingredient_ids.each do |id|
-      if id
-        r = Recipe.with_ingredient(id)
-        recipes.push(r)
-      end
+      r = Recipe.with_ingredient(id)
+      recipes.push(r)
     end
-    recipes.reduce(:&)
+    recipes.reduce(:&) || {recipes:[]};
   end
 end
