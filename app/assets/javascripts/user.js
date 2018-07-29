@@ -50,12 +50,13 @@ User.prototype.displayProfile = function() {
   this.profileListeners();
 };
 
-// User.prototype.getRecipes = function() {
-//   const user = this;
-//   $.get(`/users/${user.id}/recipes`, data => {
-//     user.displayRecipes(user, data);
-//   });
-// };
+User.prototype.getRecipes = function() {
+  const user = this;
+  $.get(`/users/${user.id}/recipes`, data => {
+    Recipe.displayAllRecipes(data);
+    // user.displayRecipes(user, data);
+  });
+};
 
 // User.prototype.displayRecipes = function(user, data) {
 //   let objs = data.user.recipes.map(recipe => new Recipe(recipe));
