@@ -8,8 +8,14 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     association_foreign_key: :friend_id
 
+  validates :email, :username, presence: true, uniqueness: true
   has_secure_password
 
   scope :from_email, -> (email) { where("email like ?", "%#{email}%") }
   scope :from_username, -> (username) { where("username like ?", "%#{username}%") }
+
+  def self.from_identifier(identifier)
+    scope = identifier.include?("@") ? "email" : "username"
+    self.send("from_#{scope}", identifier)
+  end
 end
