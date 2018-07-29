@@ -1,50 +1,73 @@
 class SearchService
-  attr_accessor :term, :type
+  attr_accessor :query, :type, :errors, :results
+
   def initialize(params)
-    @term = params[:term]
+    @query = params[:query]
     @type = params[:type]
+    @errors = []
+    @results = []
   end
 
-  def self.parse_and_create(string)
-    type = string.match(/:[a-zA-Z]+ /)
-    params = !!type ? {term:type.post_match, type:type.to_s.strip}:{term:string, type:":r"}
-    SearchService.new(params)
+  def self.create(params)
+    self.new(params).tap { |s| s.validate_blank }
+  end
+
+  def validate_blank
+    add_error("A query is required") if query.blank?
   end
 
   def find_results
     case self.type
     when ":r"
-      find_recipe
+      find_recipes
     when ":i"
       find_recipes_from_ingredients
     when ":u"
-      find_user
-    when ":ur"
-      find_users_recipes
-    else
-      nil
+      find_users
     end
   end
 
-  # private
-    def find_recipe
-      Recipe.search(self.term)
+  def valid?
+    errors.blank?
+  end
+
+  def add_error(error)
+    errors.push(error)
+  end
+
+  private
+    def find_recipes
+      self.results = Recipe.search(self.query)
+      validate_results("recipes")
     end
 
     def find_recipes_from_ingredients
-      ingredient_ids = self.term.split(",").map do |i|
-        Ingredient.by_name(i.strip).try(:id)
+      ingredients = query_to_array.find_all do |i|
+        Ingredient.find_or_create_by(name:i.titleize)
       end
-      Recipe.with_ingredients(ingredient_ids)
+      self.results = Recipe.with_ingredients(ingredient_ids(ingredients))
+      validate_results("recipes")
     end
 
-    def find_user
-      identifier = self.term.match(/^([^ \t]+).*/)[1]
-      identifier.include?("@") ? User.from_email(identifier):User.from_username(identifier)
+    def find_users
+      self.results = User.from_identifier(self.query)
+      validate_results("users")
     end
 
-    def find_users_recipes
-      user = find_user.take
-      Recipe.for(user)
+    def validate_results(type)
+      if !results.blank?
+        results
+      else
+        add_error("No #{type} found.")
+        {search:self}
+      end
+    end
+
+    def query_to_array
+      query.split(",").map{|i| i.strip}
+    end
+
+    def ingredient_ids(ingredients)
+      ingredients.map{|i| Ingredient.find_by_name(i.titleize).id}
     end
 end
