@@ -18,23 +18,19 @@
           <nav class="navbar navbar-light">
             <a id="esculentMethods" class="navbar-brand">EsculentMethods</a>
             <%= form_tag :search, id:"search", class:"form-inline my-2 my-lg-0 ml-auto" do %>
-              <%= text_field_tag :query, "", class:"form-control form-control-sm mr-sm-2", placeholder:"Search" %>
-              <%= submit_tag :Search, class:"btn btn-sm btn-outline-primary my-2 my-sm-0" %>
+              <%= select_tag(:type, options_for_select([
+                                              ["Recipes", ":r"],
+                                              ["Ingredients", ":i"],
+                                              ["Users", ":u"]], 1),
+                                    class:"form-control form-control-sm mr-sm-2") %>
+              <%= text_field_tag :query, "", class:"form-control form-control-sm mr-sm-2", placeholder:"Search", required:true %>
+              <%= button_tag :Search, class:"btn btn-sm btn-outline-primary my-2 my-sm-0", id:"submitSearch" %>
             <% end %>
-            <!-- <form id="searchForm" class="form-inline my-2 my-lg-0 ml-auto">
-              <input id="searchBar" class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" name="searchTerm">
-              <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">
-                Search
-              </button>
-            </form> -->
-            <div class="dropdown">
+            <div id="dropdown" class="dropdown">
               <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
                 <span class="navbar-toggler-icon"></span>
               </button>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a id='myRecipes' class="dropdown-item" href="#">My Recipes</a>
-                <a id='friends' class="dropdown-item" href="#">Friends</a>
-                <a id='logout' class="dropdown-item" href="#">Logout</a>
+              <div id="dropdownMenu" class="dropdown-menu dropdown-menu-right">
               </div>
             </div>
           </nav>
