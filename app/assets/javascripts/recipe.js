@@ -35,8 +35,52 @@ Recipe.prototype.get = function() {
 Recipe.prototype.display = function(owner, data) {
   const obj = new Recipe(data.recipe);
   Display.fromTemplate("recipe", obj);
+  this.socialListeners();
   owner.adjustBreadcrumb();
   owner.listener(".breadcrumb");
+};
+
+Recipe.prototype.socialListeners = function() {
+  this.favorited(this);
+  this.share(this);
+};
+
+Recipe.prototype.favorited = function(recipe) {
+  $.get(`/recipes/${recipe.id}/favorited`)
+    .done(function(resp) {
+      recipe.toggleIcon(!!resp.favorite, "favorite");
+      recipe.favoriteListener(recipe, resp.favorite);
+    });
+};
+
+Recipe.prototype.favoriteListener = function(recipe, favoriteId) {
+  this.favImg = $(`#favorite-${recipe.id}`);
+  this.favImg.click(function(e) {
+    e.preventDefault();
+    $.post(`/recipes/${recipe.id}/favorite`, {favorite_id:favoriteId}, function(resp) {
+      const boolean = $(recipe.favImg).attr("src").includes("bw");
+      recipe.toggleIcon(boolean, "favorite");
+    });
+  }).hover(function() {
+    const boolean = $(this).attr("src").includes("bw");
+    recipe.toggleIcon(boolean, "favorite");
+  });
+};
+
+Recipe.prototype.toggleIcon = function(boolean, iconName) {
+  const imageName = boolean ? iconName : `${iconName}-bw`;
+  $(`#${iconName}-${this.id}`).attr("src", `/assets/icons/${imageName}.png`);
+};
+
+Recipe.prototype.share = function(recipe) {
+  const $shareImg = $(`#share-${this.id}`);
+  $shareImg.click(function(e) {
+    e.preventDefault();
+
+  }).hover(function() {
+    const boolean = $(this).attr("src").includes("bw");
+    recipe.toggleIcon(boolean, "share");
+  });
 };
 
 Recipe.prototype.resultListeners = function() {
