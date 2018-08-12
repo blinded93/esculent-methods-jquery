@@ -1,11 +1,8 @@
 class RecipesController < ApplicationController
-  def index
-    if params[:user_id]
-      recipes = Recipe.for(params[:user_id])
-    else
-      recipes = Recipe.by_favorites
-    end
+  before_action :create_favorited_recipe_service, only: [:favorited, :favorite]
 
+  def index
+    recipes = Recipe.by_favorites
     render json: recipes, status: 200
   end
 
@@ -18,20 +15,27 @@ class RecipesController < ApplicationController
   end
 
   def favorited
-    favorite = FavoritedRecipe.find_by(recipe_id:params[:recipe_id],
-                                       user:current_user)
-    render json: {favorite: favorite.try(:id)},
+    if logged_in?
+      @f.current_user = current_user
+      @f.favorited?
+    end
+    render json: @f,
            status:200
   end
 
   def favorite
-    favorite = FavoritedRecipe.find_by(params[:favorite_id])
-    if !!favorite
-      favorite.destroy
+    if logged_in?
+      @f.current_user = current_user
+      @f.toggle_favorite
     else
-      favorite = FavoritedRecipe.create({recipe_id:params[:recipe_id],                                       user:current_user})
+      @f.errors[:loggedOut] = ("Must be logged in to do that")
     end
-    render json: {favorite: favorite.try(:id)},
+    render json: @f,
            status:200
   end
+
+  private
+    def create_favorited_recipe_service
+      @f = FavoritedRecipeService.new(recipe_id:params[:recipe_id])
+    end
 end
