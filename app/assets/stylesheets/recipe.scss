@@ -15,10 +15,15 @@
 
 .image {
   background-color:silver;
-  width:200px;
-  height:200px;
+  height:300px;
 }
 
 #ingredientList {
   list-style-type:none;
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+  li {
+    padding:.1em;
+  }
 }
