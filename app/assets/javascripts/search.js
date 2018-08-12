@@ -5,7 +5,7 @@ function Search() {
 }
 
 Search.setup = function() {
-  const search = new Search
+  const search = new Search();
   search.setListener(search);
 };
 
@@ -30,7 +30,7 @@ Search.prototype.adjustBreadcrumb = function() {
   const $bc = $(".breadcrumb");
   const $li = $("<li>", {"class": "breadcrumb-item searchLink"})
                 .html(`Search results for <span class="black">'${this.query.val()}'</span>...`);
-  Display.homeListener();
+  Listener.setHome();
   Display.removeLastBreadcrumb();
   $bc.append($li);
 };
@@ -41,23 +41,20 @@ Search.prototype.displayErrors = function(resp) {
 
 Search.prototype.evaluateResp = function(resp) {
   const search = this;
+  const bcTitle = `Search results for <span class="black">'${search.query.val()}'</span>...`
   switch (true) {
     case !!resp.search:
-      search.errors = resp.search.errors
+      search.errors = resp.search.errors;
       search.displayErrors(resp);
       search.adjustBreadcrumb();
-      console.log(resp);
-
       break;
     case !!resp.recipes:
       Recipe.displayAllRecipes(resp);
       search.adjustBreadcrumb();
-      console.log(resp);
       break;
     case !!resp.users:
       User.displayAllUsers(resp);
       search.adjustBreadcrumb();
-      console.log(resp);
       break;
   }
 };
