@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
 
   def destroy
     if current_user
-      session.delete(:user_id)
+      render json: session.delete(:user_id), status: 200
     end
   end
 end
