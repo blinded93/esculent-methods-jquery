@@ -7,71 +7,54 @@ function User(json) {
 
 User.displayAllUsers = function(data) {
   const objs = data.users.map(user => new User(user));
-  Display.fromTemplate("users", {users:objs});
-  objs.forEach(user => {
-    user.resultListeners();
-  });
+  Display.fromTemplate("users", {users:objs})
+    .done(function() {
+      objs.forEach(user => {
+        Listener.setUserResults(user);
+        // user.resultListeners();
+      });
+    });
 };
 
 User.prototype.assignRecipes = function(recipes) {
   return recipes ? recipes.map(r => new Recipe(r)): [];
 };
 
-User.prototype.resultListeners = function() {
-  const parent = `#user-${this.id}`;
-  this.listener(parent);
-  this.favoritesListener(parent);
-  this.recipesListener(parent);
-};
-
-User.prototype.recipesListener = function(parentDiv) {
-
-};
-
-User.prototype.favoritesListener = function(parentDiv) {
-
-};
-
-User.prototype.listener = function(parentDiv) {
-  const user = this;
-  $(parentDiv).find(".userLink").click(function(e) {
-    e.preventDefault();
-    user.displayProfile();
-  }).addClass("linkCursor");
-};
-
-User.prototype.profileListeners = function() {
-  // this.listener(`#user-${this.id}`);
-};
-
 User.prototype.displayProfile = function() {
-  Display.fromTemplate("user", this);
-  this.adjustBreadcrumb();
-  this.profileListeners();
+  const user = this;
+  Display.fromTemplate("user", user)
+    .done(function() {
+      Breadcrumb.adjust(user.username, "userLink")
+      user.profileListeners();
+    });
 };
 
-User.prototype.getRecipes = function() {
-  const user = this;
+User.prototype.getRecipes = function(user) {
   $.get(`/users/${user.id}/recipes`, data => {
+    Breadcrumb.adjust("My Recipes", "recipeLink")
+    user.adjustBreadcrumb("My Recipes");
     Recipe.displayAllRecipes(data);
-    // user.displayRecipes(user, data);
   });
 };
 
-// User.prototype.displayRecipes = function(user, data) {
-//   let objs = data.user.recipes.map(recipe => new Recipe(recipe));
-//   Display.fromTemplate("recipe_results", {recipes:objs});
-//   objs.forEach(recipe => {
-//     recipe.owner = user;
-//     recipe.listener(`#recipe-${recipe.id}`);
-//   });
-//   user.adjustBreadcrumb();
-// };
+User.prototype.getFavorites = function(user) {
+  $.get(`/users/${user.id}/favorites`, data => {
+    user.adjustBreadcrumb("My Favorites");
+    Recipe.displayAllRecipes(data);
+  });
+};
 
-User.prototype.adjustBreadcrumb = function() {
+User.prototype.getFriends = function(user) {
+  $.get(`/users/${user.id}/friends`, data => {
+    user.adjustBreadcrumb("Friends");
+    User.displayAllUsers(data);
+  });
+};
+
+User.prototype.adjustBreadcrumb = function(title) {
   const $bc = $(".breadcrumb");
-  const $li = $("<li>", {"class": "breadcrumb-item userLink"}).html(this.username);
-  Display.homeListener();
+  const $li = $("<li>", {"class": "breadcrumb-item userLink"}).html(title || this.username);
+  Listener.setHome();
   Display.removeLastBreadcrumb();
   $bc.append($li);
 };
