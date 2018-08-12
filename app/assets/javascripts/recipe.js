@@ -11,90 +11,80 @@ function Recipe(json) {
 }
 
 Recipe.getAllRecipes = function() {
-  $.get("/recipes", data => {
+  $.get("/recipes")
+    .done(function(data) {
     Recipe.displayAllRecipes(data);
   });
 };
 
 Recipe.displayAllRecipes = function(data) {
   const objs = data.recipes.map(recipe => new Recipe(recipe));
-  Display.fromTemplate("recipe_results", {recipes:objs});
-  objs.forEach(recipe => {
-    recipe.resultListeners();
-  });
+  Display.fromTemplate("recipe_results", {recipes:objs})
+    .done(function() {
+      Listener.setRecipeResults(objs);
+    });
 };
 
 Recipe.prototype.get = function() {
-  let recipe = this;
+  const recipe = this;
   const owner = this.owner;
-  $.get(`/users/${owner.id}/recipes/${this.id}`, data => {
-    recipe.display(owner, data);
-  });
+  $.get(`/users/${owner.id}/recipes/${this.id}`)
+    .done(function(data) {
+      recipe.display(owner, data);
+    });
 };
 
 Recipe.prototype.display = function(owner, data) {
+  const recipe = this;
   const obj = new Recipe(data.recipe);
-  Display.fromTemplate("recipe", obj);
-  this.socialListeners();
-  owner.adjustBreadcrumb();
-  owner.listener(".breadcrumb");
-};
-
-Recipe.prototype.socialListeners = function() {
-  this.favorited(this);
-  this.share(this);
+  Display.fromTemplate("recipe", obj)
+    .done(function() {
+      recipe.favorited(recipe)
+        .done(function(resp) {
+          const linkFunc = Display.linkSelector(".breadcrumb");
+          Listener.setSocial(recipe);
+          Listener.setUser(recipe.owner, linkFunc);
+          Breadcrumb.adjust(recipe.owner.username, "userLink")
+        });
+    });
 };
 
 Recipe.prototype.favorited = function(recipe) {
+  const dfd = new $.Deferred();
   $.get(`/recipes/${recipe.id}/favorited`)
     .done(function(resp) {
       recipe.toggleIcon(!!resp.favorite, "favorite");
-      recipe.favoriteListener(recipe, resp.favorite);
+      dfd.resolve(resp);
     });
-};
-
-Recipe.prototype.favoriteListener = function(recipe, favoriteId) {
-  this.favImg = $(`#favorite-${recipe.id}`);
-  this.favImg.click(function(e) {
-    e.preventDefault();
-    $.post(`/recipes/${recipe.id}/favorite`, {favorite_id:favoriteId}, function(resp) {
-      const boolean = $(recipe.favImg).attr("src").includes("bw");
-      recipe.toggleIcon(boolean, "favorite");
-    });
-  }).hover(function() {
-    const boolean = $(this).attr("src").includes("bw");
-    recipe.toggleIcon(boolean, "favorite");
-  });
+  return dfd.promise();
 };
 
 Recipe.prototype.toggleIcon = function(boolean, iconName) {
-  const imageName = boolean ? iconName : `${iconName}-bw`;
-  $(`#${iconName}-${this.id}`).attr("src", `/assets/icons/${imageName}.png`);
+  const offImg = `${iconName}-bw`;
+  const onImg = `${iconName}`;
+  const $i = $(`#${iconName}Img`);
+  if (boolean) {
+    $i.attr("src", `/assets/icons/${onImg}.png`);
+    $i.off("mouseenter mouseleave");
+  } else {
+    $i.attr("src", `/assets/icons/${offImg}.png`);
+    $i.hover(function() {
+      $(this).attr("src", `/assets/icons/${onImg}.png`);
+    }, function() {
+      $(this).attr("src", `/assets/icons/${offImg}.png`);
+    });
+  }
 };
 
 Recipe.prototype.share = function(recipe) {
   const $shareImg = $(`#share-${this.id}`);
   $shareImg.click(function(e) {
     e.preventDefault();
-
+    
   }).hover(function() {
-    const boolean = $(this).attr("src").includes("bw");
-    recipe.toggleIcon(boolean, "share");
-  });
-};
-
-Recipe.prototype.resultListeners = function() {
-  const parent = `#recipe-${this.id}`;
-  this.listener(parent);
-  this.owner.listener(parent);
-};
-
-Recipe.prototype.listener = function(parent) {
-  const recipe = this;
-  const owner = this.owner;
-  $(parent).find(".recipeLink").click(function(e) {
-    e.preventDefault();
-    recipe.get();
+    $(`#shareImg`).attr("src", `/assets/icons/share.png`);
+  }, function() {
+    $(`#shareImg`).attr("src", `/assets/icons/share-bw.png`);
   });
 };
 
