@@ -10,7 +10,9 @@ Rails.application.routes.draw do
     post '/favorite' => 'recipes#favorite'
   end
   resources :users, except: [:index] do
-    get '/recipes' => 'recipes#index'
+    get '/recipes' => 'users#recipes'
+    get '/favorites' => 'users#favorites'
+    get '/friends' => 'users#friends'
     resources :recipes, except: [:index, :new, :edit]
   end
 end
