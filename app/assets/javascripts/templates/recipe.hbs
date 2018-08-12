@@ -1,39 +1,37 @@
 <div id="recipe-{{id}}">
-  <div class="row">
+  <div class="row result">
     <div class="col">
       <div class="recipeTitle">
-        <h5 class="mb-0">{{name}}</h5>
-      </div>
-      <div id="social">
-        <div>
-          <a href="" id="favorite">
-            <img id="favorite-{{id}}" src="" alt="Favorite">
+        <span class="mb-0 h5 mr-2">{{name}}</span>
+        <span id="social">
+          <a href="" class="favorite">
+            <img id="favoriteImg" src="/assets/icons/favorite-bw.png" alt="Favorite">
           </a>
-          <a href="" id="share">
-            <img id="share-{{id}}" src="/assets/icons/share-bw.png" alt="Share">
+          <a href="" class="share">
+            <img id="shareImg" src="/assets/icons/share-bw.png" alt="Share">
           </a>
-        </div>
+        </span>
       </div>
-      <div class="small"><br>
-        <p class="small">
-          Cook Time: <span class="blue">{{cookTime}} min</span> |
-          Prep Time: <span class="blue">{{prepTime}} min</span> |
-          Difficulty: <span class="blue">{{skillLevel}}</span>
-        </p>
+      <div class="small">
+        Cook Time: <span class="blue">{{cookTime}} min</span> |
+        Prep Time: <span class="blue">{{prepTime}} min</span> |
+        Difficulty: <span class="blue">{{skillLevel}}</span>
       </div>
     </div>
   </div>
+  <div class="row result">
+    <div class="image col-12">
+    </div>
+  </div>
   <div class="row">
-    <div class="image col-5">
-    </div>
-    <div class="col-1">
-    </div>
     <div id="ingredients col-6">
-
-      <ul id="ingredientList" class="small">
+      <div class="h6">
+        Ingredients:
+      </div>
+      <ul id="ingredientList" class="">
         {{#each ingredients}}
           {{#with this}}
-            <li>{{quantity}} {{unit}} {{name}}, {{state}}</li>
+            <li>{{quantity}} {{unit}} {{name}} {{state}}</li>
           {{/with}}
         {{/each}}
       </ul>
@@ -41,6 +39,9 @@
   </div>
   <div class="row">
     <div id="directions col-12">
+      <div class="h6">
+        Directions:
+      </div>
       <ol id="directionList">
         {{#each directions}}
           <li>{{this}}</li>
