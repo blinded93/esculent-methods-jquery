@@ -1,24 +1,3 @@
-function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
-    }
-    return true;
-}
-
-function isLoggedIn() {
-  const dfd = new $.Deferred();
-  $.get("/current_user")
-    .done(function(resp) {
-      if (!!resp) {
-        dfd.resolve(!!resp);
-      } else {
-        dfd.reject(!!resp);
-      }
-    });
-  return dfd.promise();
-}
-
 $(function() {
   Display.homeSetup();
   Recipe.getAllRecipes();
@@ -35,9 +14,14 @@ Display.homeSetup = function() {
 };
 
 Display.fromTemplate = function(template, obj) {
-  const html = this.templates[template](obj);
+  this.html = this.templates[template](obj);
+  return this;
+};
+
+Display.toElement = function(elementId) {
+  const html = this.html;
   const dfd = new $.Deferred();
-  $("#mainContent").fadeOut(250, function() {
+  $(`${elementId}`).fadeOut(250, function() {
     $(this).html(html).fadeIn(500);
     dfd.resolve();
   });
@@ -51,6 +35,18 @@ Display.alert = function(message, type) {
   });
 };
 
+Display.createSearchAlert = function(query) {
+  const html = `<a href='' id='toSearchResults'>Return to results for '${query}'...</a><button id='alertDismiss' type='button' class='close'><span>&times;</span></button>`;
+  this.createAlert(html, "light");
+  Listener.setAlertDismiss("#alert", Listener.setBackToResults);
+  Listener.setAlertDismiss("#alertDismiss");
+};
+
+Display.toggleAlert = function() {
+  const $a = $("#alert");
+  $a.is(":hidden") ? $a.slideDown(200) : $a.slideUp(200);
+};
+
 Display.alertLogIn = function() {
   this.alert("Must be logged in to do that", "danger");
 };
@@ -60,18 +56,11 @@ Display.createAlert = function(message, type) {
   $("#alert").html(div);
 };
 
-Display.removeLastBreadcrumb = function() {
-  $bc = $(".breadcrumb");
-  if ($bc.children()[1]) {
-    $bc.children().last().remove();
-  }
-};
-
 Display.linkSelector = function(parent) {
-  return function(child) { return $(`${parent} ${child}`) };;
+  return function(child) { return $(`${parent} ${child}`) };
 };
 
-// const resultSelection = function(parent) {
-//   return function(child) { return $(`#${parent} .${child}`); };
-// };
-// const linkSelectorFunc = resultSelection(`user-${this.id}`);
+Display.nothingHere = function(destination) {
+  Display.html = "<div class='text-center'>Nothing to show here!</div>";
+  Display.toElement(destination);
+};
