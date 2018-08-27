@@ -13,16 +13,39 @@ function Recipe(json) {
 Recipe.getAllRecipes = function() {
   $.get("/recipes")
     .done(function(data) {
-    Recipe.displayAllRecipes(data);
+    Recipe.displayAllRecipes(data, "recipes", "#mainContent");
   });
 };
 
-Recipe.displayAllRecipes = function(data) {
-  const objs = data.recipes.map(recipe => new Recipe(recipe));
-  Display.fromTemplate("recipe_results", {recipes:objs})
-    .done(function() {
-      Listener.setRecipeResults(objs);
-    });
+Recipe.displayAllRecipes = function(data, recipeType, destination) {
+  const recipesJson = data[`${recipeType}`];
+  const recipes = this.createFrom(recipesJson);
+  switch (destination) {
+    case "#profileContent":
+      if (isEmpty(recipes)) {
+        Display.nothingHere(destination);
+      } else {
+        recipes.forEach(function(recipe) {
+          recipe.owner = "";
+        });
+        Display.fromTemplate("recipes", {recipes:recipes})
+          .toElement(destination).done(() => Listener.setRecipeResults(recipes));
+      }
+    break;
+    case "#mainContent":
+      Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
+      if (isEmpty(recipes)) {
+        Display.nothingHere(destination);
+      } else {
+        Display.fromTemplate("recipes", {recipes:recipes})
+          .toElement(destination).done(() => Listener.setRecipeResults(recipes));
+      }
+    break;
+  }
+};
+
+Recipe.createFrom = function(data) {
+  return data ? data.map(recipe => new Recipe(recipe)) : [];
 };
 
 Recipe.prototype.get = function() {
@@ -38,15 +61,16 @@ Recipe.prototype.display = function(owner, data) {
   const recipe = this;
   const obj = new Recipe(data.recipe);
   Display.fromTemplate("recipe", obj)
-    .done(function() {
-      recipe.favorited(recipe)
-        .done(function(resp) {
-          const linkFunc = Display.linkSelector(".breadcrumb");
-          Listener.setSocial(recipe);
-          Listener.setUser(recipe.owner, linkFunc);
-          Breadcrumb.adjust(recipe.owner.username, "userLink")
-        });
-    });
+    .toElement("#mainContent")
+      .done(function() {
+        recipe.favorited(recipe)
+          .done(function(resp) {
+            const linkFunc = Display.linkSelector(".breadcrumb");
+            Breadcrumb.userAssets(recipe.owner, "Recipes");
+            Listener.setSocial(recipe)
+              .setUser(recipe.owner, linkFunc)
+          });
+      });
 };
 
 Recipe.prototype.favorited = function(recipe) {
@@ -80,7 +104,7 @@ Recipe.prototype.share = function(recipe) {
   const $shareImg = $(`#share-${this.id}`);
   $shareImg.click(function(e) {
     e.preventDefault();
-    
+
   }).hover(function() {
     $(`#shareImg`).attr("src", `/assets/icons/share.png`);
   }, function() {
