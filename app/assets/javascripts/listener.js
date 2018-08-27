@@ -22,8 +22,8 @@ Listener.setFooter = function(menu) {
   $(`#${menu.footer}`).click(function(e) {
     e.stopPropagation();
     e.preventDefault();
-    menu.setTemplate(menu);
-    menu.getType(menu);
+    menu.setTemplate(menu)
+      .getType(menu);
   });
 };
 
@@ -31,12 +31,12 @@ Listener.setFooter = function(menu) {
 
 Listener.setNav = function(menu, resp) {
   const user = new User(resp.user);
-  const linkFunc = Display.linkSelector("#menu");
-  Listener.setUser(user, linkFunc);
-  Listener.setUserRecipes(user, linkFunc);
-  Listener.setUserFavorites(user, linkFunc);
-  Listener.setUserFriends(user, linkFunc);
-  Listener.setLogout(menu);
+  const linkFunc = Display.linkSelector("#menu")
+  this.setUser(user, linkFunc)
+    .setUserRecipes(user, linkFunc, "#mainContent")
+    .setUserFavorites(user, linkFunc, "#mainContent")
+    .setUserFriends(user, linkFunc, "#mainContent")
+    .setLogout(menu);
 };
 
 Listener.setLogout = function(menu) {
@@ -64,9 +64,10 @@ Listener.confirmation = function(menu) {
       menu.element.slideUp(100, function() {
         menu.template = "login";
         menu.getType(menu);
-        Display.alert("Logged out successfully.", "success")
+        Display.alert("Logged out successfully.", "success");
+        $("#loggedInAs").removeData();
         Recipe.getAllRecipes();
-        Display.removeLastBreadcrumb();
+        Breadcrumb.reset();
       });
     });
   });
@@ -76,76 +77,132 @@ Listener.confirmation = function(menu) {
 Listener.setHome = function() {
   const $home = $("#home");
   $home.addClass("linkCursor");
-  $home.click(function(e) {
+  $home.one("click", function(e) {
     e.preventDefault();
-    $(".breadcrumb li:not(:first)").remove();
     Recipe.getAllRecipes();
-    $home.removeClass("linkCursor");
-    $home.off("click");
+    Breadcrumb.reset();
   });
 };
 
 // User results listeners
-Listener.setUserResults = function(user) {
-  const linkFunc = Display.linkSelector(`#user-${user.id}`);
-  this.setUser(user, linkFunc);
-  this.setUserRecipes(user, linkFunc);
-  this.setUserFavorites(user, linkFunc);
+
+Listener.setUserResults = function(users) {
+  users.forEach(user => {
+    const linkFunc = Display.linkSelector(`#user-${user.id}`);
+    Listener.setUser(user, linkFunc, "#mainContent")
+      .setUserRecipes(user, linkFunc, "#mainContent")
+      .setUserFavorites(user, linkFunc, "#mainContent");
+  });
 };
 
 Listener.setUser = function(user, linkSelector) {
   linkSelector(".userLink").click(function(e) {
     e.preventDefault();
+    Search.backToResultsLink();
     user.displayProfile();
-  });
+  }).addClass("linkCursor");
+  return this;
 };
 
-Listener.setUserRecipes = function(user, linkSelector) {
+Listener.setUserRecipes = function(user, linkSelector, destination) {
   linkSelector(".recipesLink").click(function(e) {
     e.preventDefault();
-    user.getRecipes(user);
+    Search.backToResultsLink();
+    const preview = destination === "#mainContent" ? undefined : true;
+    user.getRecipes(preview)
+      .done(function(recipes) {
+        Recipe.displayAllRecipes(user, "recipes", destination);
+      })
   });
+  return this;
 };
 
-Listener.setUserFavorites = function(user, linkSelector) {
+Listener.setUserFavorites = function(user, linkSelector, destination) {
   linkSelector(".favoritesLink").click(function(e) {
     e.preventDefault();
-    user.getFavorites(user);
+    Search.backToResultsLink();
+    const preview = destination === "#mainContent" ? undefined : true;
+    user.getFavorites(preview)
+      .done(function(recipes) {
+        user.favorites = Recipe.createFrom(recipes);
+        Recipe.displayAllRecipes(user, "favorites", destination);
+      });
   });
+  return this;
 };
 
-Listener.setUserFriends = function(user, linkSelector) {
+Listener.setUserFriends = function(user, linkSelector, destination) {
   linkSelector(".friendsLink").click(function(e){
     e.preventDefault();
-    user.getFriends(user);
+    user.getFriends()
+      .done(function(friends) {
+        User.displayAllUsers(user, "friends", destination);
+      });
   });
+  return this;
 };
 
 // User profile listeners
 Listener.setProfile = function(user) {
+  $("#seeAll").show();
+  user.getRecipes(true)
+    .done(function(recipes) {
+      user.recipes = recipes;
+      user.displayPreview("Recipes", "recipes");
+    });
+    Listener.setPreview(user, "Recipes", "recipes")
+      .setPreview(user, "Favorites", "recipes")
+      .setPreview(user, "Friends", "users");
+};
 
+Listener.setPreview = function(user, tab, type) {
+  const $tab = $(`#user${tab}`);
+  $tab.click(function(e) {
+    e.preventDefault();
+    user[`get${tab}`](true)
+      .done(function(assets) {
+        $("ul.nav-tabs a.active").removeClass("active");
+        $tab.addClass("active");
+        user[`${tab.toLowerCase()}`] = assets;
+        user.displayPreview(tab, type);
+      })
+  });
+  return this;
+};
+
+Listener.setSeeAll = function(user, tab, type) {
+  const $sa = $("#seeAllLink");
+  $sa.attr("href", "")
+    .removeClass().addClass(`${tab.toLowerCase()}Link`)
+    .off("click");
+  const linkFunc = Display.linkSelector("#seeAll");
+  this[`setUser${tab}`](user, linkFunc, "#mainContent");
 };
 
 // Recipe results listeners
+
 Listener.setRecipeResults = function(recipes) {
   recipes.forEach(recipe => {
     const linkFunc = Display.linkSelector(`#recipe-${recipe.id}`);
-    this.setRecipe(recipe, linkFunc);
-    this.setUser(recipe.owner, linkFunc);
+    this.setRecipe(recipe, linkFunc)
+      .setUser(recipe.owner, linkFunc);
   });
 };
 
 Listener.setRecipe = function(recipe, linkSelector) {
   linkSelector(".recipeLink").click(function(e) {
     e.preventDefault();
+    Search.backToResultsLink();
     recipe.get();
   });
+  return this;
 };
 
 Listener.setSocial = function(recipe) {
   const linkFunc = Display.linkSelector("#social");
-  this.setFavorite(recipe, linkFunc);
-  this.setShare(recipe, linkFunc);
+  this.setFavorite(recipe, linkFunc)
+    .setShare(recipe, linkFunc);
+  return this;
 };
 
 Listener.setFavorite = function(recipe, linkSelector) {
@@ -154,6 +211,7 @@ Listener.setFavorite = function(recipe, linkSelector) {
     e.preventDefault();
     Listener.fav(recipe);
   });
+  return this;
 };
 
 Listener.fav = function(recipe) {
@@ -173,5 +231,52 @@ Listener.setShare = function(recipe, linkSelector) {
     $(this).attr("src", `/assets/icons/share.png`);
   }, function() {
     $(this).attr("src", `/assets/icons/share-bw.png`);
+  });
+};
+
+// Search listener
+
+Listener.setSearch = function(search) {
+  search.submit.click(function(e) {
+    e.preventDefault();
+    $.post("/search", search.form.serialize())
+      .done(function(resp) {
+        search.form.data({
+          type:$("#type option:selected").val(),
+          query:search.query.val()
+        });
+        search.evaluateResp(resp)
+          .query.val("");
+      });
+  });
+};
+
+Listener.setBackToResults = function() {
+  const $goBack = $("#toSearchResults");
+  const search = $goBack.data("search");
+  $goBack.one("click", function(e) {
+    e.preventDefault();
+    const params = {
+      type:search.form.data("type"),
+      query:search.form.data("query")
+    }
+    const data = search.form.data()
+
+    $.post("/search", encodeURI(`type=${data.type}&query=${data.query}`))
+      .done(resp => search.evaluateResp(resp))
+  });
+};
+
+// Dismiss alert listener
+
+Listener.setAlertDismiss = function(dismisser, afterDismissFunc) {
+  $(dismisser).one("click", function(e) {
+    e.preventDefault();
+    $("#alert").slideUp(200, function() {
+      // $(this).html("");
+      if (typeof afterDismissName == 'function') {
+        afterDismissFunc();
+      }
+    });
   });
 };
