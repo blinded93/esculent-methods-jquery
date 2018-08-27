@@ -1,7 +1,3 @@
-String.prototype.capitalize = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
 function Menu(template) {
   this.element = $("#dropdownMenu");
   this.template = template || "login";
@@ -11,8 +7,8 @@ function Menu(template) {
 
 Menu.setup = function() {
   const menu = new this();
-  menu.slideEffect();
-  menu.getType(menu);
+  menu.slideEffect()
+    .getType(menu);
 };
 
 Menu.prototype.setFooter = function() {
@@ -31,14 +27,15 @@ Menu.prototype.setFooter = function() {
 
 Menu.prototype.getType = function(menu) {
   $.get("/current_user", function(resp) {
-    menu.load(menu, resp);
-    menu.form = $("#dropdownMenu form");
+    menu.load(menu, resp)
+      .form = $("#dropdownMenu form");
     if (!!menu.form.length) {
       menu.setFooter();
       Listener.setSession(menu);
     } else {
       Listener.setNav(menu, resp);
-      $("#loggedInAs").html(`<small class='blue'>Logged in as:</small> ${resp.user.username}`);
+      $("#loggedInAs").html(`<small class='blue'>Logged in as:</small> ${resp.user.username}`)
+        .data({id:resp.user.id, username:resp.user.username});
     }
   });
 };
@@ -49,6 +46,7 @@ Menu.prototype.load = function(menu, resp) {
   }
   const html = Display.templates[menu.template](resp);
   menu.element.html(html);
+  return this;
 };
 
 Menu.prototype.slideEffect = function() {
@@ -60,13 +58,13 @@ Menu.prototype.slideEffect = function() {
       $("#confirmLogout").hide();
     });
   });
+  return this;
 };
 
 Menu.prototype.evaluateResp = function(menu, resp) {
   const respObj = resp.session || resp.user;
   const errors = respObj.errors;
   if (isEmpty(errors)) {
-    $("#loggedInAs").html(respObj.username)
     menu.element.slideUp(200, function() {
       menu.template = "nav";
       menu.getType(menu);
@@ -95,4 +93,5 @@ Menu.prototype.resetInputs = function() {
 
 Menu.prototype.setTemplate = function(menu) {
   menu.template = menu.template === "login" ? "signup" : "login";
+  return this;
 };
