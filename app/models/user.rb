@@ -13,6 +13,7 @@ class User < ApplicationRecord
 
   scope :from_email, -> (email) { where("email like ?", "%#{email}%") }
   scope :from_username, -> (username) { where("username like ?", "%#{username}%") }
+  scope :preview, -> () { order(Arel.sql("random()")).limit(5) }
 
   def self.from_identifier(identifier)
     scope = identifier.include?("@") ? "email" : "username"
