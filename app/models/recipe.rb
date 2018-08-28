@@ -18,6 +18,7 @@ class Recipe < ApplicationRecord
   }
   scope :for, -> (user_id) { where(user_id: user_id) }
   scope :search, -> (query) { where("name like ?", "%#{query}%") }
+  scope :preview, -> () { order(Arel.sql("random()")).limit(5) }
 
   def self.with_ingredients(ingredient_ids)
     recipes = []
