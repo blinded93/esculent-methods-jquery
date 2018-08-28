@@ -13,7 +13,7 @@ class SearchService
   end
 
   def validate_blank
-    add_error("A query is required") if query.blank?
+    add_error("A query is required.") if query.blank?
   end
 
   def find_results
