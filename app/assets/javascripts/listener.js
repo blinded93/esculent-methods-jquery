@@ -111,6 +111,7 @@ Listener.setUserRecipes = function(user, linkSelector, destination) {
     const preview = destination === "#mainContent" ? undefined : true;
     user.getRecipes(preview)
       .done(function(recipes) {
+        user.recipes = Recipe.createFrom(recipes);
         Recipe.displayAllRecipes(user, "recipes", destination);
       })
   });
@@ -241,29 +242,24 @@ Listener.setSearch = function(search) {
     e.preventDefault();
     $.post("/search", search.form.serialize())
       .done(function(resp) {
-        search.form.data({
-          type:$("#type option:selected").val(),
-          query:search.query.val()
-        });
-        search.evaluateResp(resp)
-          .query.val("");
+        search.type = $("#type").val()
+        search.query = $("#query").val()
+        search.populateData()
+          .resetSearchAlert()
+          .evaluateResp(resp)
+        $("#query").val("");
       });
   });
 };
 
 Listener.setBackToResults = function() {
   const $goBack = $("#toSearchResults");
-  const search = $goBack.data("search");
+  const data = $("#search").data();
+  const search = data.search;
   $goBack.one("click", function(e) {
     e.preventDefault();
-    const params = {
-      type:search.form.data("type"),
-      query:search.form.data("query")
-    }
-    const data = search.form.data()
-
     $.post("/search", encodeURI(`type=${data.type}&query=${data.query}`))
-      .done(resp => search.evaluateResp(resp))
+      .done(resp => search.evaluateResp(resp));
   });
 };
 
