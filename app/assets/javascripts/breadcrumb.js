@@ -47,6 +47,7 @@ Breadcrumb.profile = function(user) {
 };
 
 Breadcrumb.userAssets = function(user, items, optionalItems) {
+  const linkSelector = Display.linkSelector(".breadcrumb");
   if (!!user.id) {
     if (isLoggedInAs(user.id)) {
       this.reset()
@@ -55,6 +56,7 @@ Breadcrumb.userAssets = function(user, items, optionalItems) {
       this.reset()
         .profile(user)
         .adjust(optionalItems || items, `${items.toLowerCase()}Link`);
+      Listener.setUser(user, linkSelector)
     }
   }
 };
