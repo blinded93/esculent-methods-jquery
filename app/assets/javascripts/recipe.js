@@ -20,27 +20,19 @@ Recipe.getAllRecipes = function() {
 Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const recipesJson = data[`${recipeType}`];
   const recipes = this.createFrom(recipesJson);
-  switch (destination) {
-    case "#profileContent":
-      if (isEmpty(recipes)) {
-        Display.nothingHere(destination);
-      } else {
-        recipes.forEach(function(recipe) {
-          recipe.owner = "";
-        });
-        Display.fromTemplate("recipes", {recipes:recipes})
-          .toElement(destination).done(() => Listener.setRecipeResults(recipes));
-      }
-    break;
-    case "#mainContent":
-      Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
-      if (isEmpty(recipes)) {
-        Display.nothingHere(destination);
-      } else {
-        Display.fromTemplate("recipes", {recipes:recipes})
-          .toElement(destination).done(() => Listener.setRecipeResults(recipes));
-      }
-    break;
+  if (destination === "#mainContent") {
+    Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
+  }
+  if (isEmpty(recipes)) {
+    Display.nothingHere(destination);
+  } else {
+    if (data instanceof User) {
+      recipes.forEach(function(recipe) {
+        recipe.owner = "";
+      });
+    }
+    Display.fromTemplate("recipes", {recipes:recipes})
+      .toElement(destination).done(() => Listener.setRecipeResults(recipes));
   }
 };
 
