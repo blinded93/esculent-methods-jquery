@@ -1,7 +1,5 @@
 function Search() {
   this.form = $("#search");
-  this.type = $("#type option:selected");
-  this.query = $("#query");
   this.submit = $("#submitSearch");
 }
 
@@ -41,12 +39,25 @@ Search.prototype.evaluateResp = function(resp) {
       Breadcrumb.search();
       break;
   }
-  $(".searchLink").data({
-    type: search.type.val(),
-    query: search.query.val(),
-    page: 1,
-    search: search
-  });
+  // search.populateData();
   Display.createSearchAlert(search.form.data("query"));
   return this;
 };
+
+Search.prototype.populateData = function() {
+  const data = {
+    type: (this.type || $("#search").data("type")),
+    query: (this.query || $("#search").data("query")),
+    page: 1,
+    search: this
+  }
+  $("#search").data(data);
+  return this;
+};
+
+Search.prototype.resetSearchAlert = function() {
+  if ($("#toSearchResults").is(":visible")) {
+    Display.toggleAlert();
+  }
+  return this;
+}
