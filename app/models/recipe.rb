@@ -12,6 +12,7 @@ class Recipe < ApplicationRecord
     .group(:id)
     .order(Arel.sql('COUNT(favorited_recipes.id) DESC'))
   }
+  scope :alphabetized, -> { order(:name).pluck(:name) }
   scope :with_ingredient, -> (ingredient_id) {
     joins(:ingredient_amounts).
     where(ingredient_amounts: {ingredient_id: ingredient_id})
