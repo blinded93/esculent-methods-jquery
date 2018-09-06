@@ -32,3 +32,24 @@
     padding:.1em;
   }
 }
+
+#recipeDirections .directionList {
+    position:relative;
+    margin-bottom:0.85rem;
+  &:last-child {
+    margin-top:0.85rem;
+    margin-bottom:0;
+  }
+  &:only-child {
+    margin:0;
+  }
+}
+.directions {
+  resize:none;
+}
+
+.remove {
+  position:absolute;
+  top:-2px;
+  right:-18px;
+}
