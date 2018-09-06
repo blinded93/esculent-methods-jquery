@@ -22,3 +22,7 @@ function isLoggedInAs(id) {
 function currentUser(identifier) {
   return $("#loggedInAs").data(identifier);
 }
+
+function randomId() {
+  return Math.floor(Math.random() * 100000)
+}

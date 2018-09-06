@@ -22,7 +22,7 @@ Display.toElement = function(elementId) {
   const html = this.html;
   const dfd = new $.Deferred();
   $(`${elementId}`).fadeOut(250, function() {
-    $(this).html(html).fadeIn(500);
+    $(this).html(html).fadeIn(250);
     dfd.resolve();
   });
   return dfd.promise();
@@ -45,6 +45,8 @@ Display.createSearchAlert = function(query) {
 Display.toggleAlert = function() {
   const $a = $("#alert");
   $a.is(":hidden") ? $a.slideDown(200) : $a.slideUp(200);
+
+  return this;
 };
 
 Display.alertLogIn = function() {
@@ -54,6 +56,7 @@ Display.alertLogIn = function() {
 Display.createAlert = function(message, type) {
   const div = $(`<div id="alertMessage" class="alert alert-${type} small">`).html(message);
   $("#alert").html(div);
+  return this;
 };
 
 Display.linkSelector = function(parent) {

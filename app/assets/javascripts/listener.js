@@ -108,25 +108,94 @@ Listener.setUserRecipes = function(user, linkSelector, destination) {
   linkSelector(".recipesLink").click(function(e) {
     e.preventDefault();
     Search.backToResultsLink();
-    const preview = destination === "#mainContent" ? undefined : true;
+    const preview = destination === "#mainContent" ? null : true;
     user.getRecipes(preview)
       .done(function(recipes) {
         user.recipes = Recipe.createFrom(recipes);
-        Recipe.displayAllRecipes(user, "recipes", destination);
-      })
+        Recipe.displayAllRecipes(user, "recipes", destination)
+      });
   });
   return this;
+};
+
+Listener.setNewRecipe = function(user) {
+  $("#createRecipe").one("click", function(e) {
+    const el = this;
+    e.preventDefault();
+    Display.fromTemplate("recipe_form").toElement("#mainContent")
+      .done(function() {
+        $(el).hide();
+        Listener.setNewRecipeForm(user);
+      });
+  });
+};
+
+Listener.setNewRecipeForm = function(user) {
+  this.setAddIngredient()
+    .setAddDirection()
+    .setRemoveItems("ingredients")
+    .setNewRecipeSubmit(user);
+};
+
+Listener.setNewRecipeSubmit = function(user) {
+  $("#submitNewRecipe").click(function(e){
+    e.preventDefault();
+    $.post(`/users/${user.id}/recipes`, $("#newRecipe").serialize())
+    .done(function(resp){
+      debugger;
+    });
+  });
+  return this;
+};
+
+Listener.setAddIngredient = function() {
+  $("#addIngredient").click(function(e) {
+    e.preventDefault();
+    const i = {};
+    i.id = randomId();
+    Display.fromTemplate("ingredient", i);
+    $("#recipeIngredients").append(Display.html);
+    Listener.setRemoveItem("ingredient", i.id, $(`#remove-${i.id}`));
+  });
+  return this;
+};
+
+Listener.setAddDirection = function() {
+  $("#addDirection").click(function(e) {
+    e.preventDefault();
+    const id = randomId()
+    const html = `<li id="direction-${id}" class="directionList">` +
+                    `<textarea name="recipe[directions][]" class="form-control form-control-sm directions" rows="2"></textarea>`+
+                    `<button id='remove-${id}' class='ml-3 remove close'>&times;</button>`+
+                 `</li>`;
+    $("#recipeDirections").append(html);
+    Listener.setRemoveItem("direction", id, $(`#remove-${id}`));
+  });
+  return this;
+};
+
+Listener.setRemoveItems = function(itemsType) {
+  $(`#recipe${capitalize(itemsType)} .close`).each(function(i, el) {
+    Listener.setRemoveItem("ingredient", i+1, el);
+  });
+  return this;
+};
+
+Listener.setRemoveItem = function(itemType, id, el) {
+  $(el).one("click", function(e){
+    $(`#${itemType}-${id}`).remove();
+  });
 };
 
 Listener.setUserFavorites = function(user, linkSelector, destination) {
   linkSelector(".favoritesLink").click(function(e) {
     e.preventDefault();
     Search.backToResultsLink();
-    const preview = destination === "#mainContent" ? undefined : true;
+    const preview = destination === "#mainContent" ? null : true;
     user.getFavorites(preview)
       .done(function(recipes) {
         user.favorites = Recipe.createFrom(recipes);
-        Recipe.displayAllRecipes(user, "favorites", destination);
+        Recipe.displayAllRecipes(user, "favorites", destination)
       });
   });
   return this;
