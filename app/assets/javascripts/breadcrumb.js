@@ -46,16 +46,21 @@ Breadcrumb.profile = function(user) {
   return this;
 };
 
-Breadcrumb.userAssets = function(user, items, optionalItems) {
+Breadcrumb.userAssets = function(user, items) {
   const linkSelector = Display.linkSelector(".breadcrumb");
   if (!!user.id) {
     if (isLoggedInAs(user.id)) {
       this.reset()
-        .adjust(`My ${items}`, `${items.toLowerCase()}Link`);
+        .adjust(`My ${items}`, `${items.toLowerCase()}Link`)
+        if (linkSelector(".recipesLink").text().includes("Recipes")) {
+          const html = "<a href=''id='createRecipe' class='black small'>&nbsp;&nbsp;(New)</a>"
+          linkSelector(".recipesLink").append(html);
+          Listener.setNewRecipe(user);
+        }
     } else {
       this.reset()
         .profile(user)
-        .adjust(optionalItems || items, `${items.toLowerCase()}Link`);
+        .adjust(items, `${items.toLowerCase()}Link`);
       Listener.setUser(user, linkSelector)
     }
   }
