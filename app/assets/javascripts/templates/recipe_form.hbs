@@ -1,0 +1,84 @@
+<form class="new_recipe" id="newRecipe" action="/users/{{user.id}}/recipes" method="post">
+  <input type="hidden" name="authenticity_token">
+  <div class="form-group">
+    <label for="recipeName" class="small">
+      Name
+    </label>
+    <input type="text" name="recipe[name]" class="col-12 form-control form-control-sm" id="recipeName" autofocus>
+  </div>
+  <div class="form-group form-row">
+    <div class="col-6">
+      <label for="recipeCookTime" class="small">
+        Cook Time
+      </label>
+      <input type="number" name="recipe[cook_time]" class="form-control form-control-sm" id="recipeCookTime" min="0">
+    </div>
+    <div class="col-6">
+      <label for="recipePrepTime" class="small">
+        Prep Time
+      </label>
+      <input type="number" name="recipe[prep_time]" class="form-control form-control-sm" id="recipePrepTime" min="0">
+    </div>
+  </div>
+  <div class="form-group form-row">
+    <div class="col-6">
+      <label for="recipeServings" class="small">
+        Servings
+      </label>
+      <input type="number" name="recipe[servings]" class="col-12 form-control form-control-sm" id="recipeServings" min="0">
+    </div>
+    <div class="col-6">
+      <label for="recipeSkillLevel" class="small">
+        Difficulty
+      </label>
+      <select name="recipe[skill_level]" class="col-12 form-control form-control-sm" id="recipeSkillLevel">
+        <option value="Easy">Easy</option>
+        <option value="Average">Average</option>
+        <option value="Difficult">Difficult</option>
+      </select>
+    </div>
+  </div>
+  <label class="small">
+    Ingredients &nbsp;&nbsp; <a href="" id="addIngredient" class="blue font-weight-bold h6">+</a>
+  </label>
+  <div id="recipeIngredients">
+    <div id="ingredient-1" class="form-group form-row">
+      <input type="number" name="recipe[ingredients][][quantity]" class="ml-1 col-2 form-control form-control-sm" placeholder="Amount" min="0">
+      <select name="recipe[ingredients][][unit]" class="ml-2 col-2 form-control form-control-sm">
+        <option>Unit..</option>
+        <option disabled class="black font-weight-bold">Volume</option>
+        <option value="cup">cup</option>
+        <option value="tbsp">tbsp</option>
+        <option value="tsp">tsp</option>
+        <option value="fl oz">fl oz</option>
+        <option value="mL">mL</option>
+        <option disabled class="black font-weight-bold">Weight</option>
+        <option value="oz">oz</option>
+        <option value="mg">mg</option>
+        <option value="g">g</option>
+      </select>
+      <input type="text" name="recipe[ingredients][][name]" class="ml-2 col-3 form-control form-control-sm" placeholder="Name">
+      <select name="recipe[ingredients][][state]" class="ml-2 col-3 form-control form-control-sm">
+        <option>State (opt)..</option>
+        <option value="chopped">Chopped</option>
+        <option value="diced">Diced</option>
+        <option value="minced">Minced</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="small">
+      Directions &nbsp;&nbsp; <a href="" id="addDirection" class="blue font-weight-bold h6">+</a>
+    </label>
+    <ol id="recipeDirections">
+      <li id="direction-1" class="directionList">
+        <textarea name="recipe[directions][]" class="form-control form-control-sm directions" rows="2"></textarea>
+      </li>
+    </ol>
+  </div>
+  <div class="form-group">
+    <button id="submitNewRecipe" name="button" class="col-2 btn btn-sm btn-outline-primary">
+      Create
+    </button>
+  </div>
+</form>

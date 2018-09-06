@@ -1,0 +1,24 @@
+<div id="ingredient-{{id}}" class="form-group form-row">
+  <input type="number" name="recipe[ingredients][][quantity]" class="ml-1 col-2 form-control form-control-sm" placeholder="Amount" min="0">
+  <select name="recipe[ingredients][][unit]" class="ml-2 col-2 form-control form-control-sm">
+    <option>Unit..</option>
+    <option disabled class="black font-weight-bold">Volume</option>
+    <option value="cup">cup</option>
+    <option value="tbsp">tbsp</option>
+    <option value="tsp">tsp</option>
+    <option value="fl oz">fl oz</option>
+    <option value="mL">mL</option>
+    <option disabled class="black font-weight-bold">Weight</option>
+    <option value="oz">oz</option>
+    <option value="mg">mg</option>
+    <option value="g">g</option>
+  </select>
+  <input type="text" name="recipe[ingredients][][name]" class="ml-2 col-3 form-control form-control-sm" placeholder="Name">
+  <select name="recipe[ingredients][][state]" class="ml-2 col-3 form-control form-control-sm">
+    <option>State (opt)..</option>
+    <option value="chopped">Chopped</option>
+    <option value="diced">Diced</option>
+    <option value="minced">Minced</option>
+  </select>
+  <button id="remove-{{id}}" type='button' class='ml-3 close' data-id="{{id}}"><span>&times;</span></button>
+</div>
