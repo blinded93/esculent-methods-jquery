@@ -16,6 +16,7 @@
 //= require jquery
 //= require jquery3
 //= require jquery_ujs
+//= require jquery.validate
 //= require handlebars
 //= require_tree ./templates
 //= require_tree .
