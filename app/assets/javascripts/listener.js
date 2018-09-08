@@ -138,12 +138,27 @@ Listener.setNewRecipeForm = function(user) {
 };
 
 Listener.setNewRecipeSubmit = function(user) {
-  $("#submitNewRecipe").click(function(e){
-    e.preventDefault();
-    $.post(`/users/${user.id}/recipes`, $("#newRecipe").serialize())
-    .done(function(resp){
-      debugger;
-    });
+  $("#newRecipe").validate({
+    onkeyup: function(element, event) {
+      $(element).valid();
+    },
+    onclick: function(element, event) {
+      $(element).valid();
+    },
+    errorClass: "its-invalid is-invalid",
+    validClass: "is-valid",
+    errorPlacement: function(error, element) {
+      $("#newRecipeErrors").html(error);
+    },
+    submitHandler: function(form) {
+      $.ajax({
+          type: 'POST',
+          url: `/users/${user.id}/recipes`,
+          data: $(form).serialize(),
+          success: function(resp) {
+          }
+      });
+    }
   });
   return this;
 };
