@@ -6,6 +6,12 @@ class RecipesController < ApplicationController
     render json: recipes, status: 200
   end
 
+  def create
+    recipe = Recipe.new(recipe_params)
+    # binding.pry
+    render json: recipe
+  end
+
   def show
     recipe = Recipe.find_by_id(params[:id])
     render json: recipe,
@@ -37,5 +43,9 @@ class RecipesController < ApplicationController
   private
     def create_favorited_recipe_service
       @f = FavoritedRecipeService.new(recipe_id:params[:recipe_id])
+    end
+
+    def recipe_params
+      params.require(:recipe).permit(:name, :cook_time, :prep_time, :servings, :difficulty, :directions, ingredient_attributes:[:quantity, :unit, :name, :state])
     end
 end
