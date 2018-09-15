@@ -7,9 +7,12 @@ class RecipesController < ApplicationController
   end
 
   def create
-    recipe = Recipe.new(recipe_params)
+    recipe = current_user.recipes.create(recipe_params)
     # binding.pry
-    render json: recipe
+    render json: recipe,
+           serializer: RecipeIngredientsSerializer,
+           include:['ingredient_amounts.ingredient'],
+           status: 200
   end
 
   def show
@@ -46,6 +49,6 @@ class RecipesController < ApplicationController
     end
 
     def recipe_params
-      params.require(:recipe).permit(:name, :cook_time, :prep_time, :servings, :difficulty, :directions, ingredient_attributes:[:quantity, :unit, :name, :state])
+      params.require(:recipe).permit(:name, :cook_time, :prep_time, :servings, :skill_level, :image, :directions => [], ingredient_attributes:[:quantity, :unit, :name, :state])
     end
 end
