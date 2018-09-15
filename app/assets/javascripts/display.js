@@ -15,14 +15,16 @@ Display.homeSetup = function() {
 
 Display.fromTemplate = function(template, obj) {
   this.html = this.templates[template](obj);
+  debugger;
   return this;
 };
 
-Display.toElement = function(elementId) {
+Display.toElement = function(elementId, removeElements) {
   const html = this.html;
   const dfd = new $.Deferred();
   $(`${elementId}`).fadeOut(250, function() {
     $(this).html(html).fadeIn(250);
+    $(this).find(removeElements).remove();
     dfd.resolve();
   });
   return dfd.promise();
