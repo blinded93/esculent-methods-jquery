@@ -62,7 +62,8 @@ User.prototype.displayPreview = function(tab, type) {
 User.prototype.getRecipes = function(preview) {
   const user = this;
   const dfd = $.Deferred();
-  $.get(`/users/${user.id}/recipes`, {"preview":preview})
+  const previewObj = preview ? {"preview":preview} : {};
+  $.get(`/users/${user.id}/recipes`, previewObj)
     .done(function(data) {
       const recipes = Recipe.createFrom(data.recipes);
       dfd.resolve(recipes);
