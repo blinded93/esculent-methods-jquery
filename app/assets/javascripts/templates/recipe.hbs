@@ -20,8 +20,12 @@
     </div>
   </div>
   <div class="row result">
-    <div class="image col-12">
-    </div>
+    {{#if imageUrl}}
+      <img src="{{imageUrl}}" alt="">
+    {{else}}
+      <div class="image col-12">
+      </div>
+    {{/if}}
   </div>
   <div class="row">
     <div id="ingredients col-6">
