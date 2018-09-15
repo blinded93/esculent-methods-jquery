@@ -111,7 +111,7 @@ Listener.setUserRecipes = function(user, linkSelector, destination) {
     const preview = destination === "#mainContent" ? null : true;
     user.getRecipes(preview)
       .done(function(recipes) {
-        user.recipes = Recipe.createFrom(recipes);
+        user.recipes = recipes;
         Recipe.displayAllRecipes(user, "recipes", destination)
       });
   });
@@ -135,12 +135,26 @@ Listener.setNewRecipeForm = function(user) {
     .setAddDirection()
     .setRemoveItems("ingredients")
     .setNewRecipeSubmit(user);
+  $("#recipeImage").change(function(e) {
+    const text = !!this.files.length ? this.files[0].name : "Choose file (opt)...";
+    $(".custom-file-label").text(text);
+  });
 };
 
 Listener.setNewRecipeSubmit = function(user) {
   $("#newRecipe").validate({
     onkeyup: function(element, event) {
       $(element).valid();
+    },
+    rules: {
+      "recipe[image]": {
+        extension: "jpg|jpeg|png"
+      }
+    },
+    messages: {
+      "recipe[image]": {
+        extension: "Please upload a jpeg, jpg or png file."
+      }
     },
     onclick: function(element, event) {
       $(element).valid();
@@ -150,12 +164,17 @@ Listener.setNewRecipeSubmit = function(user) {
     errorPlacement: function(error, element) {
       $("#newRecipeErrors").html(error);
     },
-    submitHandler: function(form) {
+    submitHandler: function(form, e) {
+      e.preventDefault();
+      const formData = new FormData(form);
       $.ajax({
           type: 'POST',
           url: `/users/${user.id}/recipes`,
-          data: $(form).serialize(),
+          processData: false,
+          contentType: false,
+          data: formData,
           success: function(resp) {
+            new Recipe(resp).display(resp);
           }
       });
     }
