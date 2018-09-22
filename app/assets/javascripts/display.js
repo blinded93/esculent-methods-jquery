@@ -15,7 +15,6 @@ Display.homeSetup = function() {
 
 Display.fromTemplate = function(template, obj) {
   this.html = this.templates[template](obj);
-  debugger;
   return this;
 };
 
@@ -32,9 +31,15 @@ Display.toElement = function(elementId, removeElements) {
 
 Display.alert = function(message, type) {
   this.createAlert(message, type);
-  $("#alert").slideDown(200).delay(1500).slideUp(200, function() {
+  $("#alert").slideDown(200).delay(2000).slideUp(200, function() {
     $(this).html("");
   });
+};
+
+Display.createAlert = function(message, type) {
+  const div = $(`<div id="alertMessage" class="alert alert-${type} small">`).html(message);
+  $("#alert").html(div);
+  return this;
 };
 
 Display.createSearchAlert = function(query) {
@@ -42,6 +47,21 @@ Display.createSearchAlert = function(query) {
   this.createAlert(html, "light");
   Listener.setAlertDismiss("#alert", Listener.setBackToResults);
   Listener.setAlertDismiss("#alertDismiss");
+};
+
+Display.createEditImageAlert = function(imgName, user) {
+  const html = `Update your image to <b>${imgName}</b>? <span class='float-right'><a href='' id='confirmImg'>Yes</a> / <a href='' id='denyImg'>No</a></span>`;
+  this.createAlert(html, "light");
+  debugger;
+  Listener.setAlertDismiss("#confirmImg", user.uploadProfileImage)
+    .setAlertDismiss("#denyImg");
+  return this;
+};
+
+Display.createProfileImageErrorAlert = function() {
+  const html = `Profile image must be jpeg or png.`
+  this.alert(html, "danger");
+  return this;
 };
 
 Display.toggleAlert = function() {
@@ -53,12 +73,6 @@ Display.toggleAlert = function() {
 
 Display.alertLogIn = function() {
   this.alert("Must be logged in to do that", "danger");
-};
-
-Display.createAlert = function(message, type) {
-  const div = $(`<div id="alertMessage" class="alert alert-${type} small">`).html(message);
-  $("#alert").html(div);
-  return this;
 };
 
 Display.linkSelector = function(parent) {
