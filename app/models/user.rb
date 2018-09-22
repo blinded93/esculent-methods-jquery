@@ -10,6 +10,7 @@ class User < ApplicationRecord
 
   validates :email, :username, presence: true, uniqueness: true
   has_secure_password
+  mount_uploader :avatar, AvatarUploader
 
   scope :from_email, -> (email) { where("email like ?", "%#{email}%") }
   scope :from_username, -> (username) { where("username like ?", "%#{username}%") }
