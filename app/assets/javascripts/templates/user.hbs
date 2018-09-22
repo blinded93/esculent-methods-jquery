@@ -6,6 +6,13 @@
   </div>
   <div class="row result">
     <div class="profileImage col-12">
+      <form id="editProfileImage">
+        <input type="hidden" name="authenticity_token">
+        <label id="profileImageLabel" for="profileImageInput">
+          <img id="upload" src="/assets/icons/upload-off.png" alt="Upload Image" title="Edit image">
+        </label>
+        <input type="file" name="profileImage" id="profileImageInput">
+      </form>
     </div>
   </div>
   <div class="row">
