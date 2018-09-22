@@ -153,7 +153,7 @@ Listener.setNewRecipeSubmit = function(user) {
     },
     messages: {
       "recipe[image]": {
-        extension: "Please upload a jpeg, jpg or png file."
+        extension: "Please upload a jpeg or png file."
       }
     },
     onclick: function(element, event) {
@@ -254,9 +254,39 @@ Listener.setProfile = function(user) {
       user.recipes = recipes;
       user.displayPreview("Recipes", "recipes");
     });
-    Listener.setPreview(user, "Recipes", "recipes")
-      .setPreview(user, "Favorites", "recipes")
-      .setPreview(user, "Friends", "users");
+  Listener.setEditProfileImage(user)
+    .setPreview(user, "Recipes", "recipes")
+    .setPreview(user, "Favorites", "recipes")
+    .setPreview(user, "Friends", "users");
+};
+
+Listener.setEditProfileImage = function(user) {
+  $("#upload").hover(function() {
+    changeIconSrc(`#${this.id}`, "upload-on");
+  }, function() {
+    changeIconSrc(`#${this.id}`, "upload-off");
+  });
+  this.setProfileImageUpload(user);
+  return this;
+};
+
+Listener.setProfileImageUpload = function(user) {
+  $("#profileImageInput").change(function(e) {
+    const imgName = this.value.replace(/^.*[\\\/]/, '');
+    if (["jpeg", "jpg", "png"].includes(getExt(this))) {
+      Display.createEditImageAlert(imgName, user)
+        .toggleAlert();
+    } else {
+      const border = "border border-danger rounded";
+      $("#upload").addClass(border).delay(2150).queue(function() {
+        $("#profileImageInput").val("");
+        $(this).removeClass(border).dequeue();
+      });
+      Display.createProfileImageErrorAlert()
+        .toggleAlert();
+
+    }
+  });
 };
 
 Listener.setPreview = function(user, tab, type) {
@@ -344,12 +374,12 @@ Listener.setSearch = function(search) {
   search.submit.click(function(e) {
     e.preventDefault();
     $.post("/search", search.form.serialize())
-      .done(function(resp) {
+      .done(function(data) {
         search.type = $("#type").val()
         search.query = $("#query").val()
         search.populateData()
           .resetSearchAlert()
-          .evaluateResp(resp)
+          .evaluateResp(data)
         $("#query").val("");
       });
   });
@@ -373,9 +403,11 @@ Listener.setAlertDismiss = function(dismisser, afterDismissFunc) {
     e.preventDefault();
     $("#alert").slideUp(200, function() {
       // $(this).html("");
-      if (typeof afterDismissName == 'function') {
+      debugger;
+      if (typeof afterDismissFunc == "function") {
         afterDismissFunc();
       }
     });
   });
+  return this;
 };
