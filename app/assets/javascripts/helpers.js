@@ -26,3 +26,11 @@ function currentUser(identifier) {
 function randomId() {
   return Math.floor(Math.random() * 100000)
 }
+
+function changeIconSrc(btn, imgName) {
+  $(btn).attr("src", `/assets/icons/${imgName}.png`);
+}
+
+function getExt(element) {
+  return $(element).val().split(".").pop().toLowerCase();
+}
