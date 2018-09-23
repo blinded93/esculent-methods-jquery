@@ -52,8 +52,7 @@ Display.createSearchAlert = function(query) {
 Display.createEditImageAlert = function(imgName, user) {
   const html = `Update your image to <b>${imgName}</b>? <span class='float-right'><a href='' id='confirmImg'>Yes</a> / <a href='' id='denyImg'>No</a></span>`;
   this.createAlert(html, "light");
-  debugger;
-  Listener.setAlertDismiss("#confirmImg", user.uploadProfileImage)
+  Listener.setAlertDismiss("#confirmImg", Listener.setProfileImageSubmit(user))
     .setAlertDismiss("#denyImg");
   return this;
 };
