@@ -289,6 +289,26 @@ Listener.setProfileImageUpload = function(user) {
   });
 };
 
+Listener.setProfileImageSubmit = function(user) {
+  return function() {
+    const form = document.getElementById("editProfileImage");
+    const formData = new FormData(form);
+    $.ajax({
+      type: 'PATCH',
+      url: `/users/${user.id}`,
+      processData: false,
+      contentType: false,
+      data: formData,
+      success: function(resp) {
+        const url = resp.user.avatar.url;
+        $("#userAvatar").fadeOut(200, function() {
+          $("#userAvatar").attr("src", url);
+        }).fadeIn(200);
+      }
+    })
+  }
+};
+
 Listener.setPreview = function(user, tab, type) {
   const $tab = $(`#user${tab}`);
   $tab.click(function(e) {
