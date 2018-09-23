@@ -254,23 +254,24 @@ Listener.setProfile = function(user) {
       user.recipes = recipes;
       user.displayPreview("Recipes", "recipes");
     });
-  Listener.setEditProfileImage(user)
+  Listener.setEditProfileImageBtn(user)
+    // .setProfileImageSubmit(user)
     .setPreview(user, "Recipes", "recipes")
     .setPreview(user, "Favorites", "recipes")
     .setPreview(user, "Friends", "users");
 };
 
-Listener.setEditProfileImage = function(user) {
+Listener.setEditProfileImageBtn = function(user) {
   $("#upload").hover(function() {
     changeIconSrc(`#${this.id}`, "upload-on");
   }, function() {
     changeIconSrc(`#${this.id}`, "upload-off");
   });
-  this.setProfileImageUpload(user);
+  this.setProfileImageTypeCheck(user);
   return this;
 };
 
-Listener.setProfileImageUpload = function(user) {
+Listener.setProfileImageTypeCheck = function(user) {
   $("#profileImageInput").change(function(e) {
     const imgName = this.value.replace(/^.*[\\\/]/, '');
     if (["jpeg", "jpg", "png"].includes(getExt(this))) {
@@ -388,6 +389,9 @@ Listener.setShare = function(recipe, linkSelector) {
   });
 };
 
+Listener.setEdit = function(recipe, linkSelector) {
+  
+};
 // Search listener
 
 Listener.setSearch = function(search) {
@@ -423,7 +427,6 @@ Listener.setAlertDismiss = function(dismisser, afterDismissFunc) {
     e.preventDefault();
     $("#alert").slideUp(200, function() {
       // $(this).html("");
-      debugger;
       if (typeof afterDismissFunc == "function") {
         afterDismissFunc();
       }
