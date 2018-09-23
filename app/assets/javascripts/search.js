@@ -35,6 +35,7 @@ Search.prototype.evaluateResp = function(resp) {
       Breadcrumb.search();
       break;
     case !!resp.users:
+    debugger;
       User.displayAllUsers(resp, "users", "#mainContent");
       Breadcrumb.search();
       break;

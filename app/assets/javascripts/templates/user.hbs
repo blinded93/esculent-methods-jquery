@@ -5,13 +5,14 @@
     </div>
   </div>
   <div class="row result">
-    <div class="profileImage col-12">
+    <div class="profileImage text-center col-12">
+      <img class="rounded img-fluid" src="{{avatarURL}}" id="userAvatar" alt="{{username}} Avatar">
       <form id="editProfileImage">
         <input type="hidden" name="authenticity_token">
         <label id="profileImageLabel" for="profileImageInput">
           <img id="upload" src="/assets/icons/upload-off.png" alt="Upload Image" title="Edit image">
         </label>
-        <input type="file" name="profileImage" id="profileImageInput">
+        <input type="file" name="avatar" id="profileImageInput">
       </form>
     </div>
   </div>
