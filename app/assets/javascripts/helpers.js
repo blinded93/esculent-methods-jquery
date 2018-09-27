@@ -15,6 +15,20 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 Handlebars.registerPartial("ingredient", Display.templates.ingredient);
 Handlebars.registerPartial("direction", Display.templates.direction);
 
+Handlebars.registerHelper("selectAttribute", function(attr, options) {
+  let $el = $("<select />").html(options.fn(this));
+  $el.find(`[value="${attr}"]`).attr("selected", true);
+  return $el.html();
+});
+
+Handlebars.registerHelper("textAreaDirection", function(direction, options) {
+  let $el = $("<li />").html(options.fn(this));
+  if (direction.length) {
+    $el.find("textarea").text(direction);
+  }
+  return $el.html();
+});
+
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
