@@ -11,6 +11,10 @@ Handlebars.registerHelper("debug", function(optionalValue) {
     console.log(optionalValue);
   }
 });
+
+Handlebars.registerPartial("ingredient", Display.templates.ingredient);
+Handlebars.registerPartial("direction", Display.templates.direction);
+
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
