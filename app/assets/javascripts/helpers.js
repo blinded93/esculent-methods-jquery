@@ -29,6 +29,11 @@ Handlebars.registerHelper("textAreaDirection", function(direction, options) {
   return $el.html();
 });
 
+Handlebars.registerHelper("idOrIndex", function(id, index, options) {
+  return id ? id : index;
+});
+
+//Javascript
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -65,3 +70,9 @@ function changeIconSrc(btn, imgName) {
 function getExt(element) {
   return $(element).val().split(".").pop().toLowerCase();
 }
+
+// function getFilename(path) {
+//   return $(path) {
+//
+//   }
+// }
