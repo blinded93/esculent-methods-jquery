@@ -126,24 +126,26 @@ Listener.setNewRecipe = function(user) {
     Display.fromTemplate("recipe_form").toElement("#mainContent")
       .done(function() {
         $(el).hide();
-        Listener.setNewRecipeForm(user);
+        Listener.setRecipeForm(user, "POST");
       });
   });
 };
 
-Listener.setNewRecipeForm = function(user) {
-  this.setAddIngredient()
-    .setAddDirection()
-    .setRemoveItems("ingredients")
-    .setNewRecipeSubmit(user);
+Listener.setRecipeForm = function(user, method, recipe) {
+  this.setAddItem("ingredient")
+    .setAddItem("direction")
+    .setRemoveItems("ingredient")
+    .setRemoveItems("direction")
+    .setRecipeSubmit(user, method, recipe);
   $("#recipeImage").change(function(e) {
     const text = !!this.files.length ? this.files[0].name : "Choose file (opt)...";
     $(".custom-file-label").text(text);
   });
 };
 
-Listener.setNewRecipeSubmit = function(user) {
-  $("#newRecipe").validate({
+Listener.setRecipeSubmit = function(user, method, recipe) {
+  const path = recipe ? `/users/${user.id}/recipes/${recipe.id}` : `/users/${user.id}/recipes`
+  $("#recipeForm").validate({
     onkeyup: function(element, event) {
       $(element).valid();
     },
@@ -163,14 +165,14 @@ Listener.setNewRecipeSubmit = function(user) {
     errorClass: "its-invalid is-invalid",
     validClass: "is-valid",
     errorPlacement: function(error, element) {
-      $("#newRecipeErrors").html(error);
+      $("#recipeFormErrors").html(error);
     },
     submitHandler: function(form, e) {
       e.preventDefault();
       const formData = new FormData(form);
       $.ajax({
-          type: 'POST',
-          url: `/users/${user.id}/recipes`,
+          type: method,
+          url: path,
           processData: false,
           contentType: false,
           data: formData,
