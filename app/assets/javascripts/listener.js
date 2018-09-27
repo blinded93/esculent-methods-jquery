@@ -195,23 +195,10 @@ Listener.setAddIngredient = function() {
   return this;
 };
 
-Listener.setAddDirection = function() {
-  $("#addDirection").click(function(e) {
-    e.preventDefault();
-    const id = randomId()
-    const html = `<li id="direction-${id}" class="directionList">` +
-                    `<textarea name="recipe[directions][]" class="form-control form-control-sm directions" rows="2"></textarea>`+
-                    `<button id='remove-${id}' class='ml-3 remove close'>&times;</button>`+
-                 `</li>`;
-    $("#recipeDirections").append(html);
-    Listener.setRemoveItem("direction", id, $(`#remove-${id}`));
-  });
-  return this;
-};
-
-Listener.setRemoveItems = function(itemsType) {
-  $(`#recipe${capitalize(itemsType)} .close`).each(function(i, el) {
-    Listener.setRemoveItem("ingredient", i+1, el);
+Listener.setRemoveItems = function(itemType) {
+  $(`#recipe${capitalize(itemType)}s .close`).each(function(i, el) {
+    const id = $(el).attr("id").match(/\d+/)[0];
+    Listener.setRemoveItem(itemType, id, el);
   });
   return this;
 };
