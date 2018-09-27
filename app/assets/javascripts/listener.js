@@ -31,6 +31,7 @@ Listener.setFooter = function(menu) {
 
 Listener.setNav = function(menu, resp) {
   const user = new User(resp.user);
+  $("#menu").data({menu:menu});
   const linkFunc = Display.linkSelector("#menu")
   this.setUser(user, linkFunc)
     .setUserRecipes(user, linkFunc, "#mainContent")
