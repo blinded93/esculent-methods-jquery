@@ -1,3 +1,16 @@
+// Handlebars
+Handlebars.registerHelper("debug", function(optionalValue) {
+  console.log("Context");
+  console.log("===");
+  console.log(this);
+  console.log(this.length)
+
+  if (optionalValue) {
+    console.log("Value");
+    console.log("===");
+    console.log(optionalValue);
+  }
+});
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
