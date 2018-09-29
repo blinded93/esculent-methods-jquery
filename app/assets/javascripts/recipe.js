@@ -86,7 +86,6 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
   const $i = $(`#${iconName}Img`);
   if (boolean) {
     changeIconSrc($i, `${onImg}`);
-    // $i.attr("src", `/assets/icons/${onImg}.png`);
     $i.off("mouseenter mouseleave");
   } else {
     $i.attr("src", `/assets/icons/${offImg}.png`);
@@ -96,18 +95,6 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
       changeIconSrc(this, `${offImg}`);
     });
   }
-};
-
-Recipe.prototype.share = function() {
-  const $shareImg = $(`#share-${this.id}`);
-  $shareImg.click(function(e) {
-    e.preventDefault();
-
-  }).hover(function() {
-    $(`#shareImg`).attr("src", `/assets/icons/share.png`);
-  }, function() {
-    $(`#shareImg`).attr("src", `/assets/icons/share-bw.png`);
-  });
 };
 
 Recipe.prototype.assignUser = function(user) {
