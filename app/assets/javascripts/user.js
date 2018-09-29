@@ -5,6 +5,10 @@ function User(json) {
   this.recipes = this.assignRecipes(json.recipes);
   this.favorites = [];
   this.friends = [];
+  if (json.avatar) {
+    this.avatarURL = json.avatar.url;
+    this.thumbURL = json.avatar.thumb.url;
+  }
 }
 
 User.displayAllUsers = function(data, userType, destination) {
