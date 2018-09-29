@@ -3,6 +3,22 @@ $cornflower: lighten(#1c4587, 20%);
 body {
   margin:auto;
   max-width: 1000px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+      width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+      background: white;
+  }
+
+  &::-webkit-scrollbar-thumb {
+      background: #CCD2D9;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+      background: #9F9F9F;
+  }
 }
 
 .centered {
