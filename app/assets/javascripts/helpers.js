@@ -59,6 +59,16 @@ function currentUser(identifier) {
   return $("#loggedInAs").data(identifier);
 }
 
+function getCurrentUser() {
+  $.get("/current_user")
+    .done((resp) => {
+      $("#loggedInAs").data({
+        "id": resp.user.id,
+        "username": resp.user.username
+      });
+    });
+}
+
 function randomId() {
   return Math.floor(Math.random() * 100000)
 }
