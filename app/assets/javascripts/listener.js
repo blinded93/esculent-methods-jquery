@@ -294,9 +294,11 @@ Listener.setProfileImageSubmit = function(user) {
         $("#userAvatar").fadeOut(200, function() {
           $("#userAvatar").attr("src", url);
         }).fadeIn(200);
+        const menu = $("#menu").data().menu;
+        menu.getType(menu);
       }
-    })
-  }
+    });
+  };
 };
 
 Listener.setPreview = function(user, tab, type) {
@@ -345,7 +347,8 @@ Listener.setRecipe = function(recipe, linkSelector) {
 Listener.setSocial = function(recipe) {
   const linkFunc = Display.linkSelector("#social");
   this.setFavorite(recipe, linkFunc)
-    .setShare(recipe, linkFunc);
+    .setShare(recipe, linkFunc)
+    .setEditRecipe(recipe, linkFunc);
   return this;
 };
 
@@ -370,16 +373,30 @@ Listener.fav = function(recipe) {
 };
 
 Listener.setShare = function(recipe, linkSelector) {
-
   $("#shareImg").hover(function() {
-    $(this).attr("src", `/assets/icons/share.png`);
+    changeIconSrc(this, "share");
   }, function() {
-    $(this).attr("src", `/assets/icons/share-bw.png`);
-  });
+    changeIconSrc(this, "share-bw");
+  }).click(function(e) {
+    e.preventDefault();
+
+  })
+  return this;
 };
 
-Listener.setEdit = function(recipe, linkSelector) {
-  
+Listener.setEditRecipe = function(recipe, linkSelector) {
+  $("#editImg").hover(function() {
+    changeIconSrc(this, "edit");
+  }, function() {
+    changeIconSrc(this, "edit-bw");
+  }).click(function(e) {
+    e.preventDefault();
+    Display.fromTemplate("recipe_form", recipe)
+      .toElement("#mainContent")
+      .done(function() {
+        Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
+      });
+  })
 };
 // Search listener
 
