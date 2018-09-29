@@ -85,14 +85,15 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
   const onImg = `${iconName}`;
   const $i = $(`#${iconName}Img`);
   if (boolean) {
-    $i.attr("src", `/assets/icons/${onImg}.png`);
+    changeIconSrc($i, `${onImg}`);
+    // $i.attr("src", `/assets/icons/${onImg}.png`);
     $i.off("mouseenter mouseleave");
   } else {
     $i.attr("src", `/assets/icons/${offImg}.png`);
     $i.hover(function() {
-      $(this).attr("src", `/assets/icons/${onImg}.png`);
+      changeIconSrc(this, `${onImg}`);
     }, function() {
-      $(this).attr("src", `/assets/icons/${offImg}.png`);
+      changeIconSrc(this, `${offImg}`);
     });
   }
 };
