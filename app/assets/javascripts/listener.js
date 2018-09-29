@@ -185,14 +185,13 @@ Listener.setRecipeSubmit = function(user, method, recipe) {
   return this;
 };
 
-Listener.setAddIngredient = function() {
-  $("#addIngredient").click(function(e) {
+Listener.setAddItem = function(itemType) {
+  $(`#add${capitalize(itemType)}`).click(function(e) {
     e.preventDefault();
-    const i = {};
-    i.id = randomId();
-    Display.fromTemplate("ingredient", i);
-    $("#recipeIngredients").append(Display.html);
-    Listener.setRemoveItem("ingredient", i.id, $(`#remove-${i.id}`));
+    const i = {id:randomId()};
+    Display.fromTemplate(itemType, i);
+    $(`#recipe${capitalize(itemType)}s`).append(Display.html);
+    Listener.setRemoveItem(itemType, i.id, $(`#remove-${i.id}`));
   });
   return this;
 };
