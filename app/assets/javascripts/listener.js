@@ -272,9 +272,7 @@ Listener.setProfileImageTypeCheck = function(user) {
         $("#profileImageInput").val("");
         $(this).removeClass(border).dequeue();
       });
-      Display.createProfileImageErrorAlert()
-        .toggleAlert();
-
+      Display.createErrorAlert("Profile image must be jpeg or png.");
     }
   });
 };
@@ -391,11 +389,16 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
     changeIconSrc(this, "edit-bw");
   }).click(function(e) {
     e.preventDefault();
-    Display.fromTemplate("recipe_form", recipe)
+    getCurrentUser();
+    if (isLoggedInAs(recipe.owner.id)) {
+      Display.fromTemplate("recipe_form", recipe)
       .toElement("#mainContent")
       .done(function() {
         Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
       });
+    } else {
+      Display.createErrorAlert("You do not own this recipe.")
+    }
   })
 };
 // Search listener

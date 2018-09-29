@@ -57,9 +57,8 @@ Display.createEditImageAlert = function(imgName, user) {
   return this;
 };
 
-Display.createProfileImageErrorAlert = function() {
-  const html = `Profile image must be jpeg or png.`
-  this.alert(html, "danger");
+Display.createErrorAlert = function(message) {
+  this.alert(message, "danger");
   return this;
 };
 
