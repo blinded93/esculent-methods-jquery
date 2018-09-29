@@ -26,14 +26,17 @@ class Recipe < ApplicationRecord
   def ingredient_attributes=(ingredients)
     ingredients.each do |ingredient|
       i = Ingredient.find_or_create_by(name:ingredient[:name].capitalize)
-      self.ingredient_amounts.build.tap do |ia|
+      self.ingredient_amounts.find_or_initialize_by(id:ingredient[:id]).tap do |ia|
         ia.quantity = ingredient[:quantity]
         ia.unit = ingredient[:unit]
-        ia.state = ingredient[:state].include?("State") ? "" : ingredient[:state]
+        ia.state = ingredient[:state]
         ia.ingredient = i
         ia.save
       end
     end
+    old = self.ingredient_amounts.pluck(:id)
+    current = ingredients.pluck(:id).map(&:to_i)
+    IngredientAmount.delete(old - current)
   end
 
   def self.with_ingredients(ingredient_ids)
