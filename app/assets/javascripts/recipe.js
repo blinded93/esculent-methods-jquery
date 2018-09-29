@@ -55,7 +55,7 @@ Recipe.prototype.get = function() {
 
 Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
-  recipe.owner = this.owner;
+  recipe.owner ? recipe.owner : recipe.owner = this.owner;
   Display.fromTemplate("recipe", recipe)
     .toElement("#mainContent")
       .done(function() {
