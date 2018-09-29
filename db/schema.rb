@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_23_034341) do
+ActiveRecord::Schema.define(version: 2018_09_19_233751) do
 
   create_table "favorited_recipes", force: :cascade do |t|
     t.text "notes"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 2018_06_23_034341) do
 
   create_table "recipes", force: :cascade do |t|
     t.string "name"
-    t.string "directions"
+    t.text "directions"
     t.integer "cook_time"
     t.integer "prep_time"
     t.integer "servings"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 2018_06_23_034341) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image"
     t.index ["user_id"], name: "index_recipes_on_user_id"
   end
 
@@ -77,6 +78,7 @@ ActiveRecord::Schema.define(version: 2018_06_23_034341) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "avatar"
   end
 
 end
