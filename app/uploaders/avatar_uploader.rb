@@ -7,6 +7,10 @@ class AvatarUploader < CarrierWave::Uploader::Base
     "uploads/users/user-#{model.id}"
   end
 
+  def default_url(*args)
+    ActionController::Base.helpers.asset_path("placeholders/" + [version_name, "portrait"].compact.join('_'))
+  end
+
   process resize_to_fit: [500, 200]
 
   version :thumb do
