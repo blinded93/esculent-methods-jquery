@@ -3,15 +3,15 @@ class RecipesController < ApplicationController
 
   def index
     recipes = Recipe.by_favorites
-    render json: recipes, status: 200
+    render json: recipes,
+           status: 200
   end
 
   def create
     recipe = current_user.recipes.create(recipe_params)
-    # binding.pry
     render json: recipe,
            serializer: RecipeIngredientsSerializer,
-           include:['ingredient_amounts.ingredient'],
+           include: ['ingredient_amounts.ingredient'],
            status: 200
   end
 
@@ -19,7 +19,16 @@ class RecipesController < ApplicationController
     recipe = Recipe.find_by_id(params[:id])
     render json: recipe,
            serializer: RecipeIngredientsSerializer,
-           include:['ingredient_amounts.ingredient'],
+           include: ['ingredient_amounts.ingredient'],
+           status: 200
+  end
+
+  def update
+    recipe = Recipe.find_by_id(params[:id])
+    recipe.update(recipe_params)
+    render json: recipe,
+           serializer: RecipeIngredientsSerializer,
+           include: ['ingredient_amounts.ingredient'],
            status: 200
   end
 
@@ -29,7 +38,7 @@ class RecipesController < ApplicationController
       @f.favorited?
     end
     render json: @f,
-           status:200
+           status: 200
   end
 
   def favorite
@@ -40,7 +49,7 @@ class RecipesController < ApplicationController
       @f.errors[:loggedOut] = ("Must be logged in to do that")
     end
     render json: @f,
-           status:200
+           status: 200
   end
 
   private
@@ -49,6 +58,6 @@ class RecipesController < ApplicationController
     end
 
     def recipe_params
-      params.require(:recipe).permit(:name, :cook_time, :prep_time, :servings, :skill_level, :image, :directions => [], ingredient_attributes:[:quantity, :unit, :name, :state])
+      params.require(:recipe).permit(:name, :cook_time, :prep_time, :servings, :skill_level, :image, :directions => [], ingredient_attributes:[:id, :quantity, :unit, :name, :state])
     end
 end
