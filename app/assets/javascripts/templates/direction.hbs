@@ -1,0 +1,6 @@
+<li id="direction-{{idOrIndex id @index}}" class="directionList">
+  {{#textAreaDirection this}}
+    <textarea name="recipe[directions][]" class="form-control form-control-sm directions" rows="3" required minlength="50"></textarea>
+    <button id='remove-{{idOrIndex id @index}}' class='ml-3 remove close'>&times;</button>
+  {{/textAreaDirection}}
+</li>
