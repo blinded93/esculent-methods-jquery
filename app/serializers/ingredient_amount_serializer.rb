@@ -1,4 +1,4 @@
 class IngredientAmountSerializer < ActiveModel::Serializer
-  attributes :unit, :quantity, :state
+  attributes :id, :unit, :quantity, :state
   belongs_to :ingredient
 end
