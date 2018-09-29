@@ -7,6 +7,10 @@ class ImageUploader < CarrierWave::Uploader::Base
     "uploads/recipes/recipe-#{model.id}"
   end
 
+  def extension_whitelist
+    %w(jpg jpeg gif png)
+  end
+
   def default_url(*args)
     ActionController::Base.helpers.asset_path("placeholders/" + [version_name, "recipe.png"].compact.join('_'))
   end
