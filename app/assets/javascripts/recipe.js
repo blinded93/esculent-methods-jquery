@@ -17,7 +17,10 @@ function Recipe(json) {
 Recipe.getAllRecipes = function() {
   $.get("/recipes")
     .done(function(data) {
-    Recipe.displayAllRecipes(data, "recipes", "#mainContent");
+      Recipe.displayAllRecipes(data, "recipes", "#mainContent")
+        .done(function(pageObj) {
+          pageObj.setLinks("/recipes")
+        })
   });
 };
 
