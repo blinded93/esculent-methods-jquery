@@ -15,6 +15,14 @@ Search.prototype.typeToURL = function(givenType) {
   if (type === ":u") { return "/user_search"; }
 };
 
+Search.prototype.processQuery = function() {
+  if ($("#type").val() === ":i") {
+    return $("#query").val().split(",").map(w => w.trim());
+  } else {
+    return $("#query").val();
+  }
+};
+
 Search.backToResultsLink = function() {
   if (!!$(".searchLink").length) {
     Display.toggleAlert();
