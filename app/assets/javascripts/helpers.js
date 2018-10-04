@@ -3,7 +3,6 @@ Handlebars.registerHelper("debug", function(optionalValue) {
   console.log("Context");
   console.log("===");
   console.log(this);
-  console.log(this.length)
 
   if (optionalValue) {
     console.log("Value");
@@ -31,6 +30,30 @@ Handlebars.registerHelper("textAreaDirection", function(direction, options) {
 
 Handlebars.registerHelper("idOrIndex", function(id, index, options) {
   return id ? id : index;
+});
+
+Handlebars.registerHelper("direction", function(direction, options) {
+  let $el = $("<div />").html(options.fn(this));
+  if (!direction) {
+    $el.find("li").addClass("disabled");
+  }
+  return $el.html();
+});
+
+Handlebars.registerHelper("firstLast", function(place, current, options) {
+  let $el = $("<div />").html(options.fn(this));
+  $el.find("a").data("page", place);
+  if (place != current && Math.abs(current - place) != 1) {
+    return $el.html();
+  }
+});
+
+Handlebars.registerHelper("prevNext", function(direction, options){
+  let $el = $("<div />").html(options.fn(this));
+  if (direction) {
+    $el.find("a").text(direction);
+    return $el.html();
+  }
 });
 
 //Javascript
