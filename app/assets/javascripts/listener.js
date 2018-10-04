@@ -404,6 +404,9 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
 // Search listener
 
 Listener.setSearch = function(search) {
+  $("#query").on("keyup", function(e) {
+    $(this).removeClass("is-invalid");
+  })
   search.submit.click(function(e) {
     e.preventDefault();
     $.post("/search", search.form.serialize())
