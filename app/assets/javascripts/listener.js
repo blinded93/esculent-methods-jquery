@@ -408,15 +408,22 @@ Listener.setSearch = function(search) {
     $(this).removeClass("is-invalid");
   })
   search.submit.click(function(e) {
+    const url = search.typeToURL();
+    const query = search.processQuery();
     e.preventDefault();
-    $.post("/search", search.form.serialize())
+    $.get(url, {query:query})
       .done(function(data) {
-        search.type = $("#type").val()
-        search.query = $("#query").val()
-        search.populateData()
+        if ($("#query").val()) {
+          search.type = $("#type").val()
+          search.query = $("#query").val()
+          search.populateData(data.meta)
           .resetSearchAlert()
           .evaluateResp(data)
-        $("#query").val("");
+          $("#query").val("");
+        } else {
+          $("#query").addClass("is-invalid");
+          Display.createSearchErrorAlert();
+        }
       });
   });
 };
