@@ -40,8 +40,13 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
       removeElements = ".recipeOwnerLink";
     }
     Display.fromTemplate("recipes", {recipes:recipes})
-      .toElement(destination, removeElements).done(() => Listener.setRecipeResults(recipes));
+      .toElement(destination, removeElements).done(function() {
+        Listener.setRecipeResults(recipes);
+        Display.fromTemplate("pagination", pageObj)
+          .toElement("#paginationNav", "", 1).done(function() {
             dfd.resolve(pageObj);
+          });
+      });
   }
   return dfd.promise();
 };
