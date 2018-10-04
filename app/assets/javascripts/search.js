@@ -42,16 +42,15 @@ Search.prototype.evaluateResp = function(resp) {
         Breadcrumb.search();
       });
   }
-  // search.populateData();
   Display.createSearchAlert(search.form.data("query"));
   return this;
 };
 
-Search.prototype.populateData = function() {
+Search.prototype.populateData = function(meta) {
   const data = {
     type: (this.type || $("#search").data("type")),
     query: (this.query || $("#search").data("query")),
-    page: 1,
+    page: meta.page,
     search: this
   }
   $("#search").data(data);
