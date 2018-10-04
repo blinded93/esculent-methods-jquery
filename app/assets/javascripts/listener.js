@@ -432,9 +432,10 @@ Listener.setBackToResults = function() {
   const $goBack = $("#toSearchResults");
   const data = $("#search").data();
   const search = data.search;
+  const url = search.typeToURL(data.type);
   $goBack.one("click", function(e) {
     e.preventDefault();
-    $.post("/search", encodeURI(`type=${data.type}&query=${data.query}`))
+    $.get(url, {query:data.query, page: data.page})
       .done(resp => search.evaluateResp(resp));
   });
 };
