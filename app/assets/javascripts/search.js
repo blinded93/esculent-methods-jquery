@@ -47,7 +47,8 @@ Search.prototype.evaluateResp = function(resp) {
   } else if (!!resp.recipes) {
     Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
       .done(function(pageObj) {
-        pageObj.setLinks("/recipe_search", {query:$("#search").data("query")});
+        const url = $("#search").data("type") === ":r" ? "/recipe_search" : "/ingredient_search";
+        pageObj.setLinks(url, {query:$("#search").data("query")});
         Breadcrumb.search();
       });
   } else if (!!resp.users) {
