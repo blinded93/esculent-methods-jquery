@@ -2,8 +2,9 @@ class RecipesController < ApplicationController
   before_action :create_favorited_recipe_service, only: [:favorited, :favorite]
 
   def index
-    recipes = Recipe.by_favorites
+    pagy, recipes = pagy(Recipe.by_favorites, {items: 5})
     render json: recipes,
+           meta: pagy,
            status: 200
   end
 
@@ -49,6 +50,13 @@ class RecipesController < ApplicationController
       @f.errors[:loggedOut] = ("Must be logged in to do that")
     end
     render json: @f,
+           status: 200
+  end
+
+  def search
+    meta, recipes = pagy(Recipe.search(params[:query]), {items: 5, query:params[:query]})
+    render json: recipes,
+           meta: meta,
            status: 200
   end
 

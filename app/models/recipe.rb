@@ -15,9 +15,11 @@ class Recipe < ApplicationRecord
     .order(Arel.sql('COUNT(favorited_recipes.id) DESC'))
   }
   scope :alphabetized, -> { order(:name).pluck(:name) }
-  scope :with_ingredient, -> (ingredient_id) {
+  scope :with_ingredients, -> (ingredient_ids) {
     joins(:ingredient_amounts).
-    where(ingredient_amounts: {ingredient_id: ingredient_id})
+    where(ingredient_amounts:{ingredient_id: ingredient_ids}).
+    group("recipes.id").
+    having("count(recipes.id) >= ?", ingredient_ids.length)
   }
   scope :for, -> (user_id) { where(user_id: user_id) }
   scope :search, -> (query) { where("name like ?", "%#{query}%") }
@@ -25,7 +27,7 @@ class Recipe < ApplicationRecord
 
   def ingredient_attributes=(ingredients)
     ingredients.each do |ingredient|
-      i = Ingredient.find_or_create_by(name:ingredient[:name].capitalize)
+      i = Ingredient.find_or_create_by(name:ingredient[:name].downcase)
       self.ingredient_amounts.find_or_initialize_by(id:ingredient[:id]).tap do |ia|
         ia.quantity = ingredient[:quantity]
         ia.unit = ingredient[:unit]
@@ -37,14 +39,5 @@ class Recipe < ApplicationRecord
     old = self.ingredient_amounts.pluck(:id)
     current = ingredients.pluck(:id).map(&:to_i)
     IngredientAmount.delete(old - current)
-  end
-
-  def self.with_ingredients(ingredient_ids)
-    recipes = []
-    ingredient_ids.each do |id|
-      r = Recipe.with_ingredient(id)
-      recipes.push(r)
-    end
-    recipes.reduce(:&) || {recipes:[]};
   end
 end
