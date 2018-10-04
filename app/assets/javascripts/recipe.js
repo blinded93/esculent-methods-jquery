@@ -23,6 +23,7 @@ Recipe.getAllRecipes = function() {
 
 Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const recipesJson = data[`${recipeType}`];
+  const pageObj = new Paginate(data.meta);
   const recipes = this.createFrom(recipesJson);
   let removeElements;
   if (destination === "#mainContent") {
