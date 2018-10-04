@@ -23,22 +23,24 @@ Search.prototype.displayErrors = function(resp) {
 
 Search.prototype.evaluateResp = function(resp) {
   const search = this;
-  switch (true) {
-    case !!resp.search:
-      search.errors = resp.search.errors;
-      search.displayErrors(resp);
-      Listener.setHome();
-      Breadcrumb.reset();
-      break;
-    case !!resp.recipes:
-      Recipe.displayAllRecipes(resp, "recipes", "#mainContent");
-      Breadcrumb.search();
-      break;
-    case !!resp.users:
-    debugger;
-      User.displayAllUsers(resp, "users", "#mainContent");
-      Breadcrumb.search();
-      break;
+  if (!resp.recipes.length) {
+    const selected = $("#type option:selected").text();
+    search.errors = `No ${selected} found.`
+    search.displayErrors({search:search});
+    Listener.setHome();
+    Breadcrumb.reset();
+  } else if (!!resp.recipes) {
+    Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
+      .done(function(pageObj) {
+        pageObj.setLinks("/recipe_search", {query:$("#search").data("query")});
+        Breadcrumb.search();
+      });
+  } else if (!!resp.users) {
+    User.displayAllUsers(resp, "users", "#mainContent")
+      .done(function(pageObj) {
+        pageObj.setLinks("/user_search", {query:$("#search").data("query")});
+        Breadcrumb.search();
+      });
   }
   // search.populateData();
   Display.createSearchAlert(search.form.data("query"));
