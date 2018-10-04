@@ -51,6 +51,10 @@ body {
   }
 }
 
+.page-link {
+  padding: 0.25rem 0.65rem;
+}
+
 button:focus {
   outline: 0;
 }
@@ -78,4 +82,13 @@ a {
 hr {
   margin-top:0;
   margin-bottom:0;
+}
+
+.pagination a {
+  color:$cornflower;
+}
+
+.active.page-item .page-link {
+  background-color: $cornflower !important;
+  border-color: $cornflower !important;
 }
