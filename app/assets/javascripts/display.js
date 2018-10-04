@@ -43,6 +43,10 @@ Display.createAlert = function(message, type) {
   return this;
 };
 
+Display.createSearchErrorAlert = function() {
+  this.alert("A search term is required.", "danger")
+}
+
 Display.createSearchAlert = function(query) {
   const html = `<a href='' id='toSearchResults'>Return to results for '${query}'...</a><button id='alertDismiss' type='button' class='close'><span>&times;</span></button>`;
   this.createAlert(html, "light");
