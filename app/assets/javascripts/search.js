@@ -8,6 +8,13 @@ Search.setup = function() {
   Listener.setSearch(search);
 };
 
+Search.prototype.typeToURL = function(givenType) {
+  const type = givenType || $("#type").val();
+  if (type === ":r") { return "/recipe_search"; } else
+  if (type === ":i") { return "/ingredient_search"; } else
+  if (type === ":u") { return "/user_search"; }
+};
+
 Search.backToResultsLink = function() {
   if (!!$(".searchLink").length) {
     Display.toggleAlert();
