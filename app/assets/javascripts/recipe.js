@@ -22,6 +22,7 @@ Recipe.getAllRecipes = function() {
 };
 
 Recipe.displayAllRecipes = function(data, recipeType, destination) {
+  const dfd = new $.Deferred();
   const recipesJson = data[`${recipeType}`];
   const pageObj = new Paginate(data.meta);
   const recipes = this.createFrom(recipesJson);
@@ -37,7 +38,9 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
     }
     Display.fromTemplate("recipes", {recipes:recipes})
       .toElement(destination, removeElements).done(() => Listener.setRecipeResults(recipes));
+            dfd.resolve(pageObj);
   }
+  return dfd.promise();
 };
 
 Recipe.createFrom = function(data) {
