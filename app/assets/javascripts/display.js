@@ -18,11 +18,12 @@ Display.fromTemplate = function(template, obj) {
   return this;
 };
 
-Display.toElement = function(elementId, removeElements) {
+Display.toElement = function(elementId, removeElements, time) {
   const html = this.html;
   const dfd = new $.Deferred();
-  $(`${elementId}`).fadeOut(250, function() {
-    $(this).html(html).fadeIn(250);
+  const t = time || 250;
+  $(`${elementId}`).fadeOut(t, function() {
+    $(this).html(html).fadeIn(t);
     $(this).find(removeElements).remove();
     dfd.resolve();
   });
