@@ -60,6 +60,14 @@ class RecipesController < ApplicationController
            status: 200
   end
 
+  def ingredient_search
+    ingredient_ids = Ingredient.ids_from_names(params[:query])
+    meta, recipes = pagy(Recipe.with_ingredients(ingredient_ids), {items: 5, query:params[:query]})
+    render json: recipes,
+           meta: meta,
+           status: 200
+  end
+
   private
     def create_favorited_recipe_service
       @f = FavoritedRecipeService.new(recipe_id:params[:recipe_id])
