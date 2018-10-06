@@ -12,7 +12,10 @@ function User(json) {
 }
 
 User.displayAllUsers = function(data, userType, destination) {
+  const dfd = new $.Deferred();
   const usersJson = data[`${userType}`]
+  const pageObj = new Paginate(data.meta);
+  pageObj.destination = destination;
   const users = User.createFrom(usersJson);
   if (destination === "#mainContent") {
     Breadcrumb.userAssets(data, "Friends");
@@ -21,11 +24,15 @@ User.displayAllUsers = function(data, userType, destination) {
     Display.nothingHere(destination);
   } else {
     Display.fromTemplate("users", {users:users})
-      .toElement(destination)
-        .done(function() {
+      .toElement(destination).done(function() {
           Listener.setUserResults(users);
-        });
+          Display.fromTemplate("pagination", pageObj)
+            .toElement("#pageinationNav", 1).done(function() {
+              dfd.resolve(pageObj);
+            });
+      });
   }
+  return dfd.promise();
 };
 
 User.createFrom = function(data) {
@@ -54,47 +61,36 @@ User.prototype.displayProfile = function() {
 };
 
 User.prototype.displayPreview = function(tab, type) {
-  const user = this;
   const assets = this[`${tab.toLowerCase()}`];
+  const url = `/users/${this.id}/${tab.toLowerCase()}`;
   Listener.setSeeAll(this, tab, type);
   if (type === "recipes") {
-    const url = `/users/${user.id}/${tab.toLowerCase()}`;
     Recipe.displayAllRecipes(assets, type, "#profileContent")
       .done(function(pageObj) {
         pageObj.setLinks(url);
       })
   } else {
-    User.displayAllUsers(this, tab.toLowerCase(), "#profileContent");
+    User.displayAllUsers(this, tab.toLowerCase(), "#profileContent")
+      .done(function(pageObj) {
+        pageObj.setLinks(url);
+      });
   }
 };
 
 User.prototype.getRecipes = function(preview) {
   const user = this;
-  const dfd = $.Deferred();
   const previewObj = preview ? {"preview":preview} : {};
-  $.get(`/users/${user.id}/recipes`, previewObj)
-    .done(function(data) {
-      dfd.resolve(data);
-    });
-    return dfd.promise();
+  return $.get(`/users/${user.id}/recipes`, previewObj);
 };
 
 User.prototype.getFavorites = function(preview) {
   const user = this;
-  const dfd = $.Deferred();
-  $.get(`/users/${user.id}/favorites`, {"preview":preview})
-    .done(function(data) {
-      dfd.resolve(data);
-    });
-    return dfd.promise();
+  const previewObj = preview ? {"preview":preview} : {};
+  return $.get(`/users/${user.id}/favorites`, {"preview":preview});
 };
 
 User.prototype.getFriends = function(preview) {
   const user = this;
-  const dfd = $.Deferred();
-  $.get(`/users/${user.id}/friends`, {"preview":preview})
-    .done(function(data) {
-      dfd.resolve(data);
-    });
-    return dfd.promise();
+  const previewObj = preview ? {"preview":preview} : {};
+  return $.get(`/users/${user.id}/friends`, {"preview":preview});
 };
