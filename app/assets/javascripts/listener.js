@@ -155,7 +155,7 @@ Listener.setRecipeSubmit = function(user, method, recipe) {
     },
     rules: {
       "recipe[image]": {
-        extension: "jpg|jpeg|gif|png"
+        extension: "jpg|jpeg|png"
       }
     },
     messages: {
@@ -270,7 +270,7 @@ Listener.setEditProfileImageBtn = function(user) {
 Listener.setProfileImageTypeCheck = function(user) {
   $("#profileImageInput").change(function(e) {
     const imgName = this.value.replace(/^.*[\\\/]/, '');
-    if (["jpeg", "jpg", "gif", "png"].includes(getExt(this))) {
+    if (["jpeg", "jpg", "png"].includes(getExt(this))) {
       Display.createEditImageAlert(imgName, user)
         .toggleAlert();
     } else {
