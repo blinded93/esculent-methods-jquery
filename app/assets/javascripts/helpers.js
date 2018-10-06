@@ -14,6 +14,10 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 Handlebars.registerPartial("ingredient", Display.templates.ingredient);
 Handlebars.registerPartial("direction", Display.templates.direction);
 
+Handlebars.registerHelper("filename", function(imageUrl) {
+  let filename = getFilename(imageUrl)
+  return filename.slice(0, 48) + "...";
+});
 Handlebars.registerHelper("showIfMoreThanOnePage", function(pages, options) {
   let $el = $("<div />").html(options.fn(this));
   if (pages > 1) { return $el.html(); }
@@ -109,8 +113,6 @@ function getExt(element) {
   return $(element).val().split(".").pop().toLowerCase();
 }
 
-// function getFilename(path) {
-//   return $(path) {
-//
-//   }
-// }
+function getFilename(path) {
+  return path.match(/[^/]+$/)[0];
+}
