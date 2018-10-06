@@ -30,21 +30,17 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const pageObj = new Paginate(data.meta);
   pageObj.destination = destination;
   const recipes = this.createFrom(recipesJson);
-  let removeElements;
   if (destination === "#mainContent") {
     Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
   }
   if (isEmpty(recipes)) {
     Display.nothingHere(destination);
   } else {
-    if (data instanceof User) {
-      removeElements = ".recipeOwnerLink";
-    }
     Display.fromTemplate("recipes", {recipes:recipes})
-      .toElement(destination, removeElements).done(function() {
+      .toElement(destination).done(function() {
         Listener.setRecipeResults(recipes);
         Display.fromTemplate("pagination", pageObj)
-          .toElement("#paginationNav", "", 1).done(function() {
+          .toElement("#paginationNav", 1).done(function() {
             dfd.resolve(pageObj);
           });
       });

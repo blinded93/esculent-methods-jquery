@@ -14,10 +14,17 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 Handlebars.registerPartial("ingredient", Display.templates.ingredient);
 Handlebars.registerPartial("direction", Display.templates.direction);
 
+Handlebars.registerHelper("ifUnowned", function(id, options) {
+  let $el = $("<div />").html(options.fn(this));
+  if (!$(".breadcrumb-item").last().text().includes("My")) {
+    return $el.html();
+  }
+})
 Handlebars.registerHelper("filename", function(imageUrl) {
   let filename = getFilename(imageUrl)
   return filename.slice(0, 48) + "...";
 });
+
 Handlebars.registerHelper("showIfMoreThanOnePage", function(pages, options) {
   let $el = $("<div />").html(options.fn(this));
   if (pages > 1) { return $el.html(); }
