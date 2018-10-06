@@ -111,9 +111,13 @@ Listener.setUserRecipes = function(user, linkSelector, destination) {
     Search.backToResultsLink();
     const preview = destination === "#mainContent" ? null : true;
     user.getRecipes(preview)
-      .done(function(recipes) {
-        user.recipes = recipes;
+      .done(function(data) {
+        user.recipes = data.recipes;
+        user.meta = data.meta;
         Recipe.displayAllRecipes(user, "recipes", destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/recipes`, preview);
+          });
       });
   });
   return this;
@@ -216,9 +220,13 @@ Listener.setUserFavorites = function(user, linkSelector, destination) {
     Search.backToResultsLink();
     const preview = destination === "#mainContent" ? null : true;
     user.getFavorites(preview)
-      .done(function(recipes) {
-        user.favorites = Recipe.createFrom(recipes);
+      .done(function(data) {
+        user.favorites = data.recipes;
+        user.meta = data.meta;
         Recipe.displayAllRecipes(user, "favorites", destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/favorites`, preview);
+          });
       });
   });
   return this;
@@ -244,7 +252,6 @@ Listener.setProfile = function(user) {
       user.displayPreview("Recipes", "recipes");
     });
   Listener.setEditProfileImageBtn(user)
-    // .setProfileImageSubmit(user)
     .setPreview(user, "Recipes", "recipes")
     .setPreview(user, "Favorites", "recipes")
     .setPreview(user, "Friends", "users");
