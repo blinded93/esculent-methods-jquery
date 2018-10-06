@@ -28,6 +28,7 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const dfd = new $.Deferred();
   const recipesJson = data[`${recipeType}`];
   const pageObj = new Paginate(data.meta);
+  pageObj.destination = destination;
   const recipes = this.createFrom(recipesJson);
   let removeElements;
   if (destination === "#mainContent") {

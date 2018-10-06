@@ -5,6 +5,7 @@ function Paginate(meta) {
   this.last = meta.pages;
   this.next = meta.next;
   this.query = meta.vars.query;
+  this.destination;
 }
 
 Paginate.prototype.setLinks = function(url, params) {
@@ -16,13 +17,14 @@ Paginate.prototype.setLinks = function(url, params) {
 };
 
 Paginate.prototype.setLink = function(link, url, params) {
+  const _this = this;
   const page = $(link).data("page");
   $(link).click(function(e) {
     e.preventDefault();
       if (!$(link).parent().is(".disabled", ".active")) {
         $.get(url + `?page=${page}`, params)
           .done(function(data) {
-            Recipe.displayAllRecipes(data, "recipes", "#mainContent")
+            Recipe.displayAllRecipes(data, "recipes", _this.destination)
               .done(function(pageObj) {
                 pageObj.setLinks(url, params);
               });
