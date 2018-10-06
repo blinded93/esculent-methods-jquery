@@ -15,7 +15,7 @@
           </a>
         </span>
       </div>
-      <div class="small">
+      <div id="recipeInfo" class="small">
         Cook Time: <span class="blue">{{cookTime}} min</span> |
         Prep Time: <span class="blue">{{prepTime}} min</span> |
         Difficulty: <span class="blue">{{skillLevel}}</span>
@@ -24,7 +24,7 @@
   </div>
   <div class="row result">
     {{#if imageUrl}}
-      <img src="{{imageUrl}}" alt="">
+      <img class="mx-auto" src="{{imageUrl}}" alt="">
     {{else}}
       <div class="image col-12">
       </div>
