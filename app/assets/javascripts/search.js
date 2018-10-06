@@ -31,35 +31,42 @@ Search.backToResultsLink = function() {
   }
 };
 
-Search.prototype.displayErrors = function(resp) {
-  Display.fromTemplate("error", resp)
-    .toElement("#mainContent");
-};
-
 Search.prototype.evaluateResp = function(resp) {
   const search = this;
-  if (!resp.recipes.length) {
-    const selected = $("#type option:selected").text();
-    search.errors = `No ${selected} found.`
-    search.displayErrors({search:search});
-    Listener.setHome();
-    Breadcrumb.reset();
-  } else if (!!resp.recipes) {
-    Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
-      .done(function(pageObj) {
-        const url = $("#search").data("type") === ":r" ? "/recipe_search" : "/ingredient_search";
-        pageObj.setLinks(url, {query:$("#search").data("query")});
-        Breadcrumb.search();
-      });
+  if (!!resp.recipes) {
+    this.evaluateRecipes(resp);
   } else if (!!resp.users) {
-    User.displayAllUsers(resp, "users", "#mainContent")
-      .done(function(pageObj) {
-        pageObj.setLinks("/user_search", {query:$("#search").data("query")});
-        Breadcrumb.search();
-      });
+    this.evaluateUsers(resp);
   }
-  Display.createSearchAlert(search.form.data("query"));
+  Display.createSearchAlert(this.form.data("query"));
   return this;
+};
+
+Search.prototype.evaluateRecipes = function(resp) {
+  const search = this;
+  if (!!resp.recipes.length) {
+    Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
+    .done(function(pageObj) {
+      const url = $("#search").data("type") === ":r" ? "/recipe_search" : "/ingredient_search";
+      pageObj.setLinks(url, {query:$("#search").data("query")});
+      Breadcrumb.search();
+    });
+  } else {
+    search.displayErrors();
+  }
+};
+
+Search.prototype.evaluateUsers = function(resp) {
+  const search = this;
+  if (!!resp.users.length) {
+    User.displayAllUsers(resp, "users", "#mainContent")
+    .done(function(pageObj) {
+      pageObj.setLinks("/user_search", {query:$("#search").data("query")});
+      Breadcrumb.search();
+    });
+  } else {
+    search.displayErrors();
+  }
 }
 
 Search.prototype.displayErrors = function() {
