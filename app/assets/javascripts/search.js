@@ -60,6 +60,19 @@ Search.prototype.evaluateResp = function(resp) {
   }
   Display.createSearchAlert(search.form.data("query"));
   return this;
+}
+
+Search.prototype.displayErrors = function() {
+  this.getError();
+  Display.fromTemplate("error", this)
+  .toElement("#mainContent");
+};
+
+Search.prototype.getError = function() {
+  const selected = $("#type option:selected").text();
+  this.errors = `No ${selected} found.`;
+  Listener.setHome();
+  Breadcrumb.reset();
 };
 
 Search.prototype.populateData = function(meta) {
