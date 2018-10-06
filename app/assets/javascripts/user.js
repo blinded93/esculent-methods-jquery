@@ -54,10 +54,15 @@ User.prototype.displayProfile = function() {
 };
 
 User.prototype.displayPreview = function(tab, type) {
+  const user = this;
   const assets = this[`${tab.toLowerCase()}`];
   Listener.setSeeAll(this, tab, type);
   if (type === "recipes") {
-    Recipe.displayAllRecipes(this, tab.toLowerCase(), "#profileContent");
+    const url = `/users/${user.id}/${tab.toLowerCase()}`;
+    Recipe.displayAllRecipes(assets, type, "#profileContent")
+      .done(function(pageObj) {
+        pageObj.setLinks(url);
+      })
   } else {
     User.displayAllUsers(this, tab.toLowerCase(), "#profileContent");
   }
@@ -69,8 +74,7 @@ User.prototype.getRecipes = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
   $.get(`/users/${user.id}/recipes`, previewObj)
     .done(function(data) {
-      const recipes = Recipe.createFrom(data.recipes);
-      dfd.resolve(recipes);
+      dfd.resolve(data);
     });
     return dfd.promise();
 };
@@ -80,8 +84,7 @@ User.prototype.getFavorites = function(preview) {
   const dfd = $.Deferred();
   $.get(`/users/${user.id}/favorites`, {"preview":preview})
     .done(function(data) {
-      const recipes = Recipe.createFrom(data.recipes);
-      dfd.resolve(recipes);
+      dfd.resolve(data);
     });
     return dfd.promise();
 };
@@ -91,8 +94,7 @@ User.prototype.getFriends = function(preview) {
   const dfd = $.Deferred();
   $.get(`/users/${user.id}/friends`, {"preview":preview})
     .done(function(data) {
-      const friends = User.createFrom(data.friends);
-      dfd.resolve(friends);
+      dfd.resolve(data);
     });
     return dfd.promise();
 };
