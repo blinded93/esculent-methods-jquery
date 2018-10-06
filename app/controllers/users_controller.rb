@@ -21,20 +21,33 @@ class UsersController < ApplicationController
 
   def recipes
     user = User.find(params[:user_id])
-    recipes = params[:preview] ? user.recipes.preview : user.recipes
-    render json: recipes, status: 200
+    pagy, recipes = pagy(params[:preview] ? user.recipes.preview : user.recipes, {items: 2})
+    render json: recipes,
+           meta: pagy,
+           status: 200
   end
 
   def favorites
     user = User.find(params[:user_id])
-    favorites = params[:preview] ? user.favorites.preview : user.favorites
-    render json: favorites, status: 200
+    pagy, favorites = pagy(params[:preview] ? user.favorites.preview : user.favorites, {items: 2})
+    render json: favorites,
+           meta: pagy,
+           status: 200
   end
 
   def friends
     user = User.find(params[:user_id])
-    friends = params[:preview] ? user.friends.preview : user.friends
-    render json: friends, status: 200
+    pagy, friends = pagy(params[:preview] ? user.friends.preview : user.friends, {items: 5})
+    render json: friends,
+           meta: pagy,
+           status: 200
+  end
+
+  def search
+    meta, users = pagy(User.search(params[:query]), {items: 3, query:params[:query]})
+    render json: users,
+           meta: meta,
+           status: 200
   end
 
   private
