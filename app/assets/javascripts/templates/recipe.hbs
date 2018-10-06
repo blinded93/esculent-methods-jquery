@@ -38,7 +38,7 @@
       <ul id="ingredientList" class="">
         {{#each ingredients}}
           {{#with this}}
-            <li>{{quantity}} {{unit}} {{name}} {{state}}</li>
+            <li>{{quantity}} {{unit}} {{name}}{{#if state}}, {{/if}} {{state}}</li>
           {{/with}}
         {{/each}}
       </ul>

@@ -3,20 +3,20 @@
   </div>
   <input type="hidden" name="authenticity_token">
   <div class="form-group">
-    <label for="recipeName" class="small">
+    <label for="recipeName" class="font-weight-bold small">
       Name
     </label>
     <input type="text" name="recipe[name]" class="col-12 form-control form-control-sm" id="recipeName" value="{{name}}" autofocus required>
   </div>
   <div class="form-group form-row">
     <div class="col-6">
-      <label for="recipeCookTime" class="small">
+      <label for="recipeCookTime" class="font-weight-bold small">
         Cook Time
       </label>
       <input type="number" name="recipe[cook_time]" class="form-control form-control-sm" id="recipeCookTime" min="0" value="{{cookTime}}" required>
     </div>
     <div class="col-6">
-      <label for="recipePrepTime" class="small">
+      <label for="recipePrepTime" class="font-weight-bold small">
         Prep Time
       </label>
       <input type="number" name="recipe[prep_time]" class="form-control form-control-sm" id="recipePrepTime" min="0" value="{{prepTime}}" required>
@@ -24,13 +24,13 @@
   </div>
   <div class="form-group form-row">
     <div class="col-6">
-      <label for="recipeServings" class="small">
+      <label for="recipeServings" class="font-weight-bold small">
         Servings
       </label>
       <input type="number" name="recipe[servings]" class="col-12 form-control form-control-sm" id="recipeServings" min="0" value="{{servings}}" required>
     </div>
     <div class="col-6">
-      <label for="recipeSkillLevel" class="small">
+      <label for="recipeSkillLevel" class="font-weight-bold small">
         Skill Level
       </label>
       <select name="recipe[skill_level]" class="col-12 form-control form-control-sm" id="recipeSkillLevel" required>
@@ -43,19 +43,19 @@
     </div>
   </div>
   <div class="form-group form-row">
-    <label class="small pl-1">Image</label>
+    <label class="small pl-1"><span class="font-weight-bold">Image</span></label>
     <div class="col-12">
       <input type="file" name="recipe[image]" class="col-12 custom-file-input" id="recipeImage">
       <label for="recipeImage" class="custom-file-label small form-control-sm d-inline-block">
         {{#if imageUrl}}
-          {{imageUrl}}
+          {{filename imageUrl}}
         {{else}}
           Choose file (opt)...
         {{/if}}
       </label>
     </div>
   </div>
-  <label class="small">
+  <label class="font-weight-bold small">
     Ingredients &nbsp;&nbsp; <a href="" id="addIngredient" class="blue font-weight-bold h6">+</a>
   </label>
   <div id="recipeIngredients">
@@ -68,7 +68,7 @@
     {{/if}}
   </div>
   <div class="form-group">
-    <label class="small">
+    <label class="font-weight-bold small">
       Directions &nbsp;&nbsp; <a href="" id="addDirection" class="blue font-weight-bold h6">+</a>
     </label>
     <ol id="recipeDirections">
