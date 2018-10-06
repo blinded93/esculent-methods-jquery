@@ -15,13 +15,13 @@ class AvatarUploader < CarrierWave::Uploader::Base
     ActionController::Base.helpers.asset_path("placeholders/" + [version_name, "portrait"].compact.join('_'))
   end
 
-  process resize_to_fit: [500, 200]
+  process resize_to_fit: [500, 300]
 
   version :thumb do
-    process resize_to_fit: [100, 60]
+    process resize_to_fill: [80, 60]
   end
 
   def filename
-    original_filename if original_filename
+    model.username + "-" + original_filename if original_filename
   end
 end
