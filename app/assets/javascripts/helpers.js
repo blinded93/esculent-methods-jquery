@@ -14,6 +14,11 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 Handlebars.registerPartial("ingredient", Display.templates.ingredient);
 Handlebars.registerPartial("direction", Display.templates.direction);
 
+Handlebars.registerHelper("showIfMoreThanOnePage", function(pages, options) {
+  let $el = $("<div />").html(options.fn(this));
+  if (pages > 1) { return $el.html(); }
+});
+
 Handlebars.registerHelper("selectAttribute", function(attr, options) {
   let $el = $("<select />").html(options.fn(this));
   $el.find(`[value="${attr}"]`).attr("selected", true);
