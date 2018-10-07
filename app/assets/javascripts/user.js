@@ -61,7 +61,7 @@ User.prototype.displayProfile = function() {
 };
 
 User.prototype.displayPreview = function(tab, type) {
-  const assets = this[`${tab.toLowerCase()}`];
+  const assets = this[tab.toLowerCase()];
   const url = `/users/${this.id}/${tab.toLowerCase()}`;
   Listener.setSeeAll(this, tab, type);
   if (type === "recipes") {
@@ -86,11 +86,11 @@ User.prototype.getRecipes = function(preview) {
 User.prototype.getFavorites = function(preview) {
   const user = this;
   const previewObj = preview ? {"preview":preview} : {};
-  return $.get(`/users/${user.id}/favorites`, {"preview":preview});
+  return $.get(`/users/${user.id}/favorites`, previewObj);
 };
 
 User.prototype.getFriends = function(preview) {
   const user = this;
   const previewObj = preview ? {"preview":preview} : {};
-  return $.get(`/users/${user.id}/friends`, {"preview":preview});
+  return $.get(`/users/${user.id}/friends`, previewObj);
 };
