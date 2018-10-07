@@ -1,9 +1,15 @@
 class Recipe < ApplicationRecord
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
+  belongs_to :owner,
+      class_name: "User",
+      foreign_key: "user_id"
   has_many :favorited_recipes
-  has_many :favoriters, through: :favorited_recipes, source: :user
-  has_many :ingredient_amounts, dependent: :destroy
-  has_many :ingredients, through: :ingredient_amounts
+  has_many :favoriters,
+      through: :favorited_recipes,
+      source: :user
+  has_many :ingredient_amounts,
+      dependent: :destroy
+  has_many :ingredients,
+      through: :ingredient_amounts
 
   serialize :directions, Array
 
@@ -14,15 +20,15 @@ class Recipe < ApplicationRecord
     .group(:id)
     .order(Arel.sql('COUNT(favorited_recipes.id) DESC'))
   }
-  scope :alphabetized, -> { order(:name).pluck(:name) }
   scope :with_ingredients, -> (ingredient_ids) {
-    joins(:ingredient_amounts).
-    where(ingredient_amounts:{ingredient_id: ingredient_ids}).
-    group("recipes.id").
-    having("count(recipes.id) >= ?", ingredient_ids.length)
+      joins(:ingredient_amounts).
+      where(ingredient_amounts:{ingredient_id: ingredient_ids}).
+      group("recipes.id").
+      having("count(recipes.id) >= ?", ingredient_ids.length)
   }
   scope :for, -> (user_id) { where(user_id: user_id) }
   scope :search, -> (query) { where("name like ?", "%#{query}%") }
+  scope :alphabetized, -> { order(:name).pluck(:name) }
   scope :preview, -> () { order(Arel.sql("random()")).limit(5) }
 
   def ingredient_attributes=(ingredients)
