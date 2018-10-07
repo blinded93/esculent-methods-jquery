@@ -1,5 +1,19 @@
 $cornflower: lighten(#1c4587, 20%);
 
+@media screen and (max-width:805px) {
+  body {
+    #contentRow {
+      padding-top:132px;
+    }
+  }
+}
+@media screen and (max-width:570px) {
+  body {
+    #contentRow {
+      padding-top:210px;
+    }
+  }
+}
 body {
   margin:auto;
   max-width: 1000px;
@@ -96,4 +110,17 @@ hr {
 .imageBox {
   display: flex;
   align-items: center;
+}
+
+// #contentRow {
+//   padding-top:85px;
+// }
+
+#navRow {
+  background-color:white;
+  position: -webkit-sticky;
+  position:sticky;
+  top:0;
+  height:90px;
+  z-index:1030;
 }
