@@ -65,14 +65,18 @@ User.prototype.displayPreview = function(tab, type) {
   const url = `/users/${this.id}/${tab.toLowerCase()}`;
   Listener.setSeeAll(this, tab, type);
   if (type === "recipes") {
-    Recipe.displayAllRecipes(assets, type, "#profileContent")
+    Recipe.displayAllRecipes(this, tab.toLowerCase(), "#profileContent")
       .done(function(pageObj) {
-        pageObj.setLinks(url);
+        if (pageObj) {
+          pageObj.setLinks(url);
+        }
       })
   } else {
     User.displayAllUsers(this, tab.toLowerCase(), "#profileContent")
       .done(function(pageObj) {
-        pageObj.setLinks(url);
+        if (pageObj) {
+          pageObj.setLinks(url);
+        }
       });
   }
 };
