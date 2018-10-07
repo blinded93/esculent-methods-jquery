@@ -8,6 +8,14 @@ function Paginate(meta) {
   this.destination;
 }
 
+Paginate.createAndDestinate = function(meta, destination) {
+  if (meta) {
+    const pageObj = new Paginate(meta);
+    pageObj.destination = destination;
+    return pageObj;
+  }
+};
+
 Paginate.prototype.setLinks = function(url, params) {
   this.links = $("a.page-link");
   const pageObj = this;

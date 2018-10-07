@@ -14,8 +14,7 @@ function User(json) {
 User.displayAllUsers = function(data, userType, destination) {
   const dfd = new $.Deferred();
   const usersJson = data[`${userType}`]
-  const pageObj = new Paginate(data.meta);
-  pageObj.destination = destination;
+  const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const users = User.createFrom(usersJson);
   if (destination === "#mainContent") {
     Breadcrumb.userAssets(data, "Friends");

@@ -27,8 +27,7 @@ Recipe.getAllRecipes = function() {
 Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const dfd = new $.Deferred();
   const recipesJson = data[`${recipeType}`];
-  const pageObj = new Paginate(data.meta);
-  pageObj.destination = destination;
+  const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const recipes = this.createFrom(recipesJson);
   if (destination === "#mainContent") {
     Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
