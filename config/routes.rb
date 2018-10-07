@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   end
   resources :users, except: [:index] do
     get '/recipes' => 'users#recipes'
+    resources :messages
     resources :recipes, except: [:index, :new, :edit]
     get '/favorites' => 'users#favorites'
     get '/friends' => 'users#friends'

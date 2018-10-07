@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_19_233751) do
+ActiveRecord::Schema.define(version: 2018_10_07_053052) do
 
   create_table "favorited_recipes", force: :cascade do |t|
     t.text "notes"
@@ -46,6 +46,16 @@ ActiveRecord::Schema.define(version: 2018_09_19_233751) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "subject"
+    t.text "body"
+    t.datetime "read_at"
+    t.integer "sender_id"
+    t.integer "recipient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
