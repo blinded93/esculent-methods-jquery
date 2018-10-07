@@ -235,9 +235,15 @@ Listener.setUserFavorites = function(user, linkSelector, destination) {
 Listener.setUserFriends = function(user, linkSelector, destination) {
   linkSelector(".friendsLink").click(function(e){
     e.preventDefault();
+    const preview = destination === "#mainContent" ? null :true
     user.getFriends()
-      .done(function(friends) {
-        User.displayAllUsers(user, "friends", destination);
+      .done(function(data) {
+        user.friends = data.users;
+        user.meta = data.meta;
+        User.displayAllUsers(user, "friends", destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/friends`, preview);
+          });
       });
   });
   return this;
@@ -247,8 +253,8 @@ Listener.setUserFriends = function(user, linkSelector, destination) {
 Listener.setProfile = function(user) {
   $("#seeAll").show();
   user.getRecipes(true)
-    .done(function(recipes) {
-      user.recipes = recipes;
+    .done(function(data) {
+      user.recipes = data.recipes;
       user.displayPreview("Recipes", "recipes");
     });
   Listener.setEditProfileImageBtn(user)
@@ -314,7 +320,7 @@ Listener.setPreview = function(user, tab, type) {
       .done(function(assets) {
         $("ul.nav-tabs a.active").removeClass("active");
         $tab.addClass("active");
-        user[`${tab.toLowerCase()}`] = assets;
+        user[tab.toLowerCase()] = assets[type];
         user.displayPreview(tab, type);
       })
   });
