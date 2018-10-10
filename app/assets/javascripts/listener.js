@@ -459,7 +459,7 @@ Listener.setAlertDismiss = function(dismisser, afterDismissFunc) {
   $(dismisser).one("click", function(e) {
     e.preventDefault();
     $("#alert").slideUp(200, function() {
-      // $(this).html("");
+      $("#mainContent").animate({'padding-top':16}, 200)
       if (typeof afterDismissFunc == "function") {
         afterDismissFunc();
       }

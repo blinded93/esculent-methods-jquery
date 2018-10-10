@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :favorites,
       through: :favorited_recipes,
       source: :recipe
-  has_many :recieved_messages,
+  has_many :received_messages,
       class_name: 'Message',
       primary_key: 'id',
       foreign_key: 'recipient_id',

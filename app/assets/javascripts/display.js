@@ -68,8 +68,14 @@ Display.createErrorAlert = function(message) {
 
 Display.toggleAlert = function() {
   const $a = $("#alert");
-  $a.is(":hidden") ? $a.slideDown(200) : $a.slideUp(200);
-
+  // $a.is(":hidden") ? $a.slideDown(200) : $a.slideUp(200);
+  if ($a.is(":hidden")) {
+    $a.slideDown(200);
+    $("#mainContent").animate({ 'padding-top':35 }, 200);
+  } else {
+    $a.slideUp(200);
+    $("#mainContent").animate({'padding-top':16}, 200)
+  }
   return this;
 };
 
