@@ -37,6 +37,7 @@ Listener.setNav = function(menu, resp) {
     .setUserRecipes(user, linkFunc, "#mainContent")
     .setUserFavorites(user, linkFunc, "#mainContent")
     .setUserFriends(user, linkFunc, "#mainContent")
+    .setUserInbox(user, linkFunc, "#mainContent")
     .setLogout(menu);
 };
 
@@ -243,6 +244,23 @@ Listener.setUserFriends = function(user, linkSelector, destination) {
         User.displayAllUsers(user, "friends", destination)
           .done(function(pageObj) {
             pageObj.setLinks(`/users/${user.id}/friends`, preview);
+          });
+      });
+  });
+  return this;
+};
+
+Listener.setUserInbox = function(user, linkSelector, destination) {
+  linkSelector(".inboxLink").click(function(e) {
+    e.preventDefault();
+    user.getMessages()
+      .done(function(data) {
+        debugger;
+        user.messages = data.messages;
+        user.meta = data.meta;
+        User.displayAllMessages(user, destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/messages`);
           });
       });
   });

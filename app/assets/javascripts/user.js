@@ -34,6 +34,27 @@ User.displayAllUsers = function(data, userType, destination) {
   return dfd.promise();
 };
 
+User.prototype.displayAllMessages = function(data, destination) {
+  const dfd = new $.Deferred();
+  const messagesJson = data.messages
+  const pageObj = Paginate.createAndDestinate(data.meta, destination);
+  const messages = Message.createFrom(messagesJson);
+  Breadcrumb.userAssets(data, "Messages");
+  if (isEmpty(messages)) {
+    Display.nothingHere(destination);
+  } else {
+    Display.fromTemplate("messages", {messages:messages})
+      .toElement(destination).done(function() {
+        // set inbox listeners
+        Display.fromTemplate("pageination", pageObj)
+          .toElement("#paginationNav", 1).done(function() {
+            dfd.resolve(pageObj);
+          });
+      });
+  }
+  return dfd.promise();
+};
+
 User.createFrom = function(data) {
   return data ? data.map(user => new User(user)) : [];
 };
@@ -96,4 +117,9 @@ User.prototype.getFriends = function(preview) {
   const user = this;
   const previewObj = preview ? {"preview":preview} : {};
   return $.get(`/users/${user.id}/friends`, previewObj);
+};
+
+User.prototype.getMessages = function() {
+  const user = this;
+  return $.get(`/users/${user.id}/messages`);
 };
