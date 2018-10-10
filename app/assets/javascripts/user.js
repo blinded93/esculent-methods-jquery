@@ -87,16 +87,10 @@ User.prototype.displayPreview = function(tab, type) {
   if (type === "recipes") {
     Recipe.displayAllRecipes(this, tab.toLowerCase(), "#profileContent")
       .done(function(pageObj) {
-        if (pageObj) {
-          pageObj.setLinks(url);
-        }
       })
-  } else {
+  } else if (type === "users") {
     User.displayAllUsers(this, tab.toLowerCase(), "#profileContent")
       .done(function(pageObj) {
-        if (pageObj) {
-          pageObj.setLinks(url);
-        }
       });
   }
 };
