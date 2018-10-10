@@ -29,7 +29,7 @@ Paginate.prototype.setLink = function(link, url, params) {
   const page = $(link).data("page");
   $(link).click(function(e) {
     e.preventDefault();
-      if (!$(link).parent().is(".disabled", ".active")) {
+      if (!$(link).parent().is(".disabled, .active")) {
         $.get(url + `?page=${page}`, params)
           .done(function(data) {
             Recipe.displayAllRecipes(data, "recipes", _this.destination)
