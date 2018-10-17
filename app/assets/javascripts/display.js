@@ -18,17 +18,26 @@ Display.fromTemplate = function(template, obj) {
   return this;
 };
 
-Display.toElement = function(elementId, time) {
+Display.toElement = function(elementId, time, isInbox=false) {
   const html = this.html;
   const dfd = new $.Deferred();
   const t = time || 250;
   $(`${elementId}`).fadeOut(t, function() {
+    Display.inboxWidth(isInbox);
     $(this).html(html).fadeIn(t);
     dfd.resolve();
   });
   return dfd.promise();
 };
 
+Display.inboxWidth = function(isInbox) {
+  $main = $("#mainContent");
+  if (isInbox) {
+    $main.addClass("inbox");
+  } else {
+    $main.removeClass("inbox");
+  }
+};
 Display.alert = function(message, type) {
   this.createAlert(message, type);
   $("#alert").slideDown(200).delay(2000).slideUp(200, function() {
@@ -87,7 +96,7 @@ Display.linkSelector = function(parent) {
   return function(child) { return $(`${parent} ${child}`) };
 };
 
-Display.nothingHere = function(destination) {
+Display.nothingHere = function(destination, time, isInbox=false) {
   Display.html = "<div class='text-center'>Nothing to show here!</div>";
-  Display.toElement(destination);
+  Display.toElement(destination, time, isInbox);
 };
