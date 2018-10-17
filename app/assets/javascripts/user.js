@@ -95,16 +95,14 @@ User.prototype.displayProfile = function() {
 
 User.prototype.displayPreview = function(tab, type) {
   const assets = this[tab.toLowerCase()];
-  const url = `/users/${this.id}/${tab.toLowerCase()}`;
+  const destination = "#profileContent";
   Listener.setSeeAll(this, tab, type);
   if (type === "recipes") {
-    Recipe.displayAllRecipes(this, tab.toLowerCase(), "#profileContent")
-      .done(function(pageObj) {
-      })
+    Recipe.displayAllRecipes(this, tab.toLowerCase(), destination);
   } else if (type === "users") {
-    User.displayAllUsers(this, tab.toLowerCase(), "#profileContent")
-      .done(function(pageObj) {
-      });
+    User.displayAllUsers(this, tab.toLowerCase(), destination);
+  } else if (type === "messages") {
+    this.displayMessages(destination);
   }
 };
 
