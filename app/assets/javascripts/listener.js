@@ -266,6 +266,60 @@ Listener.setUserInbox = function(user, linkSelector, destination) {
   return this;
 };
 
+// User inbox listeners
+
+Listener.setInboxBtns = function(user) {
+  Display.deleteBtnOnCheck();
+  Listener.setComposeBtn(user)
+    .setDeleteBtn();
+};
+
+Listener.setMessages = function() {
+  // Display.fromTemplate("message_form")
+  //   .toElement("")
+};
+
+Listener.setComposeBtn = function(user) {
+  $.get(`/users/${user.id}/friends`, {'recipients':true})
+    .done(function(data) {
+      Display.fromTemplate("message_form", {friends:data.users});
+        $("#composeDropdown").html(Display.html);
+        Message.setCloseForm();
+    });
+  $("#composeBtn").click(function(e) {
+    e.preventDefault();
+    $("#composeDropdown").slideToggle();
+
+
+
+  });
+
+  return this;
+};
+
+Listener.setDeleteBtn = function() {
+  $("#deleteBtn").click(function(e) {
+    e.preventDefault();
+    const checked = $(".deleteChecks:checked");
+    $.ajax({
+      url:`/users/1/messages`,
+      data:checked,
+      type:'DELETE',
+      success:function(resp) {
+        resp.message_ids.forEach(function(id, i, arr){
+          $(`#message-${id}`).slideUp(200, function() {
+            $(this).remove();
+            if (!$(".deleteChecks").length) {
+              Display.nothingHere("#messageInbox", "", true);
+            }
+          });
+        });
+      }
+    });
+  });
+  return this;
+};
+
 // User profile listeners
 Listener.setProfile = function(user) {
   $("#seeAll").show();
