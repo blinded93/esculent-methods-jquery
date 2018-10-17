@@ -80,14 +80,6 @@ User.createFrom = function(data) {
   return data ? data.map(user => new User(user)) : [];
 };
 
-User.prototype.assignRecipes = function(recipes, type='recipes') {
-  this[`${type}`] = recipes ? Recipe.createFrom(recipes) : [];
-};
-
-User.prototype.assignFriends = function(friends) {
-  this.friends = User.createFrom(friends);
-};
-
 User.prototype.displayProfile = function() {
   const user = this;
   $.get(`/users/${user.id}`)
