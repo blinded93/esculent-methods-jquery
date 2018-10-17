@@ -2,9 +2,10 @@ function User(json) {
   this.username = json.username;
   this.email = json.email;
   this.id = json.id;
-  this.recipes = this.assignRecipes(json.recipes);
+  this.recipes = [];
   this.favorites = [];
   this.friends = [];
+  this.messages = [];
   if (json.avatar) {
     this.avatarURL = json.avatar.url;
     this.thumbURL = json.avatar.thumb.url;
@@ -13,7 +14,7 @@ function User(json) {
 
 User.displayAllUsers = function(data, userType, destination) {
   const dfd = new $.Deferred();
-  const usersJson = data[`${userType}`]
+  const usersJson = data[`${userType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const users = User.createFrom(usersJson);
   if (destination === "#mainContent") {
@@ -34,14 +35,27 @@ User.displayAllUsers = function(data, userType, destination) {
   return dfd.promise();
 };
 
-User.prototype.displayAllMessages = function(data, destination) {
+User.prototype.displayInbox = function(destination) {
+  const user = this;
   const dfd = new $.Deferred();
-  const messagesJson = data.messages
-  const pageObj = Paginate.createAndDestinate(data.meta, destination);
-  const messages = Message.createFrom(messagesJson);
-  Breadcrumb.userAssets(data, "Messages");
-  if (isEmpty(messages)) {
-    Display.nothingHere(destination);
+  const pageObj = Paginate.createAndDestinate(user.meta, destination);
+  if (destination === "#mainContent") {
+    Breadcrumb.userAssets(user, "Messages");
+  }
+  Display.fromTemplate("inbox")
+    .toElement(destination, "", true).done(function() {
+      Listener.setInboxBtns(user);
+      user.displayMessages("#messageInbox")
+        .done(function() {
+          Display.deleteBtnOnCheck()    ;
+          Display.fromTemplate("pagination", pageObj)
+            .toElement("#paginationNav", 1).done(function() {
+              dfd.resolve(pageObj);
+            });
+        });
+    });
+  return dfd.promise();
+};
   } else {
     Display.fromTemplate("messages", {messages:messages})
       .toElement(destination).done(function() {
