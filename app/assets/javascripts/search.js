@@ -67,7 +67,7 @@ Search.prototype.evaluateUsers = function(resp) {
   } else {
     search.displayErrors();
   }
-}
+};
 
 Search.prototype.displayErrors = function() {
   this.getError();
@@ -88,7 +88,7 @@ Search.prototype.populateData = function(meta) {
     query: (this.query || $("#search").data("query")),
     page: meta.page,
     search: this
-  }
+  };
   $("#search").data(data);
   return this;
 };
@@ -98,4 +98,4 @@ Search.prototype.resetSearchAlert = function() {
     Display.toggleAlert();
   }
   return this;
-}
+};
