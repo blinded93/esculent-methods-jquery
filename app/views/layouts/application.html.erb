@@ -27,16 +27,16 @@
                                     class:"form-control form-control-sm mr-sm-2") %>
               <%= text_field_tag :query, "", class:"form-control form-control-sm mr-sm-2", placeholder:"Search", required:true %>
               <%= button_tag :Search, class:"btn btn-sm btn-outline-primary my-2", id:"submitSearch" %>
-              <div class="dropdownWeb">
-                <div id="dropdown" class="dropdown">
-                  <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <div id="dropdownMenu" class="dropdown-menu dropdown-menu-right">
-                  </div>
+            <% end %>
+            <div class="dropdownWeb">
+              <div id="dropdown" class="dropdown">
+                <button class="navbar-toggler ml-3" id="navbarDropdown" type="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="true">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="dropdownMenu" class="dropdown-menu dropdown-menu-right">
                 </div>
               </div>
-            <% end %>
+            </div>
           </nav>
         </div>
         <div class="col-1">
