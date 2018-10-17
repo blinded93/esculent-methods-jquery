@@ -331,7 +331,8 @@ Listener.setProfile = function(user) {
   Listener.setEditProfileImageBtn(user)
     .setPreview(user, "Recipes", "recipes")
     .setPreview(user, "Favorites", "recipes")
-    .setPreview(user, "Friends", "users");
+    .setPreview(user, "Friends", "users")
+    .setPreview(user, "Notifications", "messages");
 };
 
 Listener.setEditProfileImageBtn = function(user) {
@@ -385,15 +386,16 @@ Listener.setProfileImageSubmit = function(user) {
 
 Listener.setPreview = function(user, tab, type) {
   const $tab = $(`#user${tab}`);
+  const tabName = $tab.data("tab");
   $tab.click(function(e) {
     e.preventDefault();
-    user[`get${tab}`](true)
+    user[`get${tabName}`](true)
       .done(function(assets) {
         $("ul.nav-tabs a.active").removeClass("active");
         $tab.addClass("active");
-        user[tab.toLowerCase()] = assets[type];
-        user.displayPreview(tab, type);
-      })
+        user[tabName.toLowerCase()] = assets[type];
+        user.displayPreview(tabName, type);
+      });
   });
   return this;
 };
@@ -447,7 +449,7 @@ Listener.fav = function(recipe) {
   $.post(`/recipes/${recipe.id}/favorite`)
   .done(function(resp) {
     if (isEmpty(resp.errors)) {
-      recipe.toggleIcon(!!resp.favoriteStatus, "favorite")
+      recipe.toggleIcon(!!resp.favoriteStatus, "favorite");
     } else if (!!resp.errors.loggedOut) {
       Display.alert(resp.errors.loggedOut, "danger");
     }
@@ -462,7 +464,7 @@ Listener.setShare = function(recipe, linkSelector) {
   }).click(function(e) {
     e.preventDefault();
 
-  })
+  });
   return this;
 };
 
@@ -481,16 +483,16 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
         Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
       });
     } else {
-      Display.createErrorAlert("You do not own this recipe.")
+      Display.createErrorAlert("You do not own this recipe.");
     }
-  })
+  });
 };
 // Search listener
 
 Listener.setSearch = function(search) {
   $("#query").on("keyup", function(e) {
     $(this).removeClass("is-invalid");
-  })
+  });
   search.submit.click(function(e) {
     const url = search.typeToURL();
     const query = search.processQuery();
@@ -498,11 +500,11 @@ Listener.setSearch = function(search) {
     $.get(url, {query:query})
       .done(function(data) {
         if ($("#query").val()) {
-          search.type = $("#type").val()
-          search.query = $("#query").val()
+          search.type = $("#type").val();
+          search.query = $("#query").val();
           search.populateData(data.meta)
           .resetSearchAlert()
-          .evaluateResp(data)
+          .evaluateResp(data);
           $("#query").val("");
         } else {
           $("#query").addClass("is-invalid");
@@ -530,7 +532,7 @@ Listener.setAlertDismiss = function(dismisser, afterDismissFunc) {
   $(dismisser).one("click", function(e) {
     e.preventDefault();
     $("#alert").slideUp(200, function() {
-      $("#mainContent").animate({'padding-top':16}, 200)
+      $("#mainContent").animate({'padding-top':16}, 200);
       if (typeof afterDismissFunc == "function") {
         afterDismissFunc();
       }
