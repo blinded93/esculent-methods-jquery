@@ -32,8 +32,24 @@ class UsersController < ApplicationController
   end
 
   def friends
-    pagy, friends = pagy_resp(params)
-    render json: friends,
+    if params[:recipients]
+      friends = current_user.friends.select(:id, :username)
+      render json: friends,
+             each_serializer: MessageRecipientSerializer,
+             status: 200
+    else
+      pagy, friends = pagy_resp(params)
+      render json: friends,
+             meta: pagy,
+             status: 200
+    end
+  end
+
+  def messages
+    user = User.find(params[:user_id])
+    scope_message = MessageService.new(params, user)
+    pagy, messages = pagy(scope_message.filter, {items:25})
+    render json: messages,
            meta: pagy,
            status: 200
   end
