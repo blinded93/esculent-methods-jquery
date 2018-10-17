@@ -32,7 +32,7 @@ Listener.setFooter = function(menu) {
 Listener.setNav = function(menu, resp) {
   const user = new User(resp.user);
   $("#menu").data({menu:menu});
-  const linkFunc = Display.linkSelector("#menu")
+  const linkFunc = Display.linkSelector("#menu");
   this.setUser(user, linkFunc)
     .setUserRecipes(user, linkFunc, "#mainContent")
     .setUserFavorites(user, linkFunc, "#mainContent")
@@ -62,7 +62,7 @@ Listener.confirmation = function(menu) {
       url:"/logout",
       method:"delete"
     }).done(function(resp) {
-      $("#loggedInAs").html("")
+      $("#loggedInAs").html("");
       menu.element.slideUp(100, function() {
         menu.template = "login";
         menu.getType(menu);
@@ -149,7 +149,7 @@ Listener.setRecipeForm = function(user, method, recipe) {
 };
 
 Listener.setRecipeSubmit = function(user, method, recipe) {
-  const path = recipe ? `/users/${user.id}/recipes/${recipe.id}` : `/users/${user.id}/recipes`
+  const path = recipe ? `/users/${user.id}/recipes/${recipe.id}` : `/users/${user.id}/recipes`;
   $("#recipeForm").validate({
     onkeyup: function(element, event) {
       $(element).valid();
@@ -236,7 +236,7 @@ Listener.setUserFavorites = function(user, linkSelector, destination) {
 Listener.setUserFriends = function(user, linkSelector, destination) {
   linkSelector(".friendsLink").click(function(e){
     e.preventDefault();
-    const preview = destination === "#mainContent" ? null :true
+    const preview = destination === "#mainContent" ? null :true;
     user.getFriends()
       .done(function(data) {
         user.friends = data.users;
@@ -253,12 +253,11 @@ Listener.setUserFriends = function(user, linkSelector, destination) {
 Listener.setUserInbox = function(user, linkSelector, destination) {
   linkSelector(".inboxLink").click(function(e) {
     e.preventDefault();
-    user.getMessages()
+    user.getMessages("all")
       .done(function(data) {
-        debugger;
         user.messages = data.messages;
         user.meta = data.meta;
-        User.displayAllMessages(user, destination)
+        user.displayInbox(destination)
           .done(function(pageObj) {
             pageObj.setLinks(`/users/${user.id}/messages`);
           });
