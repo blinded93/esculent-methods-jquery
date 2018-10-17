@@ -1,0 +1,34 @@
+<div id="messageButtons" class="row">
+  <div class="col">
+    <div class="">
+      <button id="composeBtn" type="button" class="btn btn-outline-primary btn-sm float-left mr-2" aria-haspopup="true" aria-expanded="false" data-offset="10,20">Compose</button>
+      <div id="composeDropdown" class="dropdown-menu">
+        <!-- Dropdown menu links -->
+      </div>
+    </div>
+    <form id="deleteselectedForm">
+      <button id="deleteBtn" class="btn btn-outline-danger btn-sm float-left" form="deleteSelectedForm" type="button" name="button" style="display:none;">Delete</button>
+    </form>
+    <form id="messageFilterForm" class="form-inline float-right">
+      <div class="form-group float-right">
+        <label class="" for="messageFilterInput" style="display:inline;">Filter: &nbsp;</label>
+        <select name="messages[scope]" class="form-control form-control-sm" id="messageFilterInput">
+          <option value="all">All</option>
+          <option value="compositions">Messages</option>
+          <option value="unread">Unread</option>
+          <option value="shares">Shares</option>
+          <option value="sent">Sent</option>
+          <option value="drafts">Drafts</option>
+          <option value="request">Friend Request</option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="mt-2 row">
+  <div id="messageInbox" class="col">
+    <!-- {{#each messages}}
+      {{> messages this}}
+    {{/each}} -->
+  </div>
+</div>
