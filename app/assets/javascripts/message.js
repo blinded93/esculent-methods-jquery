@@ -7,10 +7,18 @@ function Message(json) {
   this.sender = json.sender;
 }
 
+Message.createFrom = function(data) {
+  return data ? data.map(message => new Message(message)) : [];
+};
 
-// Recipe.createFrom = function(data) {
-//   return data ? data.map(recipe => new Recipe(recipe)) : [];
-// };
+Message.setCloseForm = function() {
+  $("#closeMessage").click(function(e) {
+    e.preventDefault();
+    $("#composeDropdown").slideUp();
+  });
+  return this;
+};
+
 Message.setNewForm = function(user) {
   $("#newMessageForm").validate({
     onkeyup: function(element, event) {
