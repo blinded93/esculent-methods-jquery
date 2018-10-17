@@ -11,3 +11,26 @@ function Message(json) {
 // Recipe.createFrom = function(data) {
 //   return data ? data.map(recipe => new Recipe(recipe)) : [];
 // };
+Message.setNewForm = function(user) {
+  $("#newMessageForm").validate({
+    onkeyup: function(element, event) {
+      $(element).valid();
+    },
+    errorClass: "its-invalid is-invalid",
+    validClass: "is-valid",
+    errorPlacement: function(error, element) {
+      $("#newMessageErrors").html(error);
+    },
+    submitHandler: function(form, e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      $.ajax({
+        type: "post",
+        url: `/users/${user.id}/messages`,
+        data: formData,
+        success: function(resp) {
+        }
+      });
+    }
+  });
+};
