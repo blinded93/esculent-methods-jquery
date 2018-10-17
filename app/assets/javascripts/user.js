@@ -107,24 +107,20 @@ User.prototype.displayPreview = function(tab, type) {
 };
 
 User.prototype.getRecipes = function(preview) {
-  const user = this;
   const previewObj = preview ? {"preview":preview} : {};
-  return $.get(`/users/${user.id}/recipes`, previewObj);
+  return $.get(`/users/${this.id}/recipes`, previewObj);
 };
 
 User.prototype.getFavorites = function(preview) {
-  const user = this;
   const previewObj = preview ? {"preview":preview} : {};
-  return $.get(`/users/${user.id}/favorites`, previewObj);
+  return $.get(`/users/${this.id}/favorites`, previewObj);
 };
 
 User.prototype.getFriends = function(preview) {
-  const user = this;
   const previewObj = preview ? {"preview":preview} : {};
-  return $.get(`/users/${user.id}/friends`, previewObj);
+  return $.get(`/users/${this.id}/friends`, previewObj);
 };
 
-User.prototype.getMessages = function() {
-  const user = this;
-  return $.get(`/users/${user.id}/messages`);
+User.prototype.getMessages = function(scope) {
+  return $.get(`/users/${this.id}/messages`, {"scope":scope});
 };
