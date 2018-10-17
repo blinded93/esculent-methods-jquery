@@ -38,6 +38,14 @@ Display.inboxWidth = function(isInbox) {
     $main.removeClass("inbox");
   }
 };
+
+Display.deleteBtnOnCheck = function() {
+  const $checks = $(".deleteChecks").change(function() {
+    const checked = $checks.is(':checked');
+    $("#deleteBtn").stop().fadeTo(350, checked ? 1 : 0);
+  });
+};
+
 Display.alert = function(message, type) {
   this.createAlert(message, type);
   $("#alert").slideDown(200).delay(2000).slideUp(200, function() {
@@ -52,8 +60,8 @@ Display.createAlert = function(message, type) {
 };
 
 Display.createSearchErrorAlert = function() {
-  this.alert("A search term is required.", "danger")
-}
+  this.alert("A search term is required.", "danger");
+};
 
 Display.createSearchAlert = function(query) {
   const html = `<a href='' id='toSearchResults'>Return to results for '${query}'...</a><button id='alertDismiss' type='button' class='close'><span>&times;</span></button>`;
@@ -83,7 +91,7 @@ Display.toggleAlert = function() {
     $("#mainContent").animate({ 'padding-top':35 }, 200);
   } else {
     $a.slideUp(200);
-    $("#mainContent").animate({'padding-top':16}, 200)
+    $("#mainContent").animate({'padding-top':16}, 200);
   }
   return this;
 };
