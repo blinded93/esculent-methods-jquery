@@ -20,10 +20,13 @@ Handlebars.registerHelper("ifUnowned", function(id, options) {
     return $el.html();
   }
 })
-Handlebars.registerHelper("filename", function(imageUrl) {
-  let filename = getFilename(imageUrl)
-  return filename.slice(0, 48) + "...";
+Handlebars.registerHelper("shortenString", function(length, string) {
+  return string.slice(0, length) + "...";
 });
+
+Handlebars.registerHelper("getFilename", function(string) {
+  return getFilename(string);
+})
 
 Handlebars.registerHelper("showIfMoreThanOnePage", function(pages, options) {
   let $el = $("<div />").html(options.fn(this));

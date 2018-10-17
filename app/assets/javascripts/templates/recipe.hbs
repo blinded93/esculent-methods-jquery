@@ -39,6 +39,8 @@
         {{#each ingredients}}
           {{#with this}}
             <li>{{quantity}} {{unit}} {{name}}{{#if state}}, {{/if}} {{state}}</li>
+          {{else}}
+            <li></li>
           {{/with}}
         {{/each}}
       </ul>

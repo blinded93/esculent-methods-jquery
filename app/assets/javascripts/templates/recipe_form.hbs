@@ -48,7 +48,7 @@
       <input type="file" name="recipe[image]" class="col-12 custom-file-input" id="recipeImage">
       <label for="recipeImage" class="custom-file-label small form-control-sm d-inline-block">
         {{#if imageUrl}}
-          {{filename imageUrl}}
+          {{shortenString 48 (getFilename imageUrl )}}
         {{else}}
           Choose file (opt)...
         {{/if}}
