@@ -1,4 +1,5 @@
 $cornflower: lighten(#1c4587, 20%);
+$danger: darken(#dc3545, 15%);
 
 @media screen and (max-width:805px) {
   body {
@@ -14,6 +15,7 @@ $cornflower: lighten(#1c4587, 20%);
     }
   }
 }
+
 body {
   margin:auto;
   max-width: 1000px;
@@ -35,9 +37,33 @@ body {
   }
 }
 
+.btn-outline-danger {
+  color: $danger;
+  border-color: $danger;
+  &:hover {
+    color: white;
+    background-color: $danger;
+    border-color: $danger;
+  }
+}
 .centered {
   margin: auto;
   width: 70%;
+}
+
+.inbox, #profileContent {
+  width: 85%;
+  div.input-group {
+    // box-shadow: 0px 0px 2px 0px darken(#CCD2D9, 35%);
+    &:hover {
+      box-shadow:0px 0px 20px -7px $cornflower;
+    }
+  }
+  span.input-group-text, span.form-control {
+    // border-color:white;
+    background-color:white;
+    font-size: 80%;
+  }
 }
 
 .breadcrumb {
@@ -79,6 +105,10 @@ button:focus {
 
 .black {
   color:black;
+}
+
+.white {
+  color:white;
 }
 
 .blue {
@@ -123,4 +153,40 @@ hr {
   top:0;
   height:90px;
   z-index:1030;
+}
+
+.blue-border {
+  border-color:$cornflower;
+}
+
+#composeDropdown {
+  #newMessageTitleBar {
+    background-color:#424242;
+    color:white;
+    padding:3px 10px;
+    border-top-left-radius:0.25rem;
+    border-top-right-radius:0.25rem;
+    height:32px;
+    width:400px;
+    line-height:25px;
+  }
+  #newMessageForm {
+    padding:5px 20px;
+    input, select, textarea {
+      border-color:#fff0;
+    }
+  }
+  left:10px;
+  box-shadow:0px 0px 20px -10px;
+  width:400px;
+  height:300px;
+  padding-top:0px;
+}
+
+#closeMessage {
+  font-size:25px;
+  vertical-align: top;
+  a:hover {
+    color:#9F9F9F;
+  }
 }
