@@ -1,0 +1,12 @@
+{{#each messages}}
+  <div id="message-{{id}}" class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text deleteCheckSpans leftEdge">
+        <input type="checkbox" value="{{id}}" class="deleteChecks" form="deleteSelectedForm" name='message_ids[]'>
+      </span>
+      <span style="width:75px;" class="input-group-text">{{formattedDate createdAt}}</span>
+      <span style="width:150px;" class="userLink input-group-text"><a href="">{{sender.username}}</a></span>
+    </div>
+    <span id="messageLink" class="form-control rightEdge"><a href="">{{shortenString 60 subject}}...</a></span>
+  </div>
+{{/each}}

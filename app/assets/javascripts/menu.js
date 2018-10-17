@@ -67,7 +67,7 @@ Menu.prototype.evaluateResp = function(menu, resp) {
   if (isEmpty(errors)) {
     menu.element.slideUp(200, function() {
       menu.template = "nav";
-      menu.getType(menu);
+      menu.getType(menu, resp);
       Display.alert(`Logged in as ${respObj.username}`, "success");
     });
   } else {
