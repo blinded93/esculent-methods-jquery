@@ -56,15 +56,22 @@ User.prototype.displayInbox = function(destination) {
     });
   return dfd.promise();
 };
+
+User.prototype.displayMessages = function(destination) {
+  const user = this;
+  user.messages = Message.createFrom(user.messages);
+  const dfd = new $.Deferred();
+  if (isEmpty(user.messages)) {
+    Display.nothingHere("#messageInbox", "", true);
   } else {
-    Display.fromTemplate("messages", {messages:messages})
-      .toElement(destination).done(function() {
-        // set inbox listeners
-        Display.fromTemplate("pageination", pageObj)
-          .toElement("#paginationNav", 1).done(function() {
-            dfd.resolve(pageObj);
-          });
-      });
+    const isInbox = destination === "#messageInbox" ? true : false
+    Display.fromTemplate("messages", {messages: user.messages})
+      .toElement(destination, "", isInbox)
+        .done(function() {
+          $(".deleteCheckSpans").remove();
+          Listener.setMessages(user.messages);
+          dfd.resolve();
+        });
   }
   return dfd.promise();
 };
