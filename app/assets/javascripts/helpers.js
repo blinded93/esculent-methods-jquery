@@ -75,6 +75,10 @@ Handlebars.registerHelper("prevNext", function(direction, options){
   }
 });
 
+Handlebars.registerHelper("formattedDate", function(date) {
+  return formattedDate(date);
+})
+
 //Javascript
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -125,4 +129,15 @@ function getExt(element) {
 
 function getFilename(path) {
   return path.match(/[^/]+$/)[0];
+}
+
+function dateString(date) {
+  const d = date ? new Date(date) : new Date()
+  return d.toDateString();
+}
+
+function formattedDate(dateStr) {
+  const today = dateString();
+  const date = dateString(dateStr);
+  return today === date ? "Today" : date.split(" ").slice(1, 3).join(" ")
 }
