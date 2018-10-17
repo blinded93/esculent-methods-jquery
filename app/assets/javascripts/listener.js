@@ -266,6 +266,21 @@ Listener.setUserInbox = function(user, linkSelector, destination) {
   return this;
 };
 
+Listener.setUserMessages = function(user, linkSelector, destination) {
+  linkSelector(".messagesLink").click(function(e) {
+    e.preventDefault();
+    user.getMessages("unread")
+      .done(function(data) {
+        user.messages = data.messages;
+        user.displayMessages(destination)
+          .done(function() {
+
+          });
+      });
+  });
+  return this;
+};
+
 // User inbox listeners
 
 Listener.setInboxBtns = function(user) {
