@@ -495,10 +495,10 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
     getCurrentUser();
     if (isLoggedInAs(recipe.owner.id)) {
       Display.fromTemplate("recipe_form", recipe)
-      .toElement("#mainContent")
-      .done(function() {
-        Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
-      });
+        .toElement("#mainContent")
+        .done(function() {
+          Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
+        });
     } else {
       Display.createErrorAlert("You do not own this recipe.");
     }

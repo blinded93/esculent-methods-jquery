@@ -34,8 +34,11 @@ Menu.prototype.getType = function(menu) {
       Listener.setSession(menu);
     } else {
       Listener.setNav(menu, resp);
-      $("#loggedInAs").html(`<small class='blue'>Logged in as:</small> ${resp.user.username}`)
+      $("#loggedInAs").html(`<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${resp.user.username}</a>`)
         .data({id:resp.user.id, username:resp.user.username});
+      const linkSelector = Display.linkSelector("#loggedInAs");
+      const user = new User(resp.user);
+      Listener.setUser(user, linkSelector);
     }
   });
 };
