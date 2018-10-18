@@ -251,7 +251,7 @@ Listener.setUserFriends = function(user, linkSelector, destination) {
 };
 
 Listener.setUserInbox = function(user, linkSelector, destination) {
-  linkSelector(".inboxLink").click(function(e) {
+  linkSelector(".messagesLink").click(function(e) {
     e.preventDefault();
     user.getMessages("all")
       .done(function(data) {
