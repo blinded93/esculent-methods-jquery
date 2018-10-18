@@ -417,11 +417,13 @@ Listener.setPreview = function(user, tab, type) {
 
 Listener.setSeeAll = function(user, tab, type) {
   const $sa = $("#seeAllLink");
+  let tabName;
+  tabName = tab === "Messages" ? "Inbox" : tab;
   $sa.attr("href", "")
     .removeClass().addClass(`${tab.toLowerCase()}Link`)
     .off("click");
   const linkFunc = Display.linkSelector("#seeAll");
-  this[`setUser${tab}`](user, linkFunc, "#mainContent");
+  this[`setUser${tabName}`](user, linkFunc, "#mainContent");
 };
 
 // Recipe results listeners
