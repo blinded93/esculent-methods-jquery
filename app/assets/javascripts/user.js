@@ -38,26 +38,30 @@ User.displayAllUsers = function(data, userType, destination) {
 User.prototype.displayInbox = function(destination) {
   const user = this;
   const dfd = new $.Deferred();
-  const pageObj = Paginate.createAndDestinate(user.meta, destination);
+  const pageObj = Paginate.createAndDestinate(user.meta, destination)
+  pageObj.user = user;
   if (destination === "#mainContent") {
     Breadcrumb.userAssets(user, "Messages");
   }
-  Display.fromTemplate("inbox")
-    .toElement(destination, "", true).done(function() {
-      Listener.setInboxBtns(user);
-      user.displayMessages("#messageInbox")
+  user.getRecipients()
+    .done(function(data) {
+      Display.fromTemplate("inbox", {recipients:data.users})
+      .toElement(destination, "", true).done(function() {
+        Listener.setInboxBtns(user);
+        user.displayMessages("#messageInbox", pageObj)
         .done(function() {
-          Display.deleteBtnOnCheck()    ;
+          Message.deleteBtnOnCheck();
           Display.fromTemplate("pagination", pageObj)
-            .toElement("#paginationNav", 1).done(function() {
+            .toElement("#paginationNav", 1, true).done(function() {
               dfd.resolve(pageObj);
             });
         });
+      });
     });
   return dfd.promise();
 };
 
-User.prototype.displayMessages = function(destination) {
+User.prototype.displayMessages = function(destination, pageObj) {
   const user = this;
   user.messages = Message.createFrom(user.messages);
   const dfd = new $.Deferred();
