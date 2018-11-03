@@ -21,6 +21,12 @@ Message.setCloseForm = function() {
 
 Message.setNewForm = function(user) {
   $("#newMessageForm").validate({
+Message.deleteBtnOnCheck = function() {
+  const $checks = $(".deleteChecks").change(function() {
+    const checked = $checks.is(':checked');
+    $("#deleteBtn").stop().fadeTo(200, checked ? 1 : 0);
+  });
+};
     onkeyup: function(element, event) {
       $(element).valid();
     },
