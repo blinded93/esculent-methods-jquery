@@ -12,9 +12,9 @@ Message.createFrom = function(data) {
 };
 
 Message.setCloseForm = function() {
-  $("#closeMessage").click(function(e) {
+  $("#composeDropdown .closeMessage").click(function(e) {
     e.preventDefault();
-    $("#composeDropdown").slideUp();
+    $("#composeDropdown").slideUp(200);
   });
   return this;
 };
