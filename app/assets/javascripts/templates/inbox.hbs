@@ -3,7 +3,14 @@
     <div class="">
       <button id="composeBtn" type="button" class="btn btn-outline-primary btn-sm float-left mr-2" aria-haspopup="true" aria-expanded="false" data-offset="10,20">Compose</button>
       <div id="composeDropdown" class="dropdown-menu">
-        <!-- Dropdown menu links -->
+        <div class="newMessageWindow">
+          <div id="newMessageTitleBar">
+            New Message<span class="float-right"><a href="" class="white closeMessage">&times;</a></span>
+          </div>
+          <div class="messageForm">
+            {{> messageForm }}
+          </div>
+        </div>
       </div>
     </div>
     <form id="deleteselectedForm">
@@ -26,9 +33,14 @@
   </div>
 </div>
 <div class="mt-2 row">
+  <div class="messageDropdown">
+  <div id="messageDropdown" class="dropdown-menu">
+  </div>
+</div>
   <div id="messageInbox" class="col">
-    <!-- {{#each messages}}
-      {{> messages this}}
-    {{/each}} -->
+  </div>
+</div>
+<div class="row">
+  <div class="col mt-1" id="paginationNav">
   </div>
 </div>
