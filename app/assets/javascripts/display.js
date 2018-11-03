@@ -39,13 +39,6 @@ Display.inboxWidth = function(isInbox) {
   }
 };
 
-Display.deleteBtnOnCheck = function() {
-  const $checks = $(".deleteChecks").change(function() {
-    const checked = $checks.is(':checked');
-    $("#deleteBtn").stop().fadeTo(350, checked ? 1 : 0);
-  });
-};
-
 Display.alert = function(message, type) {
   this.createAlert(message, type);
   $("#alert").slideDown(200).delay(2000).slideUp(200, function() {
@@ -75,6 +68,16 @@ Display.createEditImageAlert = function(imgName, user) {
   this.createAlert(html, "light");
   Listener.setAlertDismiss("#confirmImg", Listener.setProfileImageSubmit(user))
     .setAlertDismiss("#denyImg");
+  return this;
+};
+
+Display.createAddFriendAlert = function(user) {
+  const html = `Send ${user.username} a friend request? <span class='float-right'><a href='' id='confirmFriend'>Yes</a> / <a href='' id='denyFriend'>No</a></span>`;
+  const currentUserId = $("#loggedInAs").data("id");
+  
+  this.createAlert(html, "light");
+  Listener.setAlertDismiss("#confirmFriend", user.addFriend(currentUserId))
+    .setAlertDismiss("#denyFriend");
   return this;
 };
 

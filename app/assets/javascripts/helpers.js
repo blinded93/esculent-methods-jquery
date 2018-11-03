@@ -13,6 +13,8 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 
 Handlebars.registerPartial("ingredient", Display.templates.ingredient);
 Handlebars.registerPartial("direction", Display.templates.direction);
+Handlebars.registerPartial("messages", Display.templates.messages);
+Handlebars.registerPartial("messageForm", Display.templates.message_form);
 
 Handlebars.registerHelper("ifUnowned", function(id, options) {
   let $el = $("<div />").html(options.fn(this));
