@@ -124,4 +124,15 @@ Message.prototype.setDelete = function(ids, successFunc) {
   return this;
 };
 
+Message.prototype.deleteRowsSuccess = function(resp) {
+  resp.message_ids.forEach(function(id, i, arr){
+    $(`#message-${id}`).slideUp(200, function() {
+      $(this).remove();
+      if (!$(".deleteChecks").length) {
+        Display.nothingHere("#messageInbox", "", true);
+      }
+      $("#deleteBtn").fadeOut(200);
+      $("#messageDropdown").slideUp(200);
+    });
+  });
 };
