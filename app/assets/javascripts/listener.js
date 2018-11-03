@@ -303,6 +303,19 @@ Listener.setMessages = function(messages) {
   });
 };
 
+Listener.setMessage = function(message, linkSelector) {
+  const $messageRow = $(`#message-${message.id} span`);
+  linkSelector(".messageLink").click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $messageRow.addClass("bg-light-blue");
+    message.display()
+      .setClose("html, #messageDropdown a.closeMessage");
+    $("#messageDropdown").click((e) => e.stopPropagation())
+      .slideDown(200);
+    Search.backToResultsLink();
+  }).addClass("linkCursor");
+  return this;
 };
 
 Listener.setComposeBtn = function(user) {
