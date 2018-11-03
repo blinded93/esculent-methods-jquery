@@ -295,9 +295,14 @@ Listener.setInboxBtns = function(user) {
     .setFilterSelect(user);
 };
 
-Listener.setMessages = function() {
-  // Display.fromTemplate("message_form")
-  //   .toElement("")
+Listener.setMessages = function(messages) {
+  messages.forEach(function(message, i) {
+    const linkFunc = Display.linkSelector(`#message-${message.id}`);
+    Listener.setUser(message.sender, linkFunc)
+            .setMessage(message, linkFunc);
+  });
+};
+
 };
 
 Listener.setComposeBtn = function(user) {
