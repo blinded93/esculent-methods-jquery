@@ -341,6 +341,20 @@ Listener.setDeleteBtn = function() {
   return this;
 };
 
+Listener.setFilterSelect = function(user) {
+  $("#messageFilterInput").change(function(e) {
+    const selectedScope = $(this).children("option:selected").val();
+    user.getMessages(selectedScope)
+      .done(function(data) {
+        user.messages = data.messages;
+        user.displayMessages("#messageInbox")
+          .done(function() {
+            Message.deleteBtnOnCheck();
+          })
+      })
+  });
+};
+
 // User profile listeners
 Listener.setProfile = function(user) {
   $("#seeAll").show();
