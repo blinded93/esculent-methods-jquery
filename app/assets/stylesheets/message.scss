@@ -1,0 +1,65 @@
+$cornflower: lighten(#1c4587, 20%);
+$lightCornflower: lighten($cornflower, 40%);
+
+#composeDropdown {
+  #newMessageTitleBar {
+    background-color:#424242;
+    color:white;
+    padding:3px 10px;
+    border-top-left-radius:0.25rem;
+    border-top-right-radius:0.25rem;
+    height:32px;
+    width:400px;
+    line-height:25px;
+  }
+  #newMessageForm {
+    padding:5px 20px;
+    input, select, textarea {
+      border-color:#fff0;
+    }
+  }
+  left:10px;
+  box-shadow:0px 0px 20px -10px;
+  width:400px;
+  height:300px;
+  padding-top:0px;
+}
+
+.inbox, #profileContent {
+  width: 85% !important;
+  span.input-group-text, span.form-control {
+    background-color:white;
+    font-size: 90%;
+  }
+  div.input-group:hover span.message-cell {
+    background-color: $lightCornflower;
+  }
+}
+
+.closeMessage {
+  font-size:25px;
+  vertical-align: top;
+  a:hover {
+    color:#9F9F9F;
+  }
+}
+.closeMessageDisplay {
+  position: relative;
+  top:-14px;
+  right:-10px;
+}
+
+#messageDropdown {
+  box-shadow:0px 0px 20px -10px;
+  padding:0.5rem 1rem;
+  top:65px;
+  left:35px;
+  width: 500px;
+  .buttons {
+    margin-bottom:5px;
+  }
+  button {
+    padding:0.1rem 0.3rem;
+    font-size:0.8rem;
+  }
+}
