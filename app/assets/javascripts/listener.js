@@ -93,7 +93,8 @@ Listener.setUserResults = function(users) {
     const linkFunc = Display.linkSelector(`#user-${user.id}`);
     Listener.setUser(user, linkFunc, "#mainContent")
       .setUserRecipes(user, linkFunc, "#mainContent")
-      .setUserFavorites(user, linkFunc, "#mainContent");
+      .setUserFavorites(user, linkFunc, "#mainContent")
+      .setAddFriend(user, linkFunc);
   });
 };
 
@@ -104,6 +105,14 @@ Listener.setUser = function(user, linkSelector) {
     user.displayProfile();
   }).addClass("linkCursor");
   return this;
+};
+
+Listener.setAddFriend = function(user, linkSelector) {
+  linkSelector(".addFriend").click(function(e) {
+    e.preventDefault();
+    Search.backToResultsLink();
+    Display.createAddFriendAlert(user);
+  });
 };
 
 Listener.setUserRecipes = function(user, linkSelector, destination) {
