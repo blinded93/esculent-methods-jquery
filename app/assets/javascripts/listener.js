@@ -122,8 +122,7 @@ Listener.setUserRecipes = function(user, linkSelector, destination) {
     const preview = destination === "#mainContent" ? null : true;
     user.getRecipes(preview)
       .done(function(data) {
-        user.recipes = data.recipes;
-        user.meta = data.meta;
+        user.assignAssetsAndMeta(data);
         Recipe.displayAllRecipes(user, "recipes", destination)
           .done(function(pageObj) {
             pageObj.setLinks(`/users/${user.id}/recipes`, preview);
@@ -231,8 +230,7 @@ Listener.setUserFavorites = function(user, linkSelector, destination) {
     const preview = destination === "#mainContent" ? null : true;
     user.getFavorites(preview)
       .done(function(data) {
-        user.favorites = data.recipes;
-        user.meta = data.meta;
+        user.assignAssetsAndMeta(data);
         Recipe.displayAllRecipes(user, "favorites", destination)
           .done(function(pageObj) {
             pageObj.setLinks(`/users/${user.id}/favorites`, preview);
@@ -248,8 +246,7 @@ Listener.setUserFriends = function(user, linkSelector, destination) {
     const preview = destination === "#mainContent" ? null :true;
     user.getFriends()
       .done(function(data) {
-        user.friends = data.users;
-        user.meta = data.meta;
+        user.assignAssetsAndMeta(data);
         User.displayAllUsers(user, "friends", destination)
           .done(function(pageObj) {
             pageObj.setLinks(`/users/${user.id}/friends`, preview);
@@ -264,8 +261,7 @@ Listener.setUserInbox = function(user, linkSelector, destination) {
     e.preventDefault();
     user.getMessages("all")
       .done(function(data) {
-        user.messages = data.messages;
-        user.meta = data.meta;
+        user.assignAssetsAndMeta(data);
         user.displayInbox(destination)
           .done(function(pageObj) {
             pageObj.setLinks(`/users/${user.id}/messages`);

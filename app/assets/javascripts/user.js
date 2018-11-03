@@ -110,6 +110,13 @@ User.prototype.displayPreview = function(tab, type) {
   }
 };
 
+User.prototype.assignAssetsAndMeta = function(data) {
+  _this = this;
+  Object.keys(data).forEach(function(key) {
+    _this[key] = data[key];
+  });
+};
+
 User.prototype.addFriend = function(currentUserId) {
   const params = {
     "friend_id": this.id,
