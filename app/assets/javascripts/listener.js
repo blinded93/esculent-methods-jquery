@@ -321,18 +321,13 @@ Listener.setMessage = function(message, linkSelector) {
 Listener.setComposeBtn = function(user) {
   $.get(`/users/${user.id}/friends`, {'recipients':true})
     .done(function(data) {
-      Display.fromTemplate("message_form", {friends:data.users});
-        $("#composeDropdown").html(Display.html);
-        Message.setCloseForm();
+      $("#composeBtn").data("friends", data.users)
+      Message.setForm(user);
     });
   $("#composeBtn").click(function(e) {
     e.preventDefault();
-    $("#composeDropdown").slideToggle();
-
-
-
+    $("#composeDropdown").slideToggle(200);
   });
-
   return this;
 };
 
