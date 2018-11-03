@@ -19,14 +19,25 @@ Message.setCloseForm = function() {
   return this;
 };
 
-Message.setNewForm = function(user) {
-  $("#newMessageForm").validate({
 Message.deleteBtnOnCheck = function() {
   const $checks = $(".deleteChecks").change(function() {
     const checked = $checks.is(':checked');
     $("#deleteBtn").stop().fadeTo(200, checked ? 1 : 0);
   });
 };
+
+Message.setForm = function(user) {
+  this.setCloseForm()
+    .setSubmit(user, "#newMessageForm", function(resp) {
+      $("#composeDropdown").slideUp(200, function() {
+        $("#newMessageForm").trigger("reset");
+        Message.setForm(user);
+      });
+      Display.alert("Message sent!", "success");
+    });
+  return this;
+};
+
 Message.setSubmit = function(user, form, onSuccessFunc) {
   $(form).validate({
     onkeyup: function(element, event) {
