@@ -322,6 +322,7 @@ Listener.setDeleteBtn = function() {
   $("#deleteBtn").click(function(e) {
     e.preventDefault();
     const checked = $(".deleteChecks:checked");
+    debugger;
     $.ajax({
       url:`/users/1/messages`,
       data:checked,
@@ -333,6 +334,7 @@ Listener.setDeleteBtn = function() {
             if (!$(".deleteChecks").length) {
               Display.nothingHere("#messageInbox", "", true);
             }
+            $("#deleteBtn").fadeOut(200);
           });
         });
       }
