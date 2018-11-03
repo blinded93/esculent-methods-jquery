@@ -349,6 +349,8 @@ Listener.setProfile = function(user) {
       user.recipes = data.recipes;
       user.displayPreview("Recipes", "recipes");
     });
+  user.getMessages("count")
+    .done(function(data) { $("#unreadCount").text(` (${data.unread_count})`)});
   Listener.setEditProfileImageBtn(user)
     .setPreview(user, "Recipes", "recipes")
     .setPreview(user, "Favorites", "recipes")
