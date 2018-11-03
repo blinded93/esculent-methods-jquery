@@ -1,12 +1,12 @@
 {{#each messages}}
   <div id="message-{{id}}" class="input-group">
     <div class="input-group-prepend">
-      <span class="input-group-text deleteCheckSpans leftEdge">
+      <span class="input-group-text deleteCheckSpans leftEdge message-cell">
         <input type="checkbox" value="{{id}}" class="deleteChecks" form="deleteSelectedForm" name='message_ids[]'>
       </span>
-      <span style="width:75px;" class="input-group-text">{{formattedDate createdAt}}</span>
-      <span style="width:150px;" class="userLink input-group-text"><a href="">{{sender.username}}</a></span>
+      <span style="width:75px;" class="input-group-text message-cell">{{formattedDate createdAt}}</span>
+      <span style="width:150px;" class="userLink input-group-text message-cell"><a href="" class="userLink">{{sender.username}}</a></span>
     </div>
-    <span id="messageLink" class="form-control rightEdge"><a href="">{{shortenString 60 subject}}...</a></span>
+    <span id="messageLink" class="form-control rightEdge message-cell"><a href="" data-toggle="messageDropdown" class="messageLink">{{shortenString 60 subject}}...</a></span>
   </div>
 {{/each}}
