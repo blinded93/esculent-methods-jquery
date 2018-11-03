@@ -27,13 +27,15 @@ Message.deleteBtnOnCheck = function() {
     $("#deleteBtn").stop().fadeTo(200, checked ? 1 : 0);
   });
 };
+Message.setSubmit = function(user, form, onSuccessFunc) {
+  $(form).validate({
     onkeyup: function(element, event) {
       $(element).valid();
     },
     errorClass: "its-invalid is-invalid",
     validClass: "is-valid",
     errorPlacement: function(error, element) {
-      $("#newMessageErrors").html(error);
+      $("#messageErrors").html(error);
     },
     submitHandler: function(form, e) {
       e.preventDefault();
@@ -42,8 +44,9 @@ Message.deleteBtnOnCheck = function() {
         type: "post",
         url: `/users/${user.id}/messages`,
         data: formData,
-        success: function(resp) {
-        }
+        processData: false,
+        contentType: false,
+        success: onSuccessFunc
       });
     }
   });
