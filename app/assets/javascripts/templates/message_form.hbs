@@ -1,28 +1,23 @@
-<div class="newMessageWindow">
-  <div id="newMessageTitleBar">
-    New Message<span class="float-right"><a href="" id="closeMessage" class="white">&times;</a></span>
-  </div>
-  <form class="needs-validation" id="newMessageForm" novalidate>
-    <div class="form-group">
-      <div class="row">
-        <select id="messageRecipient" name="message[recipient_id]" class="form-control form-control-sm border-bottom" required>
-          <option class="font-weight-bold">Recipient</option>
-          {{#each friends}}
+<form class="needs-validation" id="newMessageForm" novalidate>
+  <div class="form-group">
+    <div class="row">
+      <select id="messageRecipient" name="message[recipient_id]" class="form-control form-control-sm border-bottom" required>
+        <option value="" class="font-weight-bold">Recipient</option>
+        {{#each recipients}}
           <option value="{{id}}">{{username}}</option>
-          {{/each}}
-        </select>
-      </div>
+        {{/each}}
+      </select>
     </div>
-    <div class="form-group">
-      <div class="row">
-        <input id="messageSubject" type="text" name="message[subject]" class="form-control form-control-sm border-bottom" placeholder="Subject" required>
-      </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <input id="messageSubject" type="text" name="message[subject]" class="form-control form-control-sm border-bottom" placeholder="Subject" required>
     </div>
-    <div class="form-group">
-      <div class="row">
-        <textarea id="messageBody" class="form-control form-control-sm" rows="7" name="message[body]" required></textarea>
-      </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <textarea id="messageBody" class="form-control form-control-sm" rows="7" name="message[body]" required></textarea>
     </div>
-    <button id="newMessageSubmit" form="newMessageForm" type="submit" name="button" class="btn btn-sm btn-outline-primary float-right">Send</button>
-  </form>
-</div>
+  </div>
+</form>
+<button id="newMessageSubmit" form="newMessageForm" type="submit" name="button" class="btn btn-sm btn-outline-primary float-right">Send</button>
