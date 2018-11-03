@@ -289,9 +289,10 @@ Listener.setUserMessages = function(user, linkSelector, destination) {
 // User inbox listeners
 
 Listener.setInboxBtns = function(user) {
-  Display.deleteBtnOnCheck();
+  Message.deleteBtnOnCheck();
   Listener.setComposeBtn(user)
-    .setDeleteBtn();
+    .setDeleteBtn()
+    .setFilterSelect(user);
 };
 
 Listener.setMessages = function() {
