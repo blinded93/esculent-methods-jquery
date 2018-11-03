@@ -68,9 +68,9 @@ User.prototype.displayMessages = function(destination) {
     Display.fromTemplate("messages", {messages: user.messages})
       .toElement(destination, "", isInbox)
         .done(function() {
-          $(".deleteCheckSpans").remove();
+          if (destination === "#profileContent") {$(".deleteCheckSpans").remove();}
           Listener.setMessages(user.messages);
-          dfd.resolve();
+          dfd.resolve(pageObj);
         });
   }
   return dfd.promise();
