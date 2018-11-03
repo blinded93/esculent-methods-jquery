@@ -124,3 +124,7 @@ User.prototype.getFriends = function(preview) {
 User.prototype.getMessages = function(scope) {
   return $.get(`/users/${this.id}/messages`, {"scope":scope});
 };
+
+User.prototype.getRecipients = function() {
+  return $.get(`/users/${this.id}/friends`, {"scope":"recipients"});
+}
