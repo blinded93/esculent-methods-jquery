@@ -88,4 +88,25 @@ Message.prototype.setClose = function(selectors) {
   return this;
 };
 
+Message.prototype.setReplyCancel = function() {
+  const message = this;
+  $("#cancel").click(function(e) {
+    e.preventDefault();
+    $("#messageDropdown").fadeOut(200, function() {
+      message.display();
+      $(this).fadeIn(200);
+    });
+  });
+  return this;
+};
+
+Message.prototype.setReplySubmit = function(html) {
+  Message.setSubmit(this.sender, "#replyMessageForm", function(resp) {
+    $("#messageDropdown").slideUp(200);
+    Display.alert("Message sent!", "success");
+  });
+  return this;
+};
+
+
 };
