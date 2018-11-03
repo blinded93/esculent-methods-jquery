@@ -77,4 +77,15 @@ Message.prototype.setReply = function() {
   });
   return this;
 };
+
+Message.prototype.setClose = function(selectors) {
+  const message = this;
+  $(selectors).one("click", function(e) {
+    e.preventDefault();
+    $("#messageDropdown").slideUp(200);
+    $(`#message-${message.id} span`).removeClass("bg-light-blue");
+  });
+  return this;
+};
+
 };
