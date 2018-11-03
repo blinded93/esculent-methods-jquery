@@ -79,7 +79,18 @@ Handlebars.registerHelper("prevNext", function(direction, options){
 
 Handlebars.registerHelper("formattedDate", function(date) {
   return formattedDate(date);
-})
+});
+
+Handlebars.registerHelper("ifOwned", function(id, options) {
+  let $el = $("<div />").html(options.fn(this));
+  const currentUserId = $("#loggedInAs").data("id");
+  if (id === currentUserId) {
+    return $el.html();
+  }
+});
+
+
+
 
 //Javascript
 function capitalize(string) {
