@@ -50,6 +50,8 @@ Message.setSubmit = function(user, form, onSuccessFunc) {
       });
     }
   });
+}
+
 Message.prototype.setDisplay = function() {
 
 }
@@ -108,5 +110,18 @@ Message.prototype.setReplySubmit = function(html) {
   return this;
 };
 
+
+
+Message.prototype.setDelete = function(ids, successFunc) {
+  $("#delete").click(function(e) {
+    $.ajax({
+      url:`/users/1/messages`,
+      data:ids,
+      type:'DELETE',
+      success: successFunc
+    });
+  });
+  return this;
+};
 
 };
