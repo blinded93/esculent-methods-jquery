@@ -4,7 +4,7 @@ function Message(json) {
   this.body = json.body;
   this.readAt = json.read_at;
   this.createdAt = json.created_at;
-  this.sender = json.sender;
+  this.sender = new User(json.sender);
 }
 
 Message.createFrom = function(data) {
