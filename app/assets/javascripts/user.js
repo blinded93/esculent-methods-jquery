@@ -106,6 +106,14 @@ User.prototype.displayPreview = function(tab, type) {
   }
 };
 
+User.prototype.addFriend = function(currentUserId) {
+  const params = {
+    "friend_id": this.id,
+    "request": true
+  };
+  return $.post(`/users/${currentUserId}/friend`, params);
+};
+
 User.prototype.getRecipes = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
   return $.get(`/users/${this.id}/recipes`, previewObj);
