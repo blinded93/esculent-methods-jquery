@@ -24,9 +24,10 @@
     display:none;
   }
   label {
+    z-index: 1000;
     position:absolute;
-    bottom:-8px;
-    right:-25px;
+    bottom:-35px;
+    right:15px;
   }
   & img {
     cursor:pointer;

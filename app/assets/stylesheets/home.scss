@@ -1,4 +1,5 @@
 $cornflower: lighten(#1c4587, 20%);
+$lightCornflower: lighten($cornflower, 40%);
 $danger: darken(#dc3545, 15%);
 
 @media screen and (max-width:805px) {
@@ -51,21 +52,6 @@ body {
   width: 70%;
 }
 
-.inbox, #profileContent {
-  width: 85%;
-  div.input-group {
-    // box-shadow: 0px 0px 2px 0px darken(#CCD2D9, 35%);
-    &:hover {
-      box-shadow:0px 0px 20px -7px $cornflower;
-    }
-  }
-  span.input-group-text, span.form-control {
-    // border-color:white;
-    background-color:white;
-    font-size: 80%;
-  }
-}
-
 .breadcrumb {
   font-size: 80%;
   background-color: transparent;
@@ -103,6 +89,10 @@ button:focus {
   padding: .25rem 1.25rem !important;
 }
 
+.large {
+  font-size: 120%;
+}
+
 .black {
   color:black;
 }
@@ -113,6 +103,10 @@ button:focus {
 
 .blue {
   color:$cornflower;
+}
+
+.bg-light-blue {
+  background-color:$lightCornflower !important;
 }
 
 a {
@@ -142,10 +136,6 @@ hr {
   align-items: center;
 }
 
-// #contentRow {
-//   padding-top:85px;
-// }
-
 #navRow {
   background-color:white;
   position: -webkit-sticky;
@@ -157,36 +147,4 @@ hr {
 
 .blue-border {
   border-color:$cornflower;
-}
-
-#composeDropdown {
-  #newMessageTitleBar {
-    background-color:#424242;
-    color:white;
-    padding:3px 10px;
-    border-top-left-radius:0.25rem;
-    border-top-right-radius:0.25rem;
-    height:32px;
-    width:400px;
-    line-height:25px;
-  }
-  #newMessageForm {
-    padding:5px 20px;
-    input, select, textarea {
-      border-color:#fff0;
-    }
-  }
-  left:10px;
-  box-shadow:0px 0px 20px -10px;
-  width:400px;
-  height:300px;
-  padding-top:0px;
-}
-
-#closeMessage {
-  font-size:25px;
-  vertical-align: top;
-  a:hover {
-    color:#9F9F9F;
-  }
 }
