@@ -50,4 +50,16 @@ Message.setSubmit = function(user, form, onSuccessFunc) {
       });
     }
   });
+Message.prototype.setDisplay = function() {
+
+}
+
+Message.prototype.display = function() {
+  Display.fromTemplate("message", this);
+  $("#messageDropdown").html(Display.html);
+  this.setReply()
+    .setDelete($("#messageDropdown input"), this.deleteRowsSuccess);
+
+    return this;
+};
 };
