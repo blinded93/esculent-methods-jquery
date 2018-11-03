@@ -1,7 +1,6 @@
 <div id="user-{{id}}">
   <div class="row result">
     <div class="col">
-
     </div>
   </div>
   <div class="row result">
@@ -28,9 +27,11 @@
         <li class="nav-item">
           <a href="" id="userFriends" data-tab="Friends" class="nav-link friendsLink">Friends</a>
         </li>
-        <li class="nav-item">
-          <a href="" id="userNotifications" data-tab="Messages" class="nav-link messagesLink">Notifications</a>
-        </li>
+        {{#ifOwned id}}
+          <li class="nav-item">
+            <a href="" id="userNotifications" data-tab="Messages" class="nav-link messagesLink">Notifications<span id="unreadCount" class="font-weight-bold small black"><span></a>
+          </li>
+        {{/ifOwned }}
       </ul>
     </div>
   </div>
