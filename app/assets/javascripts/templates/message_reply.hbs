@@ -1,0 +1,23 @@
+<form id="replyMessageForm">
+  <span class="font-weight-bold large mt-2">Re: {{subject}}</span>
+  <input name="message[subject]" value="Re: {{subject}}" hidden>
+  <a href="" class="black closeMessage float-right closeMessageDisplay">&times;</a>
+  <br>
+  <span class="small">from: </span><span class="small blue">{{sender.username}}</span>
+  <input name="message[recipient_id]" value="{{sender.id}}" hidden>
+  <hr class="mb-1 mt-1">
+  <div class="form-group">
+    <div class="row">
+      <textarea id="messageBody" class="form-control form-control-sm" rows="7" name="message[body]" required autofocus>
+
+
+-----Original Message-----
+{{body}}
+      </textarea >
+    </div>
+  </div>
+  <span class="buttons float-right">
+    <button id="cancel" class="btn btn-sm btn-outline-primary">Cancel</button>
+    <button id="send" class="btn btn-sm btn-outline-danger">Send</button>
+  </span>
+</form>
