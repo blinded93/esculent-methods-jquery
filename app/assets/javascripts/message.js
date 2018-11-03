@@ -62,4 +62,19 @@ Message.prototype.display = function() {
 
     return this;
 };
+
+Message.prototype.setReply = function() {
+  const message = this;
+  $("#reply").click(function(e) {
+    $("#messageDropdown").fadeOut(200, function() {
+      Display.fromTemplate("message_reply", message);
+      $(this).html(Display.html).fadeIn(200, function() {
+        message.setReplyCancel()
+          .setReplySubmit()
+          .setClose("#messageDropdown a.closeMessage");
+      });
+    });
+  });
+  return this;
+};
 };
