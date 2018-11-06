@@ -178,3 +178,10 @@ Message.deleteAll = function(ids, successFunc) {
     success: successFunc
   });
 };
+
+Message.prototype.deleteSuccess = function(resp) {
+  debugger;
+  const message = new Message(resp);
+  Inbox.deleteMessageRows(resp);
+  message.close();
+};
