@@ -5,11 +5,17 @@
   <br>
   <span class="small">from: </span><span class="small blue">{{sender.username}}</span>
   <hr class="mb-1 mt-1">
-  <p>
+  <p id="messageBody">
   {{body}}
   </p>
   <span class="buttons float-right">
-    <button id="reply" class="btn btn-sm btn-outline-primary">Reply</button>
+    {{#if user}}
+      <button id="accept" class="btn btn-sm btn-outline-primary">Accept</button>
+    {{else if recipe}}
+      <button id="view" class="btn btn-sm btn-outline-primary">View</button>
+    {{else}}
+      <button id="reply" class="btn btn-sm btn-outline-primary">Reply</button>
+    {{/if}}
     <button id="delete" class="btn btn-sm btn-outline-danger">Delete</button>
   </span>
 </div>
