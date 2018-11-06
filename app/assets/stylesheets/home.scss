@@ -148,3 +148,7 @@ hr {
 .blue-border {
   border-color:$cornflower;
 }
+
+.disabled {
+  pointer-events: none;
+}
