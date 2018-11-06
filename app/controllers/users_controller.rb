@@ -53,16 +53,24 @@ class UsersController < ApplicationController
   end
 
   def messages
-    user = User.find(params[:user_id])
-    scope_message = MessageService.new(params, user)
-    pagy, messages = pagy(scope_message.filter, {items:25})
-    render json: messages,
-           meta: pagy,
-           status: 200
+    if params[:scope] == "count"
+      count = current_user.received_messages.unread.count
+      render json: {unread_count: count}, status: 200
+    else
+      message_scope = MessagesService.new(params, current_user)
+      pagy, messages = pagy(message_scope.filter, {items:25,
+                                                   assets:params[:action]})
+      render json: messages,
+             meta: pagy,
+             status: 200
+    end
   end
 
   def search
-    meta, users = pagy(User.from_identifier(params[:query]), {items: 3, query:params[:query]})
+    meta, users = pagy(User.from_identifier(params[:query]), {
+                      items: 3,
+                      query:params[:query]
+                      })
     render json: users,
            meta: meta,
            status: 200
