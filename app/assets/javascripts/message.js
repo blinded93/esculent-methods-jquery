@@ -162,5 +162,12 @@ Message.prototype.setDelete = function(successFunc) {
   return this;
 };
 
+Message.prototype.delete = function(successFunc) {
+  $.ajax({
+    url:`/users/1/messages/${this.id}`,
+    type:'DELETE',
+    success: successFunc
+  });
+};
   });
 };
