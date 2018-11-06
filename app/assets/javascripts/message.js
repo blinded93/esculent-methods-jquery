@@ -169,5 +169,12 @@ Message.prototype.delete = function(successFunc) {
     success: successFunc
   });
 };
+
+Message.deleteAll = function(ids, successFunc) {
+  $.ajax({
+    url:`/users/1/messages`,
+    data:ids,
+    type:'DELETE',
+    success: successFunc
   });
 };
