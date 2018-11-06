@@ -54,18 +54,7 @@ Message.setSubmit = function(user, form, onSuccessFunc) {
     errorPlacement: function(error, element) {
       $("#messageErrors").html(error);
     },
-    submitHandler: function(form, e) {
-      e.preventDefault();
-      const formData = new FormData(form);
-      $.ajax({
-        type: "post",
-        url: `/users/${user.id}/messages`,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: onSuccessFunc
-      });
-    }
+    submitHandler: Message.submit(successFunc)
   });
 }
 
