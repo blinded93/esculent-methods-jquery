@@ -335,23 +335,7 @@ Listener.setDeleteBtn = function() {
   $("#deleteBtn").click(function(e) {
     e.preventDefault();
     const checked = $(".deleteChecks:checked");
-    debugger;
-    $.ajax({
-      url:`/users/1/messages`,
-      data:checked,
-      type:'DELETE',
-      success:function(resp) {
-        resp.message_ids.forEach(function(id, i, arr){
-          $(`#message-${id}`).slideUp(200, function() {
-            $(this).remove();
-            if (!$(".deleteChecks").length) {
-              Display.nothingHere("#messageInbox", "", true);
-            }
-            $("#deleteBtn").fadeOut(200);
-          });
-        });
-      }
-    });
+    Message.deleteAll(checked, Inbox.deleteMessageRows);
   });
   return this;
 };
