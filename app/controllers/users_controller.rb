@@ -31,8 +31,15 @@ class UsersController < ApplicationController
            status: 200
   end
 
+  def friend
+    friendship = FriendshipService.create(params)
+    render json: friendship,
+           status: 200
+
+  end
+
   def friends
-    if params[:recipients]
+    if params[:scope] == "recipients"
       friends = current_user.friends.select(:id, :username)
       render json: friends,
              each_serializer: MessageRecipientSerializer,
