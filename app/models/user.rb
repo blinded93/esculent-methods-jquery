@@ -20,13 +20,11 @@ class User < ApplicationRecord
       primary_key: 'id',
       foreign_key: 'sender_id',
       dependent: :destroy
-  has_and_belongs_to_many :friends,
-      class_name: "User",
-      join_table: :friendships,
-      foreign_key: :user_id,
-      association_foreign_key: :friend_id
-
-
+  has_many :friendships
+  has_many :friends,
+      through: :friendships,
+      source: :friend
+  
   scope :from_email, -> (email) { where("email like ?", "%#{email}%") }
   scope :from_username, -> (username) { where("username like ?", "%#{username}%") }
   scope :preview, -> () { order(Arel.sql("random()")).limit(5) }
