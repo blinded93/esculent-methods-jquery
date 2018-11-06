@@ -44,7 +44,7 @@ Message.setForm = function(user) {
   return this;
 };
 
-Message.setSubmit = function(user, form, onSuccessFunc) {
+Message.setSubmit = function(user, form, successFunc) {
   $(form).validate({
     onkeyup: function(element, event) {
       $(element).valid();
@@ -56,8 +56,6 @@ Message.setSubmit = function(user, form, onSuccessFunc) {
     },
     submitHandler: Message.submit(successFunc)
   });
-}
-
 };
 
 Message.submit = function(successFunc) {
@@ -111,12 +109,12 @@ Message.prototype.setAccept = function() {
 Message.prototype.setReply = function() {
   const message = this;
   $("#reply").click(function(e) {
-    $("#messageDropdown").fadeOut(200, function() {
+    message.close(function() {
       Display.fromTemplate("message_reply", message);
-      $(this).html(Display.html).fadeIn(200, function() {
+      $(this).html(Display.html).slideDown(200, function() {
         message.setReplyCancel()
           .setReplySubmit()
-          .setClose("#messageDropdown a.closeMessage");
+          .setClose("#messageDropdown .closeMessage");
       });
     });
   });
@@ -127,7 +125,7 @@ Message.prototype.setClose = function(selectors) {
   const message = this;
   $(selectors).one("click", function(e) {
     e.preventDefault();
-    $("#messageDropdown").slideUp(200);
+    message.close();
     $(`#message-${message.id} span`).removeClass("bg-light-blue");
   });
   return this;
@@ -137,17 +135,18 @@ Message.prototype.setReplyCancel = function() {
   const message = this;
   $("#cancel").click(function(e) {
     e.preventDefault();
-    $("#messageDropdown").fadeOut(200, function() {
+    message.close(function() {
       message.display();
-      $(this).fadeIn(200);
+      $(this).slideDown(200);
     });
   });
   return this;
 };
 
 Message.prototype.setReplySubmit = function(html) {
+  const message = this;
   Message.setSubmit(this.sender, "#replyMessageForm", function(resp) {
-    $("#messageDropdown").slideUp(200);
+    message.close();
     Display.alert("Message sent!", "success");
   });
   return this;
