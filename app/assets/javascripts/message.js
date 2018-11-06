@@ -5,10 +5,16 @@ function Message(json) {
   this.readAt = json.read_at;
   this.createdAt = json.created_at;
   this.sender = new User(json.sender);
+  if (json.user) { this.user = new User(json.user); }
+  if (json.recipe) { this.recipe = new Reicipe(json.recipe); }
 }
 
 Message.createFrom = function(data) {
   return data ? data.map(message => new Message(message)) : [];
+};
+
+Message.prototype.close = function(callback) {
+  $("#messageDropdown").slideUp(200, callback);
 };
 
 Message.setCloseForm = function() {
