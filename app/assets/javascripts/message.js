@@ -78,10 +78,25 @@ Message.submit = function(successFunc) {
 Message.prototype.display = function() {
   Display.fromTemplate("message", this);
   $("#messageDropdown").html(Display.html);
-  this.setReply()
-    .setDelete($("#messageDropdown input"), this.deleteRowsSuccess);
+  this.parse()
+    .setDelete(this.deleteSuccess);
+  return this;
+};
 
-    return this;
+Message.prototype.parse = function() {
+  if (!!this.user) {
+    this.setAccept();
+    $("#messageBody").html(`${this.user.username} has sent you a friend request.`);
+  } else if (!!this.recipe) {
+    this.setView();
+    $("#messageBody").html(`${this.recipe.name} has shared a recipe.`)
+  } else {
+    this.setReply();
+  }
+  return this;
+};
+
+Message.prototype.setAccept = function() {
 };
 
 Message.prototype.setReply = function() {
