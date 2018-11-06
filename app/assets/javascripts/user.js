@@ -111,9 +111,9 @@ User.prototype.displayPreview = function(tab, type) {
 };
 
 User.prototype.assignAssetsAndMeta = function(data) {
-  _this = this;
+  user = this;
   Object.keys(data).forEach(function(key) {
-    _this[key] = data[key];
+    user[key] = data[key];
   });
 };
 
