@@ -97,6 +97,15 @@ Message.prototype.parse = function() {
 };
 
 Message.prototype.setAccept = function() {
+  const message = this;
+  const currentUserId = $("#loggedInAs").data("id");
+  $("#accept").click(function(e) {
+    message.close(message.sender.confirmFriend(currentUserId));
+    Display.alert(`You are now friends with ${message.sender.username}!`, "success");
+    message.delete(message.deleteSuccess);
+  });
+};
+
 };
 
 Message.prototype.setReply = function() {
