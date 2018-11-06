@@ -118,9 +118,19 @@ User.prototype.assignAssetsAndMeta = function(data) {
 };
 
 User.prototype.addFriend = function(currentUserId) {
-  const params = {
-    "friend_id": this.id,
-    "request": true
+  const user = this;
+  return function() {
+    const params = { "friend_id": user.id, "request": true };
+    const $addFriendLink = linkSelector(`#user-${user.id}`)(".addFriend");
+    const html = "<span class='small text-success'>Pending</span>";
+    $.post(`/users/${currentUserId}/friend`, params)
+      .done(function(data) {
+        Display.alert(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
+        $addFriendLink.after(html)
+          .addClass("disabled");
+      });
+  };
+};
   };
   return $.post(`/users/${currentUserId}/friend`, params);
 
