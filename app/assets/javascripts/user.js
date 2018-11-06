@@ -131,8 +131,17 @@ User.prototype.addFriend = function(currentUserId) {
       });
   };
 };
+
+User.prototype.confirmFriend = function(currentUserId) {
+  const user = this;
+  return function() {
+    const params= {"friend_id": user.id};
+    $.post(`/users/${currentUserId}/friend`, params)
+      .done(function(data) {
+        Display.alert(`You are now friends with ${data.friendship.friend.username}!`, "success");
+      });
   };
-  return $.post(`/users/${currentUserId}/friend`, params);
+};
 
 User.prototype.setData = function() {
   const user = this;
