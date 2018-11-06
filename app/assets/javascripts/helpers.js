@@ -90,6 +90,12 @@ Handlebars.registerHelper("ifOwned", function(id, options) {
     return options.fn(this);
   }
 });
+
+Handlebars.registerHelper("unlessFriend", function(id, options) {
+  if (id && !isLoggedInAs(id)) {
+    if (!$("#loggedInAs").data("friends").includes(id)) {
+      return options.fn(this);
+    }
   }
 });
 
