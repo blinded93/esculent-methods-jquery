@@ -154,14 +154,10 @@ Message.prototype.setReplySubmit = function(html) {
 
 
 
-Message.prototype.setDelete = function(ids, successFunc) {
+Message.prototype.setDelete = function(successFunc) {
+  const message = this;
   $("#delete").click(function(e) {
-    $.ajax({
-      url:`/users/1/messages`,
-      data:ids,
-      type:'DELETE',
-      success: successFunc
-    });
+    message.delete(successFunc);
   });
   return this;
 };
