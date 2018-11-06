@@ -72,10 +72,11 @@ Display.createEditImageAlert = function(imgName, user) {
 };
 
 Display.createAddFriendAlert = function(user) {
-  const html = `Send ${user.username} a friend request? <span class='float-right'><a href='' id='confirmFriend'>Yes</a> / <a href='' id='denyFriend'>No</a></span>`;
+  const html = `Send "${user.username}" a friend request? <span class='float-right'><a href='' id='confirmFriend'>Yes</a> / <a href='' id='denyFriend'>No</a></span>`;
   const currentUserId = $("#loggedInAs").data("id");
-  
-  this.createAlert(html, "light");
+
+  this.createAlert(html, "warning");
+  Display.toggleAlert();
   Listener.setAlertDismiss("#confirmFriend", user.addFriend(currentUserId))
     .setAlertDismiss("#denyFriend");
   return this;
@@ -88,7 +89,6 @@ Display.createErrorAlert = function(message) {
 
 Display.toggleAlert = function() {
   const $a = $("#alert");
-  // $a.is(":hidden") ? $a.slideDown(200) : $a.slideUp(200);
   if ($a.is(":hidden")) {
     $a.slideDown(200);
     $("#mainContent").animate({ 'padding-top':35 }, 200);
