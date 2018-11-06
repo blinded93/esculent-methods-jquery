@@ -8,6 +8,13 @@
       <img class="rounded img-fluid" src="{{avatarURL}}" id="userAvatar" alt="{{username}} Avatar">
       <form id="editProfileImage">
         <input type="hidden" name="authenticity_token">
+        {{#unlessFriend id}}
+        <label>
+        <a href="" class="addFriend">
+          <img src="/assets/icons/add-friend-16-bw.png" alt="Add Friend" class="addFriendImg">
+        </a>
+      </label>
+        {{/unlessFriend}}
         <label id="profileImageLabel" for="profileImageInput">
           <img id="upload" src="/assets/icons/upload-off.png" alt="Upload Image" title="Edit image">
         </label>
