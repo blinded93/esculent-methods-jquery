@@ -158,3 +158,7 @@ function formattedDate(dateStr) {
   const date = dateString(dateStr);
   return today === date ? "Today" : date.split(" ").slice(1, 3).join(" ")
 }
+
+function linkSelector(parent) {
+  return function(child) { return $(`${parent} ${child}`) };
+}
