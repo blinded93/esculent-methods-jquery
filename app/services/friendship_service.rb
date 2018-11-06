@@ -11,23 +11,28 @@ class FriendshipService
   end
 
   def parse
-    friendship = Friendship.new(self.instance_values)
-    if self.request
-      self.send_request(friendship)
-    else
-      self.send_response(friendship)
-    end
+    friendship = Friendship.find_or_create_by(self.instance_values)
+    send_correspondence(friendship)
   end
 
-  def send_request(friendship)
-    params = {
+  def send_correspondence(friendship)
+    type = self.request ? "request" : "response"
+    params = self.send("#{type}_params")
+    message = MessageService.create_and_send(type, params)
+    friendship
+  end
+
+  def request_params
+    {
       sender_id:self.user_id,
       recipient_id:self.friend_id
     }
-    message = MessageService.create_and_send("request", params)
   end
 
-  def send_response(friendship)
-
+  def response_params
+    {
+      sender_id: self.friend_id,
+      recipient_id: self.user_id
+    }
   end
 end
