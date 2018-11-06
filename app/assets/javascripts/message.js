@@ -58,9 +58,22 @@ Message.setSubmit = function(user, form, onSuccessFunc) {
   });
 }
 
-Message.prototype.setDisplay = function() {
+};
 
-}
+Message.submit = function(successFunc) {
+  return function(form, e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    $.ajax({
+      type: "post",
+      url: `/users/${user.id}/messages`,
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: successFunc
+    });
+  };
+};
 
 Message.prototype.display = function() {
   Display.fromTemplate("message", this);
