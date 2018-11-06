@@ -123,6 +123,18 @@ User.prototype.addFriend = function(currentUserId) {
     "request": true
   };
   return $.post(`/users/${currentUserId}/friend`, params);
+
+User.prototype.setData = function() {
+  const user = this;
+  user.getRecipients()
+    .done(function(data) {
+      const friend_ids = data.users.map(a => a.id);
+      $("#loggedInAs").data({
+        id:user.id,
+        username:user.username,
+        friends:friend_ids
+      });
+    });
 };
 
 User.prototype.getRecipes = function(preview) {

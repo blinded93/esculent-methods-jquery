@@ -38,6 +38,7 @@ Menu.prototype.getType = function(menu) {
         .data({id:resp.user.id, username:resp.user.username});
       const linkSelector = Display.linkSelector("#loggedInAs");
       const user = new User(resp.user);
+      user.setData();
       Listener.setUser(user, linkSelector);
     }
   });
