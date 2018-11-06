@@ -104,6 +104,11 @@ Message.prototype.setAccept = function() {
   });
 };
 
+Message.prototype.setView = function() {
+  const message = this;
+  $("#view").click(function(e) {
+
+  });
 };
 
 Message.prototype.setReply = function() {
