@@ -17,22 +17,25 @@ Handlebars.registerPartial("messages", Display.templates.messages);
 Handlebars.registerPartial("messageForm", Display.templates.message_form);
 
 Handlebars.registerHelper("ifUnowned", function(id, options) {
-  let $el = $("<div />").html(options.fn(this));
   if (!$(".breadcrumb-item").last().text().includes("My")) {
-    return $el.html();
+    return options.fn(this);
   }
-})
+});
+
 Handlebars.registerHelper("shortenString", function(length, string) {
-  return string.slice(0, length) + "...";
+  if (string.length > length) {
+    return string.slice(0, length) + "...";
+  } else {
+    return string;
+  }
 });
 
 Handlebars.registerHelper("getFilename", function(string) {
   return getFilename(string);
-})
+});
 
 Handlebars.registerHelper("showIfMoreThanOnePage", function(pages, options) {
-  let $el = $("<div />").html(options.fn(this));
-  if (pages > 1) { return $el.html(); }
+  if (pages > 1) { return options.fn(this); }
 });
 
 Handlebars.registerHelper("selectAttribute", function(attr, options) {
@@ -82,10 +85,11 @@ Handlebars.registerHelper("formattedDate", function(date) {
 });
 
 Handlebars.registerHelper("ifOwned", function(id, options) {
-  let $el = $("<div />").html(options.fn(this));
   const currentUserId = $("#loggedInAs").data("id");
   if (id === currentUserId) {
-    return $el.html();
+    return options.fn(this);
+  }
+});
   }
 });
 
