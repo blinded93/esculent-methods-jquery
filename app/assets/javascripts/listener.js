@@ -372,11 +372,7 @@ Listener.setProfile = function(user) {
 };
 
 Listener.setEditProfileImageBtn = function(user) {
-  $("#upload").hover(function() {
-    changeIconSrc(`#${this.id}`, "upload-on");
-  }, function() {
-    changeIconSrc(`#${this.id}`, "upload-off");
-  });
+  iconHover("#upload", "upload");
   this.setProfileImageTypeCheck(user);
   return this;
 };
@@ -495,11 +491,9 @@ Listener.fav = function(recipe) {
 };
 
 Listener.setShare = function(recipe, linkSelector) {
-  $("#shareImg").hover(function() {
-    changeIconSrc(this, "share");
-  }, function() {
-    changeIconSrc(this, "share-bw");
-  }).click(function(e) {
+  iconHover("#shareImg", "share");
+  const $shareLink = linkSelector(".share");
+  $shareLink.click(function(e) {
     e.preventDefault();
 
   });
@@ -507,23 +501,20 @@ Listener.setShare = function(recipe, linkSelector) {
 };
 
 Listener.setEditRecipe = function(recipe, linkSelector) {
-  $("#editImg").hover(function() {
-    changeIconSrc(this, "edit");
-  }, function() {
-    changeIconSrc(this, "edit-bw");
-  }).click(function(e) {
-    e.preventDefault();
-    getCurrentUser();
-    if (isLoggedInAs(recipe.owner.id)) {
-      Display.fromTemplate("recipe_form", recipe)
-        .toElement("#mainContent")
-        .done(function() {
-          Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
-        });
-    } else {
-      Display.createErrorAlert("You do not own this recipe.");
-    }
-  });
+  iconHover("#editImg", "edit")
+    .click(function(e) {
+      e.preventDefault();
+      getCurrentUser();
+      if (isLoggedInAs(recipe.owner.id)) {
+        Display.fromTemplate("recipe_form", recipe)
+          .toElement("#mainContent")
+          .done(function() {
+            Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
+          });
+      } else {
+        Display.createErrorAlert("You do not own this recipe.");
+      }
+    });
 };
 // Search listener
 

@@ -89,19 +89,13 @@ Recipe.prototype.favorited = function() {
 };
 
 Recipe.prototype.toggleIcon = function(boolean, iconName) {
-  const offImg = `${iconName}-bw`;
-  const onImg = `${iconName}`;
-  const $i = $(`#${iconName}Img`);
+  const icon = `#${iconName}Img`;
   if (boolean) {
-    changeIconSrc($i, `${onImg}`);
-    $i.off("mouseenter mouseleave");
+    changeIconSrc(icon, iconName);
+    $(icon).off("mouseenter mouseleave");
   } else {
-    $i.attr("src", `/assets/icons/${offImg}.png`);
-    $i.hover(function() {
-      changeIconSrc(this, `${onImg}`);
-    }, function() {
-      changeIconSrc(this, `${offImg}`);
-    });
+    changeIconSrc(icon, `${iconName}-bw`)
+    iconHover(icon, iconName);
   }
 };
 

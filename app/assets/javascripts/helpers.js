@@ -142,6 +142,14 @@ function randomId() {
   return Math.floor(Math.random() * 100000)
 }
 
+function iconHover(img, icon) {
+  return $(img).hover(function() {
+    changeIconSrc(this, icon)
+  }, function() {
+    changeIconSrc(this, `${icon}-bw`);
+  });
+}
+
 function changeIconSrc(btn, imgName) {
   $(btn).attr("src", `/assets/icons/${imgName}.png`);
 }
