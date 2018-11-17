@@ -27,6 +27,7 @@ class UsersController < ApplicationController
   def favorites
     pagy, favorites = pagy_resp(params)
     render json: favorites,
+           root: :favorites,
            meta: pagy,
            status: 200
   end
@@ -47,6 +48,7 @@ class UsersController < ApplicationController
     else
       pagy, friends = pagy_resp(params)
       render json: friends,
+             root: :friends,
              meta: pagy,
              status: 200
     end
@@ -58,9 +60,10 @@ class UsersController < ApplicationController
       render json: {unread_count: count}, status: 200
     else
       message_scope = MessagesService.new(params, current_user)
-      pagy, messages = pagy(message_scope.filter, {items:25,
+      pagy, messages = pagy(message_scope.filter, {items:15,
                                                    assets:params[:action]})
       render json: messages,
+             include: "**",
              meta: pagy,
              status: 200
     end

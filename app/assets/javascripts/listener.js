@@ -429,7 +429,7 @@ Listener.setPreview = function(user, tab, type) {
       .done(function(assets) {
         $("ul.nav-tabs a.active").removeClass("active");
         $tab.addClass("active");
-        user[tabName.toLowerCase()] = assets[type];
+        user[tabName.toLowerCase()] = assets[tabName.toLowerCase()];
         user.displayPreview(tabName, type);
       });
   });
