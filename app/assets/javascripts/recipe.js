@@ -152,6 +152,22 @@ Recipe.prototype.setShareSubmit = function() {
     }
   });
 };
+
+Recipe.prototype.setShareForm = function() {
+  const recipe = this;
+  const friends = $("#loggedInAs").data("friends");
+
+  Display.fromTemplate("recipe_share", {friends:friends})
+    .toElement(".shareForm", 1)
+    .done(function(data) {
+      recipe.setShareSubmit();
+    });
+};
+
+Recipe.prototype.toggleShare = function() {
+  $("#shareDropdown").slideToggle(200);
+};
+
 Recipe.prototype.assignUser = function(user) {
   return user ? new User(user) : undefined;
 };
