@@ -77,7 +77,7 @@ Message.prototype.display = function() {
   Display.fromTemplate("message", this);
   $("#messageDropdown").html(Display.html);
   this.parse()
-    .setDelete(this.deleteSuccess);
+    .setDelete(Message.deleteSuccess);
   return this;
 };
 
@@ -100,7 +100,7 @@ Message.prototype.setAccept = function() {
   $("#accept").click(function(e) {
     message.close(message.sender.confirmFriend(currentUserId));
     Display.alert(`You are now friends with ${message.sender.username}!`, "success");
-    message.delete(message.deleteSuccess);
+    message.delete();
   });
 };
 
@@ -113,6 +113,7 @@ Message.prototype.setView = function() {
 
 Message.prototype.setReply = function() {
   const message = this;
+
   $("#reply").click(function(e) {
     message.close(function() {
       Display.fromTemplate("message_reply", message);
@@ -162,31 +163,31 @@ Message.prototype.setReplySubmit = function(html) {
 Message.prototype.setDelete = function(successFunc) {
   const message = this;
   $("#delete").click(function(e) {
-    message.delete(successFunc);
+    message.delete();
   });
   return this;
 };
 
-Message.prototype.delete = function(successFunc) {
+Message.prototype.delete = function() {
+  const message = this;
   $.ajax({
     url:`/users/1/messages/${this.id}`,
     type:'DELETE',
-    success: successFunc
+    success: Message.deleteSuccess
   });
 };
 
-Message.deleteAll = function(ids, successFunc) {
+Message.deleteAll = function(ids) {
+  const message = this;
   $.ajax({
     url:`/users/1/messages`,
     data:ids,
     type:'DELETE',
-    success: successFunc
+    success: Message.deleteSuccess
   });
 };
 
-Message.prototype.deleteSuccess = function(resp) {
-  debugger;
-  const message = new Message(resp);
+Message.deleteSuccess = function(resp) {
   Inbox.deleteMessageRows(resp);
-  message.close();
+  $("#messageDropdown").slideUp(200);
 };
