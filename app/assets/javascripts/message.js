@@ -54,11 +54,11 @@ Message.setSubmit = function(user, form, successFunc) {
     errorPlacement: function(error, element) {
       $("#messageErrors").html(error);
     },
-    submitHandler: Message.submit(successFunc)
+    submitHandler: Message.submit(user, successFunc)
   });
 };
 
-Message.submit = function(successFunc) {
+Message.submit = function(user, successFunc) {
   return function(form, e) {
     e.preventDefault();
     const formData = new FormData(form);
