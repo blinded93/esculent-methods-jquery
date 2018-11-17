@@ -8,14 +8,9 @@ class MessagesController < ApplicationController
 
   def destroy
     user = User.find(params[:user_id])
-    if params[:message_ids]
-      # delete stuff goes here
-      render json: {message_ids: params[:message_ids]}, status: 200
-    elsif params[:id]
-      message = Message.find_by(id:params[:id])
-      # delete stuff here
-      render json: message, status: 200
-    end
+
+    message_ids = params[:message_ids] || [params[:id]]
+    render json: {message_ids: message_ids}, status: 200
   end
 
   private
