@@ -52,9 +52,6 @@ $lightCornflower: lighten($cornflower, 40%);
 #messageDropdown {
   box-shadow:0px 0px 20px -10px;
   padding:0.5rem 1rem;
-  top:65px;
-  left:35px;
-  width: 500px;
   .buttons {
     margin-bottom:5px;
   }
@@ -62,4 +59,16 @@ $lightCornflower: lighten($cornflower, 40%);
     padding:0.1rem 0.3rem;
     font-size:0.8rem;
   }
+}
+
+.inboxMessageDropdown #messageDropdown {
+  top:65px;
+  left:35px;
+  width: 500px;
+}
+
+.profileMessageDropdown #messageDropdown {
+  top: 420px;
+  left: -10px;
+  width: 500px;
 }
