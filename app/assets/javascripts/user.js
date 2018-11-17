@@ -143,11 +143,11 @@ User.prototype.setData = function() {
   const user = this;
   user.getRecipients()
     .done(function(data) {
-      const friend_ids = data.users.map(a => a.id);
+      const friends = User.createFrom(data.users)
       $("#loggedInAs").data({
         id:user.id,
         username:user.username,
-        friends:friend_ids
+        friends:friends
       });
     });
 };
