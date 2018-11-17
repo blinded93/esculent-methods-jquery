@@ -15,6 +15,7 @@ Handlebars.registerPartial("ingredient", Display.templates.ingredient);
 Handlebars.registerPartial("direction", Display.templates.direction);
 Handlebars.registerPartial("messages", Display.templates.messages);
 Handlebars.registerPartial("messageForm", Display.templates.message_form);
+Handlebars.registerPartial("recipeShare", Display.templates.recipe_share);
 
 Handlebars.registerHelper("ifUnowned", function(id, options) {
   if (!$(".breadcrumb-item").last().text().includes("My")) {
@@ -96,6 +97,14 @@ Handlebars.registerHelper("unlessFriend", function(id, options) {
     if (!$("#loggedInAs").data("friends").includes(id)) {
       return options.fn(this);
     }
+  } else {
+    return options.inverse(this);
+  }
+});
+
+Handlebars.registerHelper("unlessResponse", function(subject, options) {
+  if (subject !== "You have a new friend!") {
+    return options.fn(this);
   }
 });
 
@@ -151,7 +160,7 @@ function iconHover(img, icon) {
 }
 
 function changeIconSrc(btn, imgName) {
-  $(btn).attr("src", `/assets/icons/${imgName}.png`);
+  return $(btn).attr("src", `/assets/icons/${imgName}.png`);
 }
 
 function getExt(element) {
