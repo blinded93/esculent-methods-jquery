@@ -1,25 +1,22 @@
 <div id="user-{{id}}">
   <div class="row result">
-    <div class="col">
-    </div>
-  </div>
-  <div class="row result">
     <div class="profileImage text-center col-12">
       <img class="rounded img-fluid" src="{{avatarURL}}" id="userAvatar" alt="{{username}} Avatar">
-      <form id="editProfileImage">
-        <input type="hidden" name="authenticity_token">
-        {{#unlessFriend id}}
-        <label>
-        <a href="" class="addFriend">
-          <img src="/assets/icons/add-friend-16-bw.png" alt="Add Friend" class="addFriendImg">
-        </a>
-      </label>
-        {{/unlessFriend}}
-        <label id="profileImageLabel" for="profileImageInput">
-          <img id="upload" src="/assets/icons/upload-off.png" alt="Upload Image" title="Edit image">
-        </label>
-        <input type="file" name="avatar" id="profileImageInput">
-      </form>
+      {{#unlessFriend id}}
+        <div>
+          <a href="" class="addFriend">
+            <img src="/assets/icons/add-friend-24-bw.png" alt="Add Friend" class="addFriendImg" title="Add Friend">
+          </a>
+        </div>
+      {{else}}
+        <form id="editProfileImage">
+          <input type="hidden" name="authenticity_token">
+          <label id="profileImageLabel" for="profileImageInput">
+            <img id="upload" src="/assets/icons/upload-bw.png" alt="Upload Image" title="Edit image">
+          </label>
+          <input type="file" name="avatar" id="profileImageInput">
+        </form>
+      {{/unlessFriend}}
     </div>
   </div>
   <div class="row">
