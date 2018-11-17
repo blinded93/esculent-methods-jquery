@@ -110,6 +110,48 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
   }
 };
 
+Recipe.prototype.setShareSubmit = function() {
+  const recipe = this;
+  $("#shareRecipeForm").validate({
+    onclick: function(element, event) {
+      $(element).valid();
+    },
+    onchange: function(element, event) {
+      $(element).valid();
+    },
+    highlight: function(element, errorClass, validClass) {
+      $(element).parent().removeClass(validClass).  addClass(errorClass)
+    },
+    unhighlight: function(element, errorClass, validClass) {
+      $(element).parent().removeClass(errorClass).addClass(validClass);
+    },
+    errorClass: "its-invalid is-invalid",
+    validClass: "is-valid",
+    errorPlacement: function(error, element) {
+      $("#idontexist").html(error);
+    },
+    submitHandler: function(form, e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      $.ajax({
+        type: 'post',
+        url: `/recipes/${recipe.id}/share`,
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function(resp) {
+          if (isEmpty(resp.errors)) {
+            recipe.toggleShare();
+            Display.alert(`Shared ${recipe.name} with `, "success");
+            $(form).trigger("reset");
+          } // else if (!!resp.errors.loggedOut) {
+          //   Display.alert(resp.errors.leggedOut, "danger");
+          // }
+        }
+      });
+    }
+  });
+};
 Recipe.prototype.assignUser = function(user) {
   return user ? new User(user) : undefined;
 };
