@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :recipes, only: [:index] do
     get '/favorited' => 'recipes#favorited'
     post '/favorite' => 'recipes#favorite'
+    post '/share' => 'recipes#share'
   end
 
   resources :users, except: [:index] do
