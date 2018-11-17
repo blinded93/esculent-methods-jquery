@@ -17,19 +17,17 @@ User.displayAllUsers = function(data, userType, destination) {
   const usersJson = data[`${userType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const users = User.createFrom(usersJson);
-  if (destination === "#mainContent") {
-    Breadcrumb.userAssets(data, "Friends");
-  }
+  if (destination === "#mainContent") {Breadcrumb.userAssets(data, "Friends");}
   if (isEmpty(users)) {
     Display.nothingHere(destination);
   } else {
     Display.fromTemplate("users", {users:users})
       .toElement(destination).done(function() {
-          Listener.setUserResults(users);
-          Display.fromTemplate("pagination", pageObj)
-            .toElement("#pageinationNav", 1).done(function() {
-              dfd.resolve(pageObj);
-            });
+        Listener.setUserResults(users);
+        Display.fromTemplate("pagination", pageObj)
+          .toElement("#pageinationNav", 1).done(function() {
+            dfd.resolve(pageObj);
+          });
       });
   }
   return dfd.promise();
@@ -40,24 +38,20 @@ User.prototype.displayInbox = function(destination) {
   const dfd = new $.Deferred();
   const pageObj = Paginate.createAndDestinate(user.meta, destination)
   pageObj.user = user;
-  if (destination === "#mainContent") {
-    Breadcrumb.userAssets(user, "Messages");
-  }
-  user.getRecipients()
-    .done(function(data) {
-      Display.fromTemplate("inbox", {recipients:data.users})
-      .toElement(destination, "", true).done(function() {
-        Listener.setInboxBtns(user);
-        user.displayMessages("#messageInbox", pageObj)
-        .done(function() {
-          Message.deleteBtnOnCheck();
-          Display.fromTemplate("pagination", pageObj)
-            .toElement("#paginationNav", 1, true).done(function() {
-              dfd.resolve(pageObj);
-            });
-        });
+  if (destination === "#mainContent") {Breadcrumb.userAssets(user, "Messages");}
+  const friends = $("#loggedInAs").data("friends");
+  Display.fromTemplate("inbox", {recipients:friends})
+  .toElement(destination, "", true).done(function() {
+    Listener.setInboxBtns(user);
+    user.displayMessages("#messageInbox", pageObj)
+      .done(function() {
+        Message.deleteBtnOnCheck();
+        Display.fromTemplate("pagination", pageObj)
+          .toElement("#paginationNav", 1, true).done(function() {
+            dfd.resolve(pageObj);
+          });
       });
-    });
+  });
   return dfd.promise();
 };
 
