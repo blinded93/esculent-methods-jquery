@@ -17,7 +17,7 @@ class RecipesController < ApplicationController
   end
 
   def show
-    recipe = Recipe.find_by_id(params[:id])
+    recipe = Recipe.find_by(id:params[:id])
     render json: recipe,
            serializer: RecipeIngredientsSerializer,
            include: ['ingredient_amounts.ingredient'],
@@ -25,7 +25,7 @@ class RecipesController < ApplicationController
   end
 
   def update
-    recipe = Recipe.find_by_id(params[:id])
+    recipe = Recipe.find_by(id:params[:id])
     recipe.update(recipe_params)
     render json: recipe,
            serializer: RecipeIngredientsSerializer,
@@ -35,21 +35,21 @@ class RecipesController < ApplicationController
 
   def favorited
     if logged_in?
-      @f.current_user = current_user
-      @f.favorited?
+      @favorite.current_user = current_user
+      @favorite.favorited?
     end
-    render json: @f,
+    render json: @favorite,
            status: 200
   end
 
   def favorite
     if logged_in?
-      @f.current_user = current_user
-      @f.toggle_favorite
+      @favorite.current_user = current_user
+      @favorite.toggle_favorite
     else
-      @f.errors[:loggedOut] = ("Must be logged in to do that")
+      @favorite.errors[:loggedOut] = ("Must be logged in to do that")
     end
-    render json: @f,
+    render json: @favorite,
            status: 200
   end
 
@@ -70,7 +70,12 @@ class RecipesController < ApplicationController
 
   private
     def create_favorited_recipe_service
-      @f = FavoritedRecipeService.new(recipe_id:params[:recipe_id])
+      @favorite = FavoritedRecipeService.new(recipe_id:params[:recipe_id])
+    end
+
+    def share_params
+      params[:user_id] = current_user.id
+      params.permit(:user_id, :friend_id, :recipe_id)
     end
 
     def recipe_params
