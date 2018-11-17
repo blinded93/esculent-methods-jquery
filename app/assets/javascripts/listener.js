@@ -384,11 +384,9 @@ Listener.setProfileImageTypeCheck = function(user) {
       Display.createEditImageAlert(imgName, user)
         .toggleAlert();
     } else {
-      const border = "border border-danger rounded";
-      $("#upload").addClass(border).delay(2150).queue(function() {
-        $("#profileImageInput").val("");
-        $(this).removeClass(border).dequeue();
-      });
+      window.setTimeout(changeIconSrc, 50, "#upload", "upload-wrong");
+      window.setTimeout(changeIconSrc, 2250, "#upload", "upload-bw");
+      $("#profileImageInput").val("");
       Display.createErrorAlert("Profile image must be jpeg or png.");
     }
   });
