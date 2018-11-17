@@ -94,7 +94,7 @@ Listener.setUserResults = function(users) {
     Listener.setUser(user, linkFunc, "#mainContent")
       .setUserRecipes(user, linkFunc, "#mainContent")
       .setUserFavorites(user, linkFunc, "#mainContent")
-      .setAddFriend(user, linkFunc);
+      .setAddFriendBtn(user, "16", linkFunc);
   });
 };
 
@@ -305,6 +305,7 @@ Listener.setMessages = function(messages) {
 
 Listener.setMessage = function(message, linkSelector) {
   const $messageRow = $(`#message-${message.id} span`);
+
   linkSelector(".messageLink").click(function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -315,15 +316,12 @@ Listener.setMessage = function(message, linkSelector) {
       .slideDown(200);
     Search.backToResultsLink();
   }).addClass("linkCursor");
+
   return this;
 };
 
 Listener.setComposeBtn = function(user) {
-  $.get(`/users/${user.id}/friends`, {'recipients':true})
-    .done(function(data) {
-      $("#composeBtn").data("friends", data.users)
-      Message.setForm(user);
-    });
+  Message.setForm(user);
   $("#composeBtn").click(function(e) {
     e.preventDefault();
     $("#composeDropdown").slideToggle(200);
@@ -335,7 +333,7 @@ Listener.setDeleteBtn = function() {
   $("#deleteBtn").click(function(e) {
     e.preventDefault();
     const checked = $(".deleteChecks:checked");
-    Message.deleteAll(checked, Inbox.deleteMessageRows);
+    Message.deleteAll(checked);
   });
   return this;
 };
@@ -356,6 +354,7 @@ Listener.setFilterSelect = function(user) {
 
 // User profile listeners
 Listener.setProfile = function(user) {
+  const linkFunc =  linkSelector(".profileImage");
   $("#seeAll").show();
   user.getRecipes(true)
     .done(function(data) {
@@ -365,6 +364,7 @@ Listener.setProfile = function(user) {
   user.getMessages("count")
     .done(function(data) { $("#unreadCount").text(` (${data.unread_count})`)});
   Listener.setEditProfileImageBtn(user)
+    .setAddFriendBtn(user, "24", linkFunc)
     .setPreview(user, "Recipes", "recipes")
     .setPreview(user, "Favorites", "recipes")
     .setPreview(user, "Friends", "users")
