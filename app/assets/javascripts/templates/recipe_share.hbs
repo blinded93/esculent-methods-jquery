@@ -1,0 +1,11 @@
+<form id="shareRecipeForm" class="form-inline">
+  <div class="select-style">
+    <select class="" name="friend_id" required>
+      <option value="" class="font-weight-bold">Select Friend</option>
+      {{#each friends}}
+        <option value="{{id}}">{{username}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <button id="shareSubmit" class="btn btn-sm btn-outline-primary ml-1">Share</button>
+</form>
