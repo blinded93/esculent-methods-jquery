@@ -57,12 +57,13 @@ User.prototype.displayInbox = function(destination) {
 
 User.prototype.displayMessages = function(destination, pageObj) {
   const user = this;
-  user.messages = Message.createFrom(user.messages);
   const dfd = new $.Deferred();
+  const isInbox = destination === "#messageInbox" ? true : false
+  user.messages = Message.createFrom(user.messages);
+
   if (isEmpty(user.messages)) {
-    Display.nothingHere("#messageInbox", "", true);
+    Display.nothingHere(destination, "", isInbox);
   } else {
-    const isInbox = destination === "#messageInbox" ? true : false
     Display.fromTemplate("messages", {messages: user.messages})
       .toElement(destination, "", isInbox)
         .done(function() {
@@ -117,6 +118,7 @@ User.prototype.addFriend = function(currentUserId) {
     const params = { "friend_id": user.id, "request": true };
     const $addFriendLink = linkSelector(`#user-${user.id}`)(".addFriend");
     const html = "<span class='small text-success'>Pending</span>";
+
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
         Display.alert(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
