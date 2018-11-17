@@ -6,7 +6,7 @@ function Message(json) {
   this.createdAt = json.created_at;
   this.sender = new User(json.sender);
   if (json.user) { this.user = new User(json.user); }
-  if (json.recipe) { this.recipe = new Reicipe(json.recipe); }
+  if (json.recipe) { this.recipe = new Recipe(json.recipe); }
 }
 
 Message.createFrom = function(data) {
@@ -82,12 +82,12 @@ Message.prototype.display = function() {
 };
 
 Message.prototype.parse = function() {
-  if (!!this.user) {
-    this.setAccept();
-    $("#messageBody").html(`${this.user.username} has sent you a friend request.`);
-  } else if (!!this.recipe) {
+  if (!!this.recipe) {
     this.setView();
-    $("#messageBody").html(`${this.recipe.name} has shared a recipe.`)
+    $("#messageBody").html(`<center class="h6 pt-1">${this.recipe.name}</center><img src="${this.recipe.imageUrl}" style="width:100%"/>`)
+  } else if (!!this.user) {
+    this.setAccept();
+    $("#messageBody").html(`<img src="${this.user.thumbURL}" class="pt-2 pr-2"/>${this.user.username} has sent you a friend request.`);
   } else {
     this.setReply();
   }
@@ -106,7 +106,12 @@ Message.prototype.setAccept = function() {
 
 Message.prototype.setView = function() {
   const message = this;
+  const recipe_data = {recipe:message.recipe};
+
   $("#view").click(function(e) {
+    message.close(function() {
+      message.recipe.get();
+    });
 
   });
 };
