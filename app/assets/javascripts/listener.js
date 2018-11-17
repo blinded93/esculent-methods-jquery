@@ -414,6 +414,12 @@ Listener.setProfileImageSubmit = function(user) {
   };
 };
 
+Listener.setAddFriendBtn = function(user, size, linkFunc) {
+  iconHover(".addFriendImg", `add-friend-${size}`);
+  this.setAddFriend(user, linkFunc);
+  return this;
+};
+
 Listener.setPreview = function(user, tab, type) {
   const $tab = $(`#user${tab}`);
   const tabName = $tab.data("tab");
@@ -460,7 +466,7 @@ Listener.setRecipe = function(recipe, linkSelector) {
   return this;
 };
 
-Listener.setSocial = function(recipe) {
+Listener.setSocialBtns = function(recipe) {
   const linkFunc = Display.linkSelector("#social");
   this.setFavorite(recipe, linkFunc)
     .setShare(recipe, linkFunc)
