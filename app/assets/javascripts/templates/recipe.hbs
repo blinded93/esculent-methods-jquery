@@ -1,4 +1,4 @@
-<div id="recipe-{{id}}">
+<div id="recipe-{{id}}" data-id="{{id}}">
   <div class="row result">
     <div class="col">
       <div class="recipeTitle">
@@ -7,9 +7,15 @@
           <a href="" class="favorite">
             <img id="favoriteImg" src="/assets/icons/favorite-bw.png" alt="Favorite">
           </a>
-          <a href="" class="share">
-            <img id="shareImg" src="/assets/icons/share-bw.png" alt="Share">
-          </a>
+            <a href="" class="share" data-toggle="shareDropdown" aria-haspopup="true" aria-expanded="false">
+              <img id="shareImg" src="/assets/icons/share-bw.png" alt="Share">
+            </a>
+            <div id="shareDropdown" class="dropdown-menu" style="display:none;">
+              <div class="shareRecipeWindow">
+                <div class="shareForm">
+                </div>
+              </div>
+            </div>
           <a href="" class="edit">
             <img id="editImg" src="/assets/icons/edit-bw.png" alt="Edit">
           </a>

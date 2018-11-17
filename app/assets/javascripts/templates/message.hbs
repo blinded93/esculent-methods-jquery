@@ -9,10 +9,12 @@
   {{body}}
   </p>
   <span class="buttons float-right">
-    {{#if user}}
-      <button id="accept" class="btn btn-sm btn-outline-primary">Accept</button>
-    {{else if recipe}}
+    {{#if recipe}}
       <button id="view" class="btn btn-sm btn-outline-primary">View</button>
+    {{else if user}}
+      {{#unlessResponse subject}}
+        <button id="accept" class="btn btn-sm btn-outline-primary">Accept</button>
+      {{/unlessResponse}}
     {{else}}
       <button id="reply" class="btn btn-sm btn-outline-primary">Reply</button>
     {{/if}}
