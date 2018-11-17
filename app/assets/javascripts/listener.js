@@ -484,10 +484,15 @@ Listener.setFavorite = function(recipe, linkSelector) {
 };
 
 Listener.setShare = function(recipe, linkSelector) {
-  iconHover("#shareImg", "share");
   const $shareLink = linkSelector(".share");
+  const $dropdown = $("#shareDropdown");
+
+  iconHover("#shareImg", "share");
+  recipe.setShareForm();
+
   $shareLink.click(function(e) {
     e.preventDefault();
+    recipe.toggleShare();
 
   });
   return this;
@@ -501,9 +506,9 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
       if (isLoggedInAs(recipe.owner.id)) {
         Display.fromTemplate("recipe_form", recipe)
           .toElement("#mainContent")
-          .done(function() {
-            Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
-          });
+            .done(function() {
+              Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
+            });
       } else {
         Display.createErrorAlert("You do not own this recipe.");
       }
