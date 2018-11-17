@@ -53,6 +53,18 @@ class RecipesController < ApplicationController
            status: 200
   end
 
+  def share
+    recipe = Recipe.find_by(id:params[:recipe_id])
+    if logged_in?
+      share = ShareService.create_and_send(share_params)
+      render json: recipe,
+             serializer: RecipeIngredientsSerializer,
+             status: 200
+    else
+      # recipe.errors << ""
+    end
+  end
+
   def search
     meta, recipes = pagy(Recipe.search(params[:query]), {items: 3, query:params[:query]})
     render json: recipes,
