@@ -56,7 +56,6 @@ Recipe.prototype.get = function() {
   const owner = this.owner;
   $.get(`/users/${owner.id}/recipes/${this.id}`)
     .done(function(data) {
-
       recipe.display(data);
     });
 };
@@ -71,7 +70,7 @@ Recipe.prototype.display = function(data) {
           .done(function(resp) {
             const linkFunc = Display.linkSelector(".breadcrumb");
             Breadcrumb.userAssets(recipe.owner, "Recipes");
-            Listener.setSocial(recipe)
+            Listener.setSocialBtns(recipe)
               .setUser(recipe.owner, linkFunc)
           });
       });
@@ -86,6 +85,18 @@ Recipe.prototype.favorited = function() {
       dfd.resolve(resp);
     });
   return dfd.promise();
+};
+
+Recipe.prototype.favorite = function() {
+  const recipe = this;
+  $.post(`/recipes/${recipe.id}/favorite`)
+    .done(function(resp) {
+      if (isEmpty(resp.errors)) {
+        recipe.toggleIcon(!!resp.favoriteStatus, "favorite");
+      } else if (!!resp.errors.loggedOut) {
+        Display.alert(resp.errors.loggedOut, "danger");
+      }
+    });
 };
 
 Recipe.prototype.toggleIcon = function(boolean, iconName) {

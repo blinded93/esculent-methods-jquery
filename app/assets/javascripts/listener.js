@@ -478,20 +478,9 @@ Listener.setFavorite = function(recipe, linkSelector) {
   const $favLink = linkSelector(".favorite");
   $favLink.click(function(e) {
     e.preventDefault();
-    Listener.fav(recipe);
+    recipe.favorite();
   });
   return this;
-};
-
-Listener.fav = function(recipe) {
-  $.post(`/recipes/${recipe.id}/favorite`)
-  .done(function(resp) {
-    if (isEmpty(resp.errors)) {
-      recipe.toggleIcon(!!resp.favoriteStatus, "favorite");
-    } else if (!!resp.errors.loggedOut) {
-      Display.alert(resp.errors.loggedOut, "danger");
-    }
-  });
 };
 
 Listener.setShare = function(recipe, linkSelector) {
