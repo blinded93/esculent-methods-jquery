@@ -2,13 +2,18 @@
   <div class="row result">
     <div class="profileImage text-center col-12">
       <img class="rounded img-fluid" src="{{avatarURL}}" id="userAvatar" alt="{{username}} Avatar">
-      {{#unlessFriend id}}
+      {{#ifFriend id}}
+        {{#ifPending id}}
+          <small class="text-success">Pending</small>
+        {{/ifPending}}
+      {{else}}
         <div>
           <a href="" class="addFriend">
             <img src="/assets/icons/add-friend-24-bw.png" alt="Add Friend" class="addFriendImg" title="Add Friend">
           </a>
         </div>
-      {{else}}
+      {{/ifFriend}}
+      {{#ifOwned id}}
         <form id="editProfileImage">
           <input type="hidden" name="authenticity_token">
           <label id="profileImageLabel" for="profileImageInput">
@@ -16,7 +21,7 @@
           </label>
           <input type="file" name="avatar" id="profileImageInput">
         </form>
-      {{/unlessFriend}}
+      {{/ifOwned}}
     </div>
   </div>
   <div class="row">
