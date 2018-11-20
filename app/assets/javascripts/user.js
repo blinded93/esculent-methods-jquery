@@ -114,26 +114,34 @@ User.prototype.assignAssetsAndMeta = function(data) {
 
 User.prototype.addFriend = function(currentUserId) {
   const user = this;
+  const friendIds = $("#loggedInAs").data("friendIds");
+  const pendingIds = $("#loggedInAs").data("pendingFriendIds");
+
   return function() {
     const params = { "friend_id": user.id, "request": true };
     const $addFriendLink = linkSelector(`#user-${user.id}`)(".addFriend");
-    const html = "<span class='small text-success'>Pending</span>";
+    const pendingHtml = "<small class='text-success'>Pending</small>";
 
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
+        friendIds.push(user.id);
+        pendingIds.push(user.id);
         Display.alert(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
-        $addFriendLink.after(html)
-          .addClass("disabled");
+        $addFriendLink.after(pendingHtml)
+          .remove();
       });
   };
 };
 
 User.prototype.confirmFriend = function(currentUserId) {
   const user = this;
+  const friendIds = $("#loggedInAs").data("friendIds");
+
   return function() {
-    const params= {"friend_id": user.id};
+    const params = {"friend_id": user.id};
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
+        friendIds.push(user.id);
         Display.alert(`You are now friends with ${data.friendship.friend.username}!`, "success");
       });
   };
@@ -143,11 +151,16 @@ User.prototype.setData = function() {
   const user = this;
   user.getRecipients()
     .done(function(data) {
-      const friends = User.createFrom(data.users)
+      const pendingIds = data.friendships.map(function(f) {
+        if (!!f.request) { return f.friend.id }
+      });
+      const friends = data.friendships.map(f => f.friend);
       $("#loggedInAs").data({
         id:user.id,
         username:user.username,
-        friends:friends
+        friends: friends,
+        pendingFriendIds: pendingIds,
+        friendIds: friends.map(f => f.id)
       });
     });
 };
@@ -172,5 +185,5 @@ User.prototype.getMessages = function(scope) {
 };
 
 User.prototype.getRecipients = function() {
-  return $.get(`/users/${this.id}/friends`, {"scope":"recipients"});
+  return $.get(`/users/${this.id}/friendships`);
 }
