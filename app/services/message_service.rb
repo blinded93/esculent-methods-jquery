@@ -12,6 +12,7 @@ class MessageService
   def self.create_and_send(type, params)
     message = self.create(params, "#{type}_params")
     message.transmit(message.instance_values)
+    message
   end
 
   def self.create(params, params_method)
@@ -26,13 +27,18 @@ class MessageService
     message = Message.create(message_attrs)
   end
 
+  def remove_request
+    request_message_params = request_params.tap {|h| h[:user_id] = self.sender_id}
+    Message.find_by(request_message_params).destroy
+  end
+
   private
     def request_params
       { subject: "You have a friend request!", user_id: self.recipient_id }
     end
 
     def response_params
-      { subject: "You have a new friend!", user_id: self.sender_id }
+      { subject: "You have a new friend!", user_id: self.recipient_id }
     end
 
     def share_params

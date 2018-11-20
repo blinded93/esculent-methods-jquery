@@ -19,14 +19,15 @@ class FriendshipService
   def send_correspondence(friendship)
     type = self.request ? "request" : "response"
     message = MessageService.create_and_send(type, self.params)
-    fulfill_request if type == "response"
+    fulfill_request(message) if type == "response"
   end
 
   def find_request
     Friendship.find_by({friend_id: self.user_id, user_id: self.friend_id})
   end
 
-  def fulfill_request
+  def fulfill_request(message)
+    message.remove_request
     find_request.tap do |f|
       f.request = false
       f.save
