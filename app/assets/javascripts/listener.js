@@ -517,12 +517,12 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
 // Search listener
 
 Listener.setSearch = function(search) {
-  $("#query").on("keyup", function(e) {
-    $(this).removeClass("is-invalid");
-  });
+  $("#query").on("keyup", (e) => $(this).removeClass("is-invalid"));
+
   search.submit.click(function(e) {
     const url = search.typeToURL();
     const query = search.processQuery();
+
     e.preventDefault();
     $.get(url, {query:query})
       .done(function(data) {
@@ -530,8 +530,8 @@ Listener.setSearch = function(search) {
           search.type = $("#type").val();
           search.query = $("#query").val();
           search.populateData(data.meta)
-          .resetSearchAlert()
-          .evaluateResp(data);
+            .resetSearchAlert()
+            .evaluateResp(data);
           $("#query").val("");
         } else {
           $("#query").addClass("is-invalid");

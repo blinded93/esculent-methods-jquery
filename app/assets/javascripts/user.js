@@ -25,7 +25,7 @@ User.displayAllUsers = function(data, userType, destination) {
       .toElement(destination).done(function() {
         Listener.setUserResults(users);
         Display.fromTemplate("pagination", pageObj)
-          .toElement("#pageinationNav", 1).done(function() {
+          .toElement("#paginationNav", 1).done(function() {
             dfd.resolve(pageObj);
           });
       });
@@ -37,21 +37,22 @@ User.prototype.displayInbox = function(destination) {
   const user = this;
   const dfd = new $.Deferred();
   const pageObj = Paginate.createAndDestinate(user.meta, destination)
+  const friends = $("#loggedInAs").data("friends");
+
   pageObj.user = user;
   if (destination === "#mainContent") {Breadcrumb.userAssets(user, "Messages");}
-  const friends = $("#loggedInAs").data("friends");
   Display.fromTemplate("inbox", {recipients:friends})
-  .toElement(destination, "", true).done(function() {
-    Listener.setInboxBtns(user);
-    user.displayMessages("#messageInbox", pageObj)
-      .done(function() {
-        Message.deleteBtnOnCheck();
-        Display.fromTemplate("pagination", pageObj)
-          .toElement("#paginationNav", 1, true).done(function() {
-            dfd.resolve(pageObj);
-          });
-      });
-  });
+    .toElement(destination, "", true).done(function() {
+      Listener.setInboxBtns(user);
+      user.displayMessages("#messageInbox", pageObj)
+        .done(function() {
+          Message.deleteBtnOnCheck();
+          Display.fromTemplate("pagination", pageObj)
+            .toElement("#paginationNav", 1, true).done(function() {
+              dfd.resolve(pageObj);
+            });
+        });
+    });
   return dfd.promise();
 };
 
@@ -60,7 +61,6 @@ User.prototype.displayMessages = function(destination, pageObj) {
   const dfd = new $.Deferred();
   const isInbox = destination === "#messageInbox" ? true : false
   user.messages = Message.createFrom(user.messages);
-
   if (isEmpty(user.messages)) {
     Display.nothingHere(destination, "", isInbox);
   } else {
