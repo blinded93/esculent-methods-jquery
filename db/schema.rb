@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_15_234032) do
+ActiveRecord::Schema.define(version: 2018_11_18_195550) do
 
   create_table "favorited_recipes", force: :cascade do |t|
     t.text "notes"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 2018_10_15_234032) do
   create_table "friendships", force: :cascade do |t|
     t.integer "user_id"
     t.integer "friend_id"
-    t.boolean "request"
+    t.boolean "request", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["friend_id", "user_id"], name: "index_friendships_on_friend_id_and_user_id", unique: true
