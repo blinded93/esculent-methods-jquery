@@ -40,18 +40,18 @@ class UsersController < ApplicationController
   end
 
   def friends
-    if params[:scope] == "recipients"
-      friends = current_user.friends.select(:id, :username)
-      render json: friends,
-             each_serializer: MessageRecipientSerializer,
-             status: 200
-    else
-      pagy, friends = pagy_resp(params)
-      render json: friends,
-             root: :friends,
-             meta: pagy,
-             status: 200
-    end
+    pagy, friends = pagy_resp(params)
+    render json: friends,
+           root: :friends,
+           meta: pagy,
+           status: 200
+  end
+
+  def friendships
+    friendships = Friendship.where(user_id:current_user.id)
+    render json: friendships,
+           each_serializer: FriendshipSerializer,
+           status: 200
   end
 
   def messages
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 
   def search
     meta, users = pagy(User.from_identifier(params[:query]), {
-                      items: 3,
+                      items: 2,
                       query:params[:query]
                       })
     render json: users,
