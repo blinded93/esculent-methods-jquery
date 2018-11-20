@@ -36,7 +36,7 @@ Breadcrumb.reset = function() {
 Breadcrumb.search = function() {
   Breadcrumb.reset()
     .adjust($("#type option:selected").text())
-    .adjust(`'${$('#search').data('query')}'`, "searchLink");
+    .adjust($('#search').data('query'), "searchLink");
 };
 
 Breadcrumb.profile = function(user) {

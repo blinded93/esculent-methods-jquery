@@ -92,13 +92,19 @@ Handlebars.registerHelper("ifOwned", function(id, options) {
   }
 });
 
-Handlebars.registerHelper("unlessFriend", function(id, options) {
+Handlebars.registerHelper("ifFriend", function(id, options) {
   if (id && !isLoggedInAs(id)) {
-    if (!$("#loggedInAs").data("friends").includes(id)) {
+    if ($("#loggedInAs").data("friendIds").includes(id)) {
       return options.fn(this);
+    } else {
+      return options.inverse(this);
     }
-  } else {
-    return options.inverse(this);
+  }
+});
+
+Handlebars.registerHelper("ifPending", function(id, options) {
+  if ($("#loggedInAs").data("pendingFriendIds").includes(id)) {
+    return options.fn(this);
   }
 });
 
