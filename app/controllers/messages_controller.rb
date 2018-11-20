@@ -7,9 +7,8 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    user = User.find(params[:user_id])
-
     message_ids = params[:message_ids] || [params[:id]]
+    Message.delete(message_ids) if logged_in?
     render json: {message_ids: message_ids}, status: 200
   end
 
