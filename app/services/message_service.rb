@@ -43,6 +43,6 @@ class MessageService
 
     def share_params
       user = User.find_by(id:self.sender_id)
-      { subject: "#{user.username} shared a recipe with you!", recipe_id: self.recipe_id }
+      { subject: "Check out this recipe!", recipe_id: self.recipe_id }
     end
 end
