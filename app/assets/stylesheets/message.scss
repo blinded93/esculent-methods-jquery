@@ -34,6 +34,9 @@ $lightCornflower: lighten($cornflower, 40%);
   div.input-group:hover span.message-cell {
     background-color: $lightCornflower;
   }
+  .unread span {
+    font-weight: bold !important;
+  }
 }
 
 .closeMessage {
