@@ -161,6 +161,10 @@ Recipe.prototype.setShareForm = function() {
     });
 };
 
+Recipe.prototype.ownedBy = function(id) {
+  return id === this.owner.id;
+};
+
 Recipe.prototype.toggleShare = function() {
   $("#shareDropdown").slideToggle(200);
 };
