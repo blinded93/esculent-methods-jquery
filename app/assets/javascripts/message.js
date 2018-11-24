@@ -207,5 +207,8 @@ Message.deleteAll = function(ids) {
 
 Message.deleteSuccess = function(resp) {
   Inbox.deleteMessageRows(resp);
+  const messagesDeletedCount = resp.message_ids.length;
+  let unread = parseInt($("#unreadCount").text());
+  $("#unreadCount").text(unread -= messagesDeletedCount);
   $("#messageDropdown").slideUp(200);
 };
