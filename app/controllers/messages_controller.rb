@@ -6,10 +6,21 @@ class MessagesController < ApplicationController
            status: 200
   end
 
+  def read
+    message = Message.find_by(id:params[:id]).tap do |m|
+      m.read_at = Time.new
+      m.save
+    end
+
+    render json: {message_id: message.id},
+           status: 200
+  end
+
   def destroy
     message_ids = params[:message_ids] || [params[:id]]
     Message.delete(message_ids) if logged_in?
-    render json: {message_ids: message_ids}, status: 200
+    render json: {message_ids: message_ids},
+           status: 200
   end
 
   private
