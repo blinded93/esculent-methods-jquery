@@ -83,9 +83,10 @@ Message.prototype.display = function() {
 };
 
 Message.prototype.markAsRead = function() {
-  if (!this.readAt) {
+  const message = this;
+  if (!message.readAt) {
     let unreadCount = parseInt($("#unreadCount").text());
-    $.post(`/users/${this.sender.id}/messages/${this.id}/read`)
+    $.post(`/users/${currentUser("id")}/messages/${message.id}/read`)
       .done(function(resp) {
         $(`#message-${resp.message_id}`).removeClass("unread")
         $("#unreadCount").text(unreadCount -= 1);

@@ -38,10 +38,7 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
     Display.fromTemplate("recipes", {recipes:recipes})
       .toElement(destination).done(function() {
         Listener.setRecipeResults(recipes);
-        Display.fromTemplate("pagination", pageObj)
-          .toElement("#paginationNav", 1).done(function() {
-            dfd.resolve(pageObj);
-          });
+        if (pageObj) { pageObj.displayLinks(dfd, destination); }
       });
   }
   return dfd.promise();
