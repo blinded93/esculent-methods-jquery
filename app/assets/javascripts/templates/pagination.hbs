@@ -1,7 +1,6 @@
 {{#showIfMoreThanOnePage last}}
   <nav aria-label="Page navigation example">
     <ul class="pagination pageination-sm justify-content-center">
-
       {{#direction prev}}
         <li class="page-item">
           <a data-page="{{prev}}" class="page-link" href aria-label="Previous">
@@ -20,7 +19,6 @@
       {{/prevNext}}
 
       <li class="page-item active"><a style="cursor:default" class="page-link">{{current}}</a></li>
-
       {{#prevNext next}}
         <li class="page-item"><a data-page="{{next}}" class="page-link" href></a></li>
       {{/prevNext}}
