@@ -15,11 +15,12 @@ Inbox.prototype.display = function(destination) {
       Listener.setInboxBtns(user);
       user.displayMessages("#messageInbox", pageObj)
         .done(function() {
-          Message.deleteBtnOnCheck()    ;
-          Display.fromTemplate("pagination", pageObj)
-            .toElement("#paginationNav", 1, true).done(function() {
-              dfd.resolve(pageObj);
-            });
+          Message.deleteBtnOnCheck();
+          if (pageObj) { pageObj.displayLinks(dfd, destination); }
+          // Display.fromTemplate("pagination", pageObj)
+          //   .toElement("#paginationNav", 1, true).done(function() {
+          //     dfd.resolve(pageObj);
+          //   });
         });
     });
   return dfd.promise();
