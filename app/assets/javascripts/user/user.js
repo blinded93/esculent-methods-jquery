@@ -17,6 +17,7 @@ User.displayAllUsers = function(data, userType, destination) {
   const usersJson = data[`${userType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const users = User.createFrom(usersJson);
+
   if (destination === "#mainContent") {Breadcrumb.userAssets(data, "Friends");}
   if (isEmpty(users)) {
     Display.nothingHere(destination);
@@ -24,10 +25,7 @@ User.displayAllUsers = function(data, userType, destination) {
     Display.fromTemplate("users", {users:users})
       .toElement(destination).done(function() {
         Listener.setUserResults(users);
-        Display.fromTemplate("pagination", pageObj)
-          .toElement("#paginationNav", 1).done(function() {
-            dfd.resolve(pageObj);
-          });
+        if (pageObj) { pageObj.displayLinks(dfd, destination) }
       });
   }
   return dfd.promise();
@@ -35,41 +33,38 @@ User.displayAllUsers = function(data, userType, destination) {
 
 User.prototype.displayInbox = function(destination) {
   const user = this;
-  const dfd = new $.Deferred();
-  const pageObj = Paginate.createAndDestinate(user.meta, destination)
   const friends = $("#loggedInAs").data("friends");
 
-  pageObj.user = user;
   if (destination === "#mainContent") {Breadcrumb.userAssets(user, "Messages");}
   Display.fromTemplate("inbox", {recipients:friends})
     .toElement(destination, "", true).done(function() {
       Listener.setInboxBtns(user);
-      user.displayMessages("#messageInbox", pageObj)
-        .done(function() {
+      user.displayMessages("#messageInbox")
+        .done(function(pageObj) {
           Message.deleteBtnOnCheck();
-          Display.fromTemplate("pagination", pageObj)
-            .toElement("#paginationNav", 1, true).done(function() {
-              dfd.resolve(pageObj);
-            });
+          pageObj.setLinks(`/users/${user.id}/messages`);
         });
     });
-  return dfd.promise();
 };
 
-User.prototype.displayMessages = function(destination, pageObj) {
+User.prototype.displayMessages = function(destination) {
   const user = this;
   const dfd = new $.Deferred();
+  const pageObj = Paginate.createAndDestinate(user.meta, destination)
   const isInbox = destination === "#messageInbox" ? true : false
   user.messages = Message.createFrom(user.messages);
+
+  if (destination === "#messageInbox") {pageObj.user = user;}
+
   if (isEmpty(user.messages)) {
     Display.nothingHere(destination, "", isInbox);
   } else {
     Display.fromTemplate("messages", {messages: user.messages})
       .toElement(destination, "", isInbox)
         .done(function() {
-          if (destination === "#profileContent") {$(".deleteCheckSpans").remove();}
           Listener.setMessages(user.messages);
-          dfd.resolve(pageObj);
+          if (pageObj) { pageObj.displayLinks(dfd) }
+          else { $(".deleteCheckSpans").remove(); }
         });
   }
   return dfd.promise();
@@ -101,6 +96,7 @@ User.prototype.displayPreview = function(tab, type) {
   } else if (type === "users") {
     User.displayAllUsers(this, tab.toLowerCase(), destination);
   } else if (type === "messages") {
+    $("#unreadCount").text(`${this.messages.length}`);
     this.displayMessages(destination);
   }
 };
@@ -126,7 +122,8 @@ User.prototype.addFriend = function(currentUserId) {
       .done(function(data) {
         friendIds.push(user.id);
         pendingIds.push(user.id);
-        Display.alert(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
+        AlertMessage.createAutoDismiss(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
+        // Display.alert(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
         $addFriendLink.after(pendingHtml)
           .remove();
       });
@@ -142,7 +139,8 @@ User.prototype.confirmFriend = function(currentUserId) {
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
         friendIds.push(user.id);
-        Display.alert(`You are now friends with ${data.friendship.friend.username}!`, "success");
+        AlertMessage.createAutoDismiss(`You are now friends with ${data.friendship.friend.username}!`, "success");
+        // Display.alert(`You are now friends with ${data.friendship.friend.username}!`, "success");
       });
   };
 };

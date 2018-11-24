@@ -18,10 +18,10 @@ Display.fromTemplate = function(template, obj) {
   return this;
 };
 
-Display.toElement = function(elementId, time, isInbox=false) {
+Display.toElement = function(elementId, elapsedTime, isInbox=false) {
   const html = this.html;
   const dfd = new $.Deferred();
-  const t = time || 250;
+  const t = elapsedTime || 250;
   $(`${elementId}`).fadeOut(t, function() {
     Display.inboxWidth(isInbox);
     $(this).html(html).fadeIn(t);

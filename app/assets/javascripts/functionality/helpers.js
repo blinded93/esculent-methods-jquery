@@ -1,8 +1,8 @@
 // Handlebars
 Handlebars.registerHelper("debug", function(optionalValue) {
-  console.log("Context");
-  console.log("===");
-  console.log(this);
+  // console.log("Context");
+  // console.log("===");
+  // console.log(this);
 
   if (optionalValue) {
     console.log("Value");
@@ -139,6 +139,10 @@ function isLoggedInAs(id) {
   return id === $("#loggedInAs").data("id");
 }
 
+function isLoggedIn() {
+  return $("#loggedInAs").data().length;
+}
+
 function currentUser(identifier) {
   return $("#loggedInAs").data(identifier);
 }
@@ -146,10 +150,12 @@ function currentUser(identifier) {
 function getCurrentUser() {
   $.get("/current_user")
     .done((resp) => {
-      $("#loggedInAs").data({
-        "id": resp.user.id,
-        "username": resp.user.username
-      });
+      if (resp) {
+        $("#loggedInAs").data({
+          "id": resp.user.id,
+          "username": resp.user.username
+        });
+      }
     });
 }
 
@@ -190,4 +196,12 @@ function formattedDate(dateStr) {
 
 function linkSelector(parent) {
   return function(child) { return $(`${parent} ${child}`) };
+}
+
+function toggleClass(element, klass, boolean) {
+  if (boolean) {
+    element.addClass(klass);
+  } else {
+    element.removeClass(klass);
+  }
 }

@@ -263,9 +263,6 @@ Listener.setUserInbox = function(user, linkSelector, destination) {
       .done(function(data) {
         user.assignAssetsAndMeta(data);
         user.displayInbox(destination)
-          .done(function(pageObj) {
-            pageObj.setLinks(`/users/${user.id}/messages`);
-          });
       });
   });
   return this;
@@ -362,7 +359,7 @@ Listener.setProfile = function(user) {
       user.displayPreview("Recipes", "recipes");
     });
   user.getMessages("count")
-    .done(function(data) { $("#unreadCount").text(` (${data.unread_count})`)});
+    .done(function(data) { $("#unreadCount").text(`${data.unread_count}`)});
   Listener.setEditProfileImageBtn(user)
     .setAddFriendBtn(user, "24", linkFunc)
     .setPreview(user, "Recipes", "recipes")
@@ -423,6 +420,7 @@ Listener.setAddFriendBtn = function(user, size, linkFunc) {
 Listener.setPreview = function(user, tab, type) {
   const $tab = $(`#user${tab}`);
   const tabName = $tab.data("tab");
+
   $tab.click(function(e) {
     e.preventDefault();
     user[`get${tabName}`](true)
@@ -443,7 +441,7 @@ Listener.setSeeAll = function(user, tab, type) {
   $sa.attr("href", "")
     .removeClass().addClass(`${tab.toLowerCase()}Link`)
     .off("click");
-  const linkFunc = Display.linkSelector("#seeAll");
+  const linkFunc = linkSelector("#seeAll");
   this[`setUser${tabName}`](user, linkFunc, "#mainContent");
 };
 
@@ -492,7 +490,13 @@ Listener.setShare = function(recipe, linkSelector) {
 
   $shareLink.click(function(e) {
     e.preventDefault();
-    recipe.toggleShare();
+    getCurrentUser();
+    if (isLoggedInAs(recipe.owner.id)) {
+      recipe.toggleShare();
+    } else {
+      Display.alertLogIn();
+    }
+
 
   });
   return this;
@@ -503,7 +507,9 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
     .click(function(e) {
       e.preventDefault();
       getCurrentUser();
-      if (isLoggedInAs(recipe.owner.id)) {
+      if (!isLoggedIn()) {
+        Display.createErrorAlert("Must be logged in to do that.");
+      } else if (isLoggedInAs(recipe.owner.id)) {
         Display.fromTemplate("recipe_form", recipe)
           .toElement("#mainContent")
             .done(function() {
