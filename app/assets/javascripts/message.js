@@ -77,9 +77,22 @@ Message.prototype.display = function() {
   Display.fromTemplate("message", this);
   $("#messageDropdown").html(Display.html);
   this.parse()
+    .markAsRead()
     .setDelete(Message.deleteSuccess);
   return this;
 };
+
+Message.prototype.markAsRead = function() {
+  if (!this.readAt) {
+    let unreadCount = parseInt($("#unreadCount").text());
+    $.post(`/users/${this.sender.id}/messages/${this.id}/read`)
+      .done(function(resp) {
+        $(`#message-${resp.message_id}`).removeClass("unread")
+        $("#unreadCount").text(unreadCount -= 1);
+      });
+  }
+  return this;
+}
 
 Message.prototype.parse = function() {
   if (!!this.recipe) {
