@@ -25,5 +25,6 @@ Rails.application.routes.draw do
     post '/friend' => 'users#friend'
     get '/friends' => 'users#friends'
     get '/friendships' => 'users#friendships'
+    post '/messages/:id/read' => 'messages#read'
   end
 end
