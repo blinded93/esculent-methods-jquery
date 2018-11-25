@@ -3,23 +3,27 @@
     <div class="col">
       <div class="recipeTitle">
         <span class="mb-0 h5 mr-2">{{name}}</span>
-        <span id="social">
-          <a href="" class="favorite">
-            <img id="favoriteImg" src="/assets/icons/favorite-bw.png" alt="Favorite">
-          </a>
-            <a href="" class="share" data-toggle="shareDropdown" aria-haspopup="true" aria-expanded="false">
-              <img id="shareImg" src="/assets/icons/share-bw.png" alt="Share">
+        {{#ifLoggedIn}}
+          <span id="social">
+            <a href="" class="favorite">
+              <img id="favoriteImg" src="/assets/icons/favorite-bw.png" alt="Favorite">
             </a>
-            <div id="shareDropdown" class="dropdown-menu" style="display:none;">
-              <div class="shareRecipeWindow">
-                <div class="shareForm">
+            {{#ifOwned owner.id}}
+              <a href="" class="share" data-toggle="shareDropdown" aria-haspopup="true" aria-expanded="false">
+                <img id="shareImg" src="/assets/icons/share-bw.png" alt="Share">
+              </a>
+              <div id="shareDropdown" class="dropdown-menu" style="display:none;">
+                <div class="shareRecipeWindow">
+                  <div class="shareForm">
+                  </div>
                 </div>
               </div>
-            </div>
-          <a href="" class="edit">
-            <img id="editImg" src="/assets/icons/edit-bw.png" alt="Edit">
-          </a>
-        </span>
+              <a href="" class="edit">
+                <img id="editImg" src="/assets/icons/edit-bw.png" alt="Edit">
+              </a>
+            {{/ifOwned}}
+          </span>
+        {{/ifLoggedIn}}
       </div>
       <div id="recipeInfo" class="small">
         Cook Time: <span class="blue">{{cookTime}} min</span> |
