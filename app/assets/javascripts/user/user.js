@@ -38,18 +38,15 @@ User.prototype.displayInbox = function(destination) {
   const friends = $("#loggedInAs").data("friends");
   const breadcrumb = Breadcrumb.current();
 
-  Display.fromTemplate("inbox", {recipients:friends})
-    .toElement(destination, "", true).done(function() {
-      Listener.setInboxBtns(user);
-      user.displayMessages("#messageInbox")
-        .done(function(pageObj) {
-          Message.deleteBtnOnCheck();
-          pageObj.setLinks(`/users/${user.id}/messages`);
-        });
-    });
   if (destination === "#mainContent") {breadcrumb.addUserAssets(user, "Messages");}
   display.fromTemplate("inbox", {recipients:friends})
          .toElement(destination, "", true).done(function() {
+           Listener.setInboxBtns(user);
+           user.displayMessages("#messageInbox")
+               .done(function(pageObj) {
+                 Message.deleteBtnOnCheck();
+                 pageObj.setLinks(`/users/${user.id}/messages`);
+               });
          });
 };
 
