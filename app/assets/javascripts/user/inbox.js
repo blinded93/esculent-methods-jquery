@@ -6,7 +6,7 @@ function Inbox(owner) {
 
 Inbox.prototype.display = function(destination) {
   const dfd = new $.Deferred();
-  const pageObj = Paginate.createAndDestinate(this.owner.meta, destination)
+  const pageObj = Paginate.createAndDestinate(this.owner.meta, destination);
   const breadcrumb = Breadcrumb.current();
   pageObj.user = this.owner;
 
@@ -18,10 +18,6 @@ Inbox.prototype.display = function(destination) {
         .done(function() {
           Message.deleteBtnOnCheck();
           if (pageObj) { pageObj.displayLinks(dfd, destination); }
-          // Display.fromTemplate("pagination", pageObj)
-          //   .toElement("#paginationNav", 1, true).done(function() {
-          //     dfd.resolve(pageObj);
-          //   });
         });
     });
   return dfd.promise();

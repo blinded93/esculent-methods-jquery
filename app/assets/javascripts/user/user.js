@@ -65,13 +65,13 @@ User.prototype.displayMessages = function(destination) {
   if (isEmpty(user.messages)) {
     display.nothingHere(destination, "", isInbox);
   } else {
-        .done(function() {
-          Listener.setMessages(user.messages);
-          if (pageObj) { pageObj.displayLinks(dfd) }
-          else { $(".deleteCheckSpans").remove(); }
-        });
     display.fromTemplate("messages", {messages: user.messages})
            .toElement(destination, "", isInbox)
+             .done(function() {
+               Listener.setMessages(user.messages);
+               if (pageObj) { pageObj.displayLinks(dfd, destination) }
+               else { $(".deleteCheckSpans").remove(); }
+             });
   }
   return dfd.promise();
 };
@@ -130,7 +130,7 @@ User.prototype.addFriend = function(currentUserId) {
 
   return function() {
     const params = { "friend_id": user.id, "request": true };
-    const $addFriendLink = linkSelector(`#user-${user.id}`)(".addFriend");
+    const $addFriendLink = $(`#user-${user.id} .addFriend`);
     const pendingHtml = "<small class='text-success'>Pending</small>";
 
     $.post(`/users/${currentUserId}/friend`, params)

@@ -79,7 +79,7 @@ Search.prototype.displayErrors = function() {
 
 Search.prototype.getError = function() {
   const selected = $("#type option:selected").text();
-  this.errors = `No ${selected} found.`;
+  this.errors = `No ${selected.toLowerCase()} found.`;
   Listener.setHome();
   // Breadcrumb.reset();
 };

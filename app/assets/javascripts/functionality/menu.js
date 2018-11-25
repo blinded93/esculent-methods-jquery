@@ -5,11 +5,14 @@ function Menu(template) {
   this.footer = null;
 }
 
+
 Menu.setup = function() {
   const menu = new this();
+
   menu.slideEffect()
-    .getType(menu);
+      .getType(menu);
 };
+
 
 Menu.prototype.setFooter = function() {
   switch (this.template) {
