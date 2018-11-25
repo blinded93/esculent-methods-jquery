@@ -3,15 +3,17 @@
     <img class="rounded" src="{{thumbURL}}">
     <div class="ml-3 small">
       <a href="" class="userLink black h6">{{username}}</a>
-      {{#ifFriend id}}
-        {{#ifPending id}}
-          <small class="text-success">Pending</small>
-        {{/ifPending}}
-      {{else}}
-      <a href="" class="addFriend">
-        <img style="vertical-align:text-top" src="/assets/icons/add-friend-16-bw.png" alt="Add Friend" class="addFriendImg" title="Add Friend">
-      </a>
-      {{/ifFriend}}
+      {{#ifLoggedIn}}
+        {{#ifFriend id}}
+          {{#ifPending id}}
+            <small class="text-success">Pending</small>
+          {{/ifPending}}
+        {{else}}
+        <a href="" class="addFriend">
+          <img style="vertical-align:text-top" src="/assets/icons/add-friend-16-bw.png" alt="Add Friend" class="addFriendImg" title="Add Friend">
+        </a>
+        {{/ifFriend}}
+      {{/ifLoggedIn}}
       <br>
       <a href="" class="favoritesLink">Favorites</a> | <a href="" class="recipesLink">Recipes</a>
     </div>
