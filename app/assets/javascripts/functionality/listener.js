@@ -75,17 +75,6 @@ Listener.confirmation = function(menu) {
   });
 };
 
-// Home button listener
-Listener.setHome = function() {
-  const $home = $("#home");
-  $home.addClass("linkCursor");
-  $home.one("click", function(e) {
-    e.preventDefault();
-    Recipe.getAllRecipes();
-    Breadcrumb.reset();
-  });
-};
-
 // User results listeners
 
 Listener.setUserResults = function(users) {
