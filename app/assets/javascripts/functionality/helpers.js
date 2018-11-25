@@ -85,9 +85,14 @@ Handlebars.registerHelper("formattedDate", function(date) {
   return formattedDate(date);
 });
 
-Handlebars.registerHelper("ifOwned", function(id, options) {
-  const currentUserId = $("#loggedInAs").data("id");
-  if (id === currentUserId) {
+Handlebars.registerHelper("ifOwned", function(ownerId, options) {
+  if (ownerId === currentUser("id")) {
+    return options.fn(this);
+  }
+});
+
+Handlebars.registerHelper("ifLoggedIn", function(options) {
+  if (isLoggedIn()) {
     return options.fn(this);
   }
 });
@@ -136,20 +141,20 @@ function switchElementData(from, to) {
 }
 
 function isLoggedInAs(id) {
-  return id === $("#loggedInAs").data("id");
+  return id === currentUser("id");
 }
 
 function isLoggedIn() {
-  return $("#loggedInAs").data().length;
+  return !isEmpty(currentUser());
 }
 
 function currentUser(identifier) {
   return $("#loggedInAs").data(identifier);
 }
 
-function getCurrentUser() {
-  $.get("/current_user")
-    .done((resp) => {
+function assignCurrentUser() {
+  getCurrentUser()
+    .done(resp => {
       if (resp) {
         $("#loggedInAs").data({
           "id": resp.user.id,
@@ -159,13 +164,17 @@ function getCurrentUser() {
     });
 }
 
+function getCurrentUser() {
+  return $.get("/current_user");
+}
+
 function randomId() {
-  return Math.floor(Math.random() * 100000)
+  return Math.floor(Math.random() * 100000);
 }
 
 function iconHover(img, icon) {
   return $(img).hover(function() {
-    changeIconSrc(this, icon)
+    changeIconSrc(this, icon);
   }, function() {
     changeIconSrc(this, `${icon}-bw`);
   });
@@ -184,17 +193,17 @@ function getFilename(path) {
 }
 
 function dateString(date) {
-  const d = date ? new Date(date) : new Date()
+  const d = date ? new Date(date) : new Date();
   return d.toDateString();
 }
 
 function formattedDate(dateStr) {
   const today = dateString();
   const date = dateString(dateStr);
-  return today === date ? "Today" : date.split(" ").slice(1, 3).join(" ")
+  return today === date ? "Today" : date.split(" ").slice(1, 3).join(" ");
 }
 
-function linkSelector(parent) {
+function linkSelectorFunction(parent) {
   return function(child) { return $(`${parent} ${child}`) };
 }
 
