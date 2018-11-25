@@ -351,8 +351,7 @@ Listener.setProfile = function(user) {
       user.recipes = data.recipes;
       user.displayPreview("Recipes", "recipes");
     });
-  user.getMessages("count")
-    .done(function(data) { $("#unreadCount").text(`${data.unread_count}`)});
+  user.displayUnreadCount();
   Listener.setEditProfileImageBtn(user)
     .setAddFriendBtn(user, "24", linkFunc)
     .setPreview(user, "Recipes", "recipes")

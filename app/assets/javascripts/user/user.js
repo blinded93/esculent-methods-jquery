@@ -109,6 +109,13 @@ User.prototype.displayPreview = function(tab, type) {
   }
 };
 
+User.prototype.displayUnreadCount = function() {
+  if (isLoggedIn()) {
+    this.getMessages("count")
+      .done(function(data) { $("#unreadCount").text(`${data.unread_count}`)});
+  }
+};
+
 User.prototype.assignAssetsAndMeta = function(data) {
   user = this;
   Object.keys(data).forEach(function(key) {
