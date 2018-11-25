@@ -136,7 +136,8 @@ Listener.setNewRecipe = function(user) {
   $("#createRecipe").one("click", function(e) {
     const el = this;
     e.preventDefault();
-    Display.fromTemplate("recipe_form").toElement("#mainContent")
+    e.stopPropagation();
+    display.fromTemplate("recipe_form").toElement("#mainContent")
       .done(function() {
         $(el).hide();
         Listener.setRecipeForm(user, "POST");
@@ -202,7 +203,7 @@ Listener.setAddItem = function(itemType) {
   $(`#add${capitalize(itemType)}`).click(function(e) {
     e.preventDefault();
     const i = {id:randomId()};
-    Display.fromTemplate(itemType, i);
+    display.fromTemplate(itemType, i);
     $(`#recipe${capitalize(itemType)}s`).append(Display.html);
     Listener.setRemoveItem(itemType, i.id, $(`#remove-${i.id}`));
   });

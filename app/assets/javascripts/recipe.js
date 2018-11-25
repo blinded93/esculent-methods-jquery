@@ -35,11 +35,12 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
   if (isEmpty(recipes)) {
     Display.nothingHere(destination);
   } else {
-    Display.fromTemplate("recipes", {recipes:recipes})
-      .toElement(destination).done(function() {
-        Listener.setRecipeResults(recipes);
-        if (pageObj) { pageObj.displayLinks(dfd, destination); }
-      });
+    display.fromTemplate("recipes", {recipes:recipes})
+      .toElement(destination)
+        .done(function() {
+          Listener.setRecipeResults(recipes);
+          if (pageObj) { pageObj.displayLinks(dfd, destination); }
+        });
   }
   return dfd.promise();
 };
@@ -154,7 +155,7 @@ Recipe.prototype.setShareForm = function() {
   const recipe = this;
   const friends = $("#loggedInAs").data("friends");
 
-  Display.fromTemplate("recipe_share", {friends:friends})
+  display.fromTemplate("recipe_share", {friends:friends})
     .toElement(".shareForm", 1)
     .done(function(data) {
       recipe.setShareSubmit();

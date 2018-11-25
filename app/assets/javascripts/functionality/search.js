@@ -69,7 +69,7 @@ Search.prototype.evaluateUsers = function(resp) {
 
 Search.prototype.displayErrors = function() {
   this.getError();
-  Display.fromTemplate("error", this)
+  display.fromTemplate("error", this)
   .toElement("#mainContent");
 };
 

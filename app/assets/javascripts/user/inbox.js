@@ -10,7 +10,7 @@ Inbox.prototype.display = function(destination) {
   pageObj.user = this.owner;
   Breadcrumb.userAssets(this.owner, "Messages");
 
-  Display.fromTemplate("inbox", {friends: this.recipients})
+  display.fromTemplate("inbox", {friends: this.recipients})
     .toElement(destination, "", true).done(function() {
       Listener.setInboxBtns(user);
       user.displayMessages("#messageInbox", pageObj)
@@ -31,7 +31,7 @@ Inbox.deleteMessageRows = function(resp) {
     $(`#message-${id}`).slideUp(200, function() {
       $(this).remove();
       if (!$(".deleteChecks").length) {
-        Display.nothingHere("#messageInbox", "", true);
+        display.nothingHere("#messageInbox", "", true);
       }
       $("#deleteBtn").fadeOut(200);
     });

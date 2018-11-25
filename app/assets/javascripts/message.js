@@ -74,8 +74,8 @@ Message.submit = function(user, successFunc) {
 };
 
 Message.prototype.display = function() {
-  Display.fromTemplate("message", this);
-  $("#messageDropdown").html(Display.html);
+  const html = display.hbsPartial("message");
+  $("#messageDropdown").html(html(this));
   this.parse()
     .markAsRead()
     .setDelete(Message.deleteSuccess);
@@ -135,7 +135,7 @@ Message.prototype.setReply = function() {
 
   $("#reply").click(function(e) {
     message.close(function() {
-      Display.fromTemplate("message_reply", message);
+      display.fromTemplate("message_reply", message);
       $(this).html(Display.html).slideDown(200, function() {
         message.setReplyCancel()
           .setReplySubmit()

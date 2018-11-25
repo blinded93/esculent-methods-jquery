@@ -48,7 +48,7 @@ Menu.prototype.load = function(menu, resp) {
   if (!!resp) {
     menu.template = "nav";
   }
-  const html = Display.templates[menu.template](resp);
+  const html = display.menuTemplate(menu.template, resp);
   menu.element.html(html);
   return this;
 };

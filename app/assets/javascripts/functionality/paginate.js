@@ -20,8 +20,10 @@ Paginate.createAndDestinate = function(meta, destination) {
 
 Paginate.prototype.displayLinks = function(dfd) {
   const pageObj = this;
-  Display.fromTemplate("pagination", pageObj)
-    .toElement("#paginationNav", 1, true).done(function() {
+  const isInbox = destination === "#messageInbox" ? true : false;
+
+  display.fromTemplate("pagination", pageObj)
+    .toElement("#paginationNav", 1, isInbox).done(function() {
       dfd.resolve(pageObj);
   });
 };

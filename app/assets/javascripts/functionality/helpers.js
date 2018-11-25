@@ -11,11 +11,11 @@ Handlebars.registerHelper("debug", function(optionalValue) {
   }
 });
 
-Handlebars.registerPartial("ingredient", Display.templates.ingredient);
-Handlebars.registerPartial("direction", Display.templates.direction);
-Handlebars.registerPartial("messages", Display.templates.messages);
-Handlebars.registerPartial("messageForm", Display.templates.message_form);
-Handlebars.registerPartial("recipeShare", Display.templates.recipe_share);
+Handlebars.registerPartial("ingredient", display.hbsPartial("ingredient"));
+Handlebars.registerPartial("direction", display.hbsPartial("direction"));
+Handlebars.registerPartial("messages", display.hbsPartial("messages"));
+Handlebars.registerPartial("messageForm", display.hbsPartial("message_form"));
+Handlebars.registerPartial("recipeShare", display.hbsPartial("recipe_share"));
 
 Handlebars.registerHelper("ifUnowned", function(id, options) {
   if (!$(".breadcrumb-item").last().text().includes("My")) {

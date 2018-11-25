@@ -20,13 +20,13 @@ User.displayAllUsers = function(data, userType, destination) {
 
   if (destination === "#mainContent") {Breadcrumb.userAssets(data, "Friends");}
   if (isEmpty(users)) {
-    Display.nothingHere(destination);
+    display.nothingHere(destination);
   } else {
-    Display.fromTemplate("users", {users:users})
-      .toElement(destination).done(function() {
-        Listener.setUserResults(users);
-        if (pageObj) { pageObj.displayLinks(dfd, destination) }
-      });
+    display.fromTemplate("users", {users:users})
+           .toElement(destination).done(function() {
+             Listener.setUserResults(users);
+             if (pageObj) { pageObj.displayLinks(dfd, destination) }
+           });
   }
   return dfd.promise();
 };
@@ -45,6 +45,9 @@ User.prototype.displayInbox = function(destination) {
           pageObj.setLinks(`/users/${user.id}/messages`);
         });
     });
+  display.fromTemplate("inbox", {recipients:friends})
+         .toElement(destination, "", true).done(function() {
+         });
 };
 
 User.prototype.displayMessages = function(destination) {
@@ -59,8 +62,6 @@ User.prototype.displayMessages = function(destination) {
   if (isEmpty(user.messages)) {
     Display.nothingHere(destination, "", isInbox);
   } else {
-    Display.fromTemplate("messages", {messages: user.messages})
-      .toElement(destination, "", isInbox)
         .done(function() {
           Listener.setMessages(user.messages);
           if (pageObj) { pageObj.displayLinks(dfd) }
@@ -78,12 +79,12 @@ User.prototype.displayProfile = function() {
   const user = this;
   $.get(`/users/${user.id}`)
     .done(function(data) {
-      Display.fromTemplate("user", user)
-        .toElement("#mainContent")
           .done(function() {
             Breadcrumb.profile(user);
             Listener.setProfile(user);
           });
+      display.fromTemplate("user", user)
+             .toElement("#mainContent")
     });
 };
 
@@ -165,16 +166,19 @@ User.prototype.setData = function() {
 
 User.prototype.getRecipes = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
+
   return $.get(`/users/${this.id}/recipes`, previewObj);
 };
 
 User.prototype.getFavorites = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
+
   return $.get(`/users/${this.id}/favorites`, previewObj);
 };
 
 User.prototype.getFriends = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
+
   return $.get(`/users/${this.id}/friends`, previewObj);
 };
 
