@@ -18,7 +18,7 @@ Paginate.createAndDestinate = function(meta, destination) {
   }
 };
 
-Paginate.prototype.displayLinks = function(dfd) {
+Paginate.prototype.displayLinks = function(dfd, destination) {
   const pageObj = this;
   const isInbox = destination === "#messageInbox" ? true : false;
 

@@ -32,7 +32,7 @@ Listener.setFooter = function(menu) {
 Listener.setNav = function(menu, resp) {
   const user = new User(resp.user);
   $("#menu").data({menu:menu});
-  const linkFunc = Display.linkSelector("#menu");
+  const linkFunc = linkSelectorFunction("#menu");
   this.setUser(user, linkFunc)
     .setUserRecipes(user, linkFunc, "#mainContent")
     .setUserFavorites(user, linkFunc, "#mainContent")
@@ -90,7 +90,7 @@ Listener.setHome = function() {
 
 Listener.setUserResults = function(users) {
   users.forEach(user => {
-    const linkFunc = Display.linkSelector(`#user-${user.id}`);
+    const linkFunc = linkSelectorFunction(`#user-${user.id}`);
     Listener.setUser(user, linkFunc, "#mainContent")
       .setUserRecipes(user, linkFunc, "#mainContent")
       .setUserFavorites(user, linkFunc, "#mainContent")
@@ -117,9 +117,10 @@ Listener.setAddFriend = function(user, linkSelector) {
 
 Listener.setUserRecipes = function(user, linkSelector, destination) {
   linkSelector(".recipesLink").click(function(e) {
+    const preview = destination === "#mainContent" ? null : true;
+
     e.preventDefault();
     Search.backToResultsLink();
-    const preview = destination === "#mainContent" ? null : true;
     user.getRecipes(preview)
       .done(function(data) {
         user.assignAssetsAndMeta(data);
@@ -295,7 +296,7 @@ Listener.setInboxBtns = function(user) {
 
 Listener.setMessages = function(messages) {
   messages.forEach(function(message, i) {
-    const linkFunc = Display.linkSelector(`#message-${message.id}`);
+    const linkFunc = linkSelectorFunction(`#message-${message.id}`);
     Listener.setUser(message.sender, linkFunc)
             .setMessage(message, linkFunc);
   });
@@ -352,7 +353,7 @@ Listener.setFilterSelect = function(user) {
 
 // User profile listeners
 Listener.setProfile = function(user) {
-  const linkFunc =  linkSelector(".profileImage");
+  const linkFunc = linkSelectorFunction(".profileImage");
   $("#seeAll").show();
   user.getRecipes(true)
     .done(function(data) {
@@ -441,7 +442,7 @@ Listener.setSeeAll = function(user, tab, type) {
   $sa.attr("href", "")
     .removeClass().addClass(`${tab.toLowerCase()}Link`)
     .off("click");
-  const linkFunc = linkSelector("#seeAll");
+  const linkFunc = linkSelectorFunction("#seeAll");
   this[`setUser${tabName}`](user, linkFunc, "#mainContent");
 };
 
@@ -449,7 +450,7 @@ Listener.setSeeAll = function(user, tab, type) {
 
 Listener.setRecipeResults = function(recipes) {
   recipes.forEach(recipe => {
-    const linkFunc = Display.linkSelector(`#recipe-${recipe.id}`);
+    const linkFunc = linkSelectorFunction(`#recipe-${recipe.id}`);
     this.setRecipe(recipe, linkFunc)
       .setUser(recipe.owner, linkFunc);
   });
@@ -465,15 +466,15 @@ Listener.setRecipe = function(recipe, linkSelector) {
 };
 
 Listener.setSocialBtns = function(recipe) {
-  const linkFunc = Display.linkSelector("#social");
+  const linkFunc = linkSelectorFunction("#social");
   this.setFavorite(recipe, linkFunc)
     .setShare(recipe, linkFunc)
     .setEditRecipe(recipe, linkFunc);
   return this;
 };
 
-Listener.setFavorite = function(recipe, linkSelector) {
-  const $favLink = linkSelector(".favorite");
+Listener.setFavorite = function(recipe, linkFunc) {
+  const $favLink = linkFunc(".favorite");
   $favLink.click(function(e) {
     e.preventDefault();
     recipe.favorite();
@@ -481,8 +482,8 @@ Listener.setFavorite = function(recipe, linkSelector) {
   return this;
 };
 
-Listener.setShare = function(recipe, linkSelector) {
-  const $shareLink = linkSelector(".share");
+Listener.setShare = function(recipe, linkFunc) {
+  const $shareLink = linkFunc(".share");
   const $dropdown = $("#shareDropdown");
 
   iconHover("#shareImg", "share");
@@ -490,7 +491,7 @@ Listener.setShare = function(recipe, linkSelector) {
 
   $shareLink.click(function(e) {
     e.preventDefault();
-    getCurrentUser();
+    assignCurrentUser();
     if (isLoggedInAs(recipe.owner.id)) {
       recipe.toggleShare();
     } else {
@@ -506,7 +507,7 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
   iconHover("#editImg", "edit")
     .click(function(e) {
       e.preventDefault();
-      getCurrentUser();
+      assignCurrentUser();
       if (!isLoggedIn()) {
         AlertMessage.createError("Must be logged in to do that.");
       } else if (isLoggedInAs(recipe.owner.id)) {

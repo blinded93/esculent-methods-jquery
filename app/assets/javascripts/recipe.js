@@ -33,7 +33,7 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
     Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
   }
   if (isEmpty(recipes)) {
-    Display.nothingHere(destination);
+    display.nothingHere(destination);
   } else {
     display.fromTemplate("recipes", {recipes:recipes})
       .toElement(destination)
@@ -61,7 +61,7 @@ Recipe.prototype.get = function() {
 Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
   recipe.owner ? recipe.owner : recipe.owner = this.owner;
-  Display.fromTemplate("recipe", recipe)
+  display.fromTemplate("recipe", recipe)
     .toElement("#mainContent")
       .done(function() {
         recipe.favorited()
@@ -92,7 +92,7 @@ Recipe.prototype.favorite = function() {
       if (isEmpty(resp.errors)) {
         recipe.toggleIcon(!!resp.favoriteStatus, "favorite");
       } else if (!!resp.errors.loggedOut) {
-        Display.alert(resp.errors.loggedOut, "danger");
+        AlertMessage.createAutoDismiss(resp.errors.loggedOut, "danger");
       }
     });
 };
@@ -140,11 +140,9 @@ Recipe.prototype.setShareSubmit = function() {
         success: function(resp) {
           if (isEmpty(resp.errors)) {
             recipe.toggleShare();
-            Display.alert(`Shared ${recipe.name} with `, "success");
+            AlertMessage.createAutoDismiss(`Shared ${recipe.name} with `, "success");
             $(form).trigger("reset");
-          } // else if (!!resp.errors.loggedOut) {
-          //   Display.alert(resp.errors.leggedOut, "danger");
-          // }
+          }
         }
       });
     }

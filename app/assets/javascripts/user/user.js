@@ -60,13 +60,15 @@ User.prototype.displayMessages = function(destination) {
   if (destination === "#messageInbox") {pageObj.user = user;}
 
   if (isEmpty(user.messages)) {
-    Display.nothingHere(destination, "", isInbox);
+    display.nothingHere(destination, "", isInbox);
   } else {
         .done(function() {
           Listener.setMessages(user.messages);
           if (pageObj) { pageObj.displayLinks(dfd) }
           else { $(".deleteCheckSpans").remove(); }
         });
+    display.fromTemplate("messages", {messages: user.messages})
+           .toElement(destination, "", isInbox)
   }
   return dfd.promise();
 };
@@ -147,12 +149,14 @@ User.prototype.confirmFriend = function(currentUserId) {
 
 User.prototype.setData = function() {
   const user = this;
+
   user.getRecipients()
     .done(function(data) {
+      const friends = data.friendships.map(f => f.friend);
       const pendingIds = data.friendships.map(function(f) {
         if (!!f.request) { return f.friend.id }
       });
-      const friends = data.friendships.map(f => f.friend);
+
       $("#loggedInAs").data({
         id:user.id,
         username:user.username,
