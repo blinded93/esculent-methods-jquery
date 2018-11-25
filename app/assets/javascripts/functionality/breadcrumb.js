@@ -1,67 +1,113 @@
 function Breadcrumb() {
+  this.list = $(".breadcrumb");
+  this.home = $("#home");
 }
 
-Breadcrumb.adjust = function(title, classLink) {
-  const $li = $("<li>", {"class": `breadcrumb-item ${classLink}`}).html(title);
-  Listener.setHome();
-  $(".breadcrumb").append($li);
-  return this;
+Breadcrumb.prototype.listItems = function() { return $(".breadcrumb-item"); };
+
+Breadcrumb.current = function() {
+  return $(".breadcrumb").data("breadcrumb");
 };
 
-Breadcrumb.link = function() {
-  Listener.setBcLink();
+
+Breadcrumb.createAndSave = function() {
+  const bc = new Breadcrumb();
+
+  $("ol.breadcrumb").data("breadcrumb", bc);
 };
 
-Breadcrumb.navItem = function(title, classLink) {
+
+Breadcrumb.prototype.setHome = function() {
   const bc = this;
-  return function() {
-    bc.reset()
-      .adjust(`My ${title}`, classLink);
-  };
-};
 
-Breadcrumb.removeLast = function() {
-  if ($(".breadcrumb").children()[1]) {
-    $(".breadcrumb").children().last().remove();
+  if (!jQuery._data($("#home")[0], "events")) {
+    bc.home.addClass("linkCursor")
+      .one("click", function(e) {
+        e.preventDefault();
+        Recipe.getAllRecipes();
+        bc.reset();
+      });
   }
   return this;
 };
 
-Breadcrumb.reset = function() {
-  $(".breadcrumb li:not(:first)").remove();
-  $("#home").removeClass("linkCursor");
+
+Breadcrumb.prototype.reset = function() {
+  this.listItems().not(":first").remove();
+  this.home.removeClass("linkCursor");
   return this;
 };
 
-Breadcrumb.search = function() {
-  Breadcrumb.reset()
-    .adjust($("#type option:selected").text())
-    .adjust($('#search').data('query'), "searchLink");
+
+Breadcrumb.prototype.addLink = function(title, classLink) {
+  const $li = $("<li>", {"class": `breadcrumb-item ${classLink}`}).html(title);
+
+  this.setHome()
+      .list.append($li);
+  return this;
 };
 
-Breadcrumb.profile = function(user) {
-  const userTitle = isLoggedInAs(user.id) ? "My Profile" : user.username;
+
+Breadcrumb.prototype.addSearch = function() {
+  const userTitle = $("#type option:selected").text();
+  const searchQuery = $("#search").data("query");
+
   this.reset()
-    .adjust(userTitle, "userLink");
+      .addLink(userTitle, "userLink")
+      .addLink(searchQuery, "searchLink");
   return this;
 };
 
-Breadcrumb.userAssets = function(user, items) {
-  const linkSelector = Display.linkSelector(".breadcrumb");
+
+Breadcrumb.prototype.addProfile = function(user) {
+  const userTitle = isLoggedInAs(user.id) ? "My Profile" : user.username;
+
+  this.reset()
+      .addLink(userTitle, "userLink");
+  return this;
+};
+
+
+Breadcrumb.prototype.addUserAssets = function(user, items) {
+  const linkFunc = linkSelectorFunction(".breadcrumb");
+
   if (!!user.id) {
+    this.reset();
+
     if (isLoggedInAs(user.id)) {
-      this.reset()
-        .adjust(`My ${items}`, `${items.toLowerCase()}Link`)
-        if (linkSelector(".recipesLink").text().includes("Recipes")) {
-          const html = "<a href=''id='createRecipe' class='black small'>&nbsp;&nbsp;(New)</a>"
-          linkSelector(".recipesLink").append(html);
-          Listener.setNewRecipe(user);
-        }
+      this.addLink(`My ${items}`, `${items.toLowerCase()}Link`)
+          .addNewRecipeLink();
     } else {
-      this.reset()
-        .profile(user)
-        .adjust(items, `${items.toLowerCase()}Link`);
-      Listener.setUser(user, linkSelector)
+      this.addProfile(user)
+          .addLink(items, `${items.toLowerCase()}Link`);
+      Listener.setUser(user, linkFunc);
     }
+
   }
+};
+
+
+Breadcrumb.prototype.addNewRecipeLink = function() {
+  const lastItem = this.listItems().last();
+  const html = "<a href=''id='createRecipe' class='black small'>&nbsp;&nbsp;(New)</a>";
+
+  if (lastItem.text().includes("Recipes")) {
+    lastItem.append(html);
+    this.setNewRecipeLink();
+  }
+};
+
+
+Breadcrumb.prototype.setNewRecipeLink = function() {
+  $("#createRecipe").one("click", function(e) {
+    const el = this;
+
+    e.preventDefault()
+    e.stopPropagation();
+    display.fromTemplate("recipe_form").toElement("#mainContent")
+      .done(function() {
+        $(el).hide();
+        Listener.setRecipeForm(user, "POST");
+      });
+  });
 };
