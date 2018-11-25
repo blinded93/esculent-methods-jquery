@@ -68,13 +68,13 @@ Recipe.prototype.display = function(data) {
   display.fromTemplate("recipe", recipe)
     .toElement("#mainContent")
       .done(function() {
-        recipe.favorited()
-          .done(function(resp) {
-            const linkFunc = Display.linkSelector(".breadcrumb");
-            Breadcrumb.userAssets(recipe.owner, "Recipes");
-            Listener.setSocialBtns(recipe)
-              .setUser(recipe.owner, linkFunc)
-          });
+        breadcrumb.addUserAssets(recipe.owner, "Recipes");
+        if (isLoggedIn()) {
+          recipe.favorited()
+            .done(function(resp) {
+              Listener.setSocialBtns(recipe)
+            });
+        }
       });
 };
 
