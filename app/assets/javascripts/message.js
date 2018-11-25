@@ -39,7 +39,7 @@ Message.setForm = function(user) {
         $("#newMessageForm").trigger("reset");
         Message.setForm(user);
       });
-      Display.alert("Message sent!", "success");
+      AlertMessage.createAutoDismiss("Message sent!", "success");
     });
   return this;
 };
@@ -113,7 +113,7 @@ Message.prototype.setAccept = function() {
   const currentUserId = $("#loggedInAs").data("id");
   $("#accept").click(function(e) {
     message.close(message.sender.confirmFriend(currentUserId));
-    Display.alert(`You are now friends with ${message.sender.username}!`, "success");
+    AlertMessage.createAutoDismiss(`You are now friends with ${message.sender.username}!`, "success");
     message.delete();
   });
 };
@@ -172,7 +172,7 @@ Message.prototype.setReplySubmit = function(html) {
   const message = this;
   Message.setSubmit(this.sender, "#replyMessageForm", function(resp) {
     message.close();
-    Display.alert("Message sent!", "success");
+    AlertMessage.createAutoDismiss("Message sent!", "success");
   });
   return this;
 };

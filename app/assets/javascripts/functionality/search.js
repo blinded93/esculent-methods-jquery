@@ -25,7 +25,7 @@ Search.prototype.processQuery = function() {
 
 Search.backToResultsLink = function() {
   if (!!$(".searchLink").length) {
-    Display.toggleAlert();
+    AlertMessage.toggle();
     switchElementData(".searchLink", "#toSearchResults");
     Listener.setBackToResults();
   }
@@ -36,7 +36,7 @@ Search.prototype.evaluateResp = function(resp) {
   if (!!resp.recipes) { this.evaluateRecipes(resp); }
   else if (!!resp.users) { this.evaluateUsers(resp); }
 
-  Display.createSearchAlert(this.form.data("query"));
+  const alert = AlertMessage.createSearch(this.form.data("query"));
   return this;
 };
 
@@ -93,7 +93,7 @@ Search.prototype.populateData = function(meta) {
 
 Search.prototype.resetSearchAlert = function() {
   if ($("#toSearchResults").is(":visible")) {
-    Display.toggleAlert();
+    AlertMessage.toggle();
   }
   return this;
 };

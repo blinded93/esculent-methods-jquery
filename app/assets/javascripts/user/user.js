@@ -141,7 +141,6 @@ User.prototype.confirmFriend = function(currentUserId) {
       .done(function(data) {
         friendIds.push(user.id);
         AlertMessage.createAutoDismiss(`You are now friends with ${data.friendship.friend.username}!`, "success");
-        // Display.alert(`You are now friends with ${data.friendship.friend.username}!`, "success");
       });
   };
 };

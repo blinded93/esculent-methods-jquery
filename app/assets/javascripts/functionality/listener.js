@@ -66,7 +66,7 @@ Listener.confirmation = function(menu) {
       menu.element.slideUp(100, function() {
         menu.template = "login";
         menu.getType(menu);
-        Display.alert("Logged out successfully.", "success");
+        AlertMessage.createAutoDismiss("Logged out successfully.", "success");
         $("#loggedInAs").removeData();
         Recipe.getAllRecipes();
         Breadcrumb.reset();
@@ -111,7 +111,7 @@ Listener.setAddFriend = function(user, linkSelector) {
   linkSelector(".addFriend").click(function(e) {
     e.preventDefault();
     Search.backToResultsLink();
-    Display.createAddFriendAlert(user);
+    AlertMessage.createAddFriend(user);
   });
 };
 
@@ -379,13 +379,12 @@ Listener.setProfileImageTypeCheck = function(user) {
   $("#profileImageInput").change(function(e) {
     const imgName = this.value.replace(/^.*[\\\/]/, '');
     if (["jpeg", "jpg", "png"].includes(getExt(this))) {
-      Display.createEditImageAlert(imgName, user)
-        .toggleAlert();
+      AlertMessage.createEditImage(imgName, user);
     } else {
       window.setTimeout(changeIconSrc, 50, "#upload", "upload-wrong");
       window.setTimeout(changeIconSrc, 2250, "#upload", "upload-bw");
       $("#profileImageInput").val("");
-      Display.createErrorAlert("Profile image must be jpeg or png.");
+      AlertMessage.createError("Profile image must be jpeg or png.");
     }
   });
 };
@@ -495,7 +494,7 @@ Listener.setShare = function(recipe, linkSelector) {
     if (isLoggedInAs(recipe.owner.id)) {
       recipe.toggleShare();
     } else {
-      Display.alertLogIn();
+      AlertMessage.createAutoDismiss("Must be logged in to do that", "danger");
     }
 
 
@@ -509,15 +508,15 @@ Listener.setEditRecipe = function(recipe, linkSelector) {
       e.preventDefault();
       getCurrentUser();
       if (!isLoggedIn()) {
-        Display.createErrorAlert("Must be logged in to do that.");
+        AlertMessage.createError("Must be logged in to do that.");
       } else if (isLoggedInAs(recipe.owner.id)) {
-        Display.fromTemplate("recipe_form", recipe)
+        display.fromTemplate("recipe_form", recipe)
           .toElement("#mainContent")
             .done(function() {
               Listener.setRecipeForm(recipe.owner, "PATCH", recipe);
             });
       } else {
-        Display.createErrorAlert("You do not own this recipe.");
+        AlertMessage.createError("You do not own this recipe.");
       }
     });
 };
@@ -542,7 +541,7 @@ Listener.setSearch = function(search) {
           $("#query").val("");
         } else {
           $("#query").addClass("is-invalid");
-          Display.createSearchErrorAlert();
+          AlertMessage.createError("A search term is required.");
         }
       });
   });
