@@ -17,42 +17,42 @@ AlertMessage.create = function(message, type) {
 AlertMessage.createAutoDismiss = function(message, type) {
   const alert = this.create(message, type);
 
-  alert.element.slidedown(200).delay(2000).slideUp(200, function() {
+  alert.element.slideDown(200).delay(2000).slideUp(200, function() {
     $(this).html("");
   });
 };
 
 
-AlertMessage.createSearchAlert = function(query) {
+AlertMessage.createSearch = function(query) {
   const html = `<a href='' id='toSearchResults'>Return to results for '${query}'...</a><button id='alertDismiss' type='button' class='close'><span>&times;</span></button>`;
   const alert = this.create(html, "light");
 
-  alert.setAlertDismiss("#alert", Listener.setBackToResults)
-    .setAlertDismiss("#alertDismiss");
+  alert.setDismissLink("#alert", Listener.setBackToResults)
+    .setDismissLink("#alertDismiss");
 };
 
 
-AlertMessage.createEditImageAlert = function(imageName, user) {
+AlertMessage.createEditImage = function(imgName, user) {
   const html = `Update your image to <b>${imgName}</b>? <span class='float-right'><a href='' id='confirmImg'>Yes</a> / <a href='' id='denyImg'>No</a></span>`;
   const alert = this.create(html, "light");
 
-  alert.setAlertDismiss("#confirmImg", Listener.setProfileImageSubmit(user))
-    .setAlertDismiss("#denyImg");
+  alert.setDismissLink("#confirmImg", Listener.setProfileImageSubmit(user))
+    .setDismissLink("#denyImg")
+    .toggle();
 };
 
 
-AlertMessage.createAddFriendAlert = function(user) {
+AlertMessage.createAddFriend = function(user) {
   const currentUserId = $("#loggedInAs").data("id");
   const html = `Send "${user.username}" a friend request? <span class='float-right'><a href='' id='confirmFriend'>Yes</a> / <a href='' id='denyFriend'>No</a></span>`;
   const alert = this.create(html, "warning");
 
-  alert.alertdismiss("$confirmFriend", user.addFriend(currentUserId))
-    .setAlertDismiss("#denyFriend")
-    .toggleAlert();
+  alert.setDismissLink("#confirmFriend", user.addFriend(currentUserId))
+    .setDismissLink("#denyFriend");
 };
 
 
-AlertMessage.createErrorAlert = function(message) {
+AlertMessage.createError = function(message) {
   this.createAutoDismiss(message, "danger");
 };
 
@@ -60,23 +60,21 @@ AlertMessage.createErrorAlert = function(message) {
 
 
 
-AlertMessage.prototype.setAlertDismiss = function(dismisser, afterDismissFunc) {
+AlertMessage.prototype.setDismissLink = function(dismisser, afterDismissFunc) {
   const alert = this;
 
   $(dismisser).one("click", function(e) {
     e.preventDefault();
     alert.element.slideUp(200, function() {
       $("#mainContent").animate({'padding-top':16}, 200);
-      if (typeof afterDismissFunc == "function") {
-        afterDismissFunc();
-      }
+      if (typeof afterDismissFunc == "function") { afterDismissFunc(); }
     });
   });
   return this;
 };
 
 
-AlertMessage.prototype.toggleAlert = function() {
+AlertMessage.prototype.toggle = function() {
   const $el = this.element;
   if ($el.is(":hidden")) {
     $el.slideDown(200);
@@ -86,4 +84,8 @@ AlertMessage.prototype.toggleAlert = function() {
     $("#mainContent").animate({'padding-top':16}, 200);
   }
   return this;
+};
+
+AlertMessage.toggle = function() {
+  (new this()).toggle();
 };
