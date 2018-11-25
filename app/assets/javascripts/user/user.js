@@ -125,8 +125,6 @@ User.prototype.assignAssetsAndMeta = function(data) {
 
 User.prototype.addFriend = function(currentUserId) {
   const user = this;
-  const friendIds = $("#loggedInAs").data("friendIds");
-  const pendingIds = $("#loggedInAs").data("pendingFriendIds");
 
   return function() {
     const params = { "friend_id": user.id, "request": true };
@@ -135,25 +133,22 @@ User.prototype.addFriend = function(currentUserId) {
 
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
-        friendIds.push(user.id);
-        pendingIds.push(user.id);
+        user.addData("friendIds", "pendingFriendIds");
         AlertMessage.createAutoDismiss(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
-        // Display.alert(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
         $addFriendLink.after(pendingHtml)
-          .remove();
+                      .remove();
       });
   };
 };
 
 User.prototype.confirmFriend = function(currentUserId) {
   const user = this;
-  const friendIds = $("#loggedInAs").data("friendIds");
 
   return function() {
     const params = {"friend_id": user.id};
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
-        friendIds.push(user.id);
+        user.addData("friendIds");
         AlertMessage.createAutoDismiss(`You are now friends with ${data.friendship.friend.username}!`, "success");
       });
   };
@@ -177,6 +172,14 @@ User.prototype.setData = function() {
         friendIds: friends.map(f => f.id)
       });
     });
+};
+
+User.prototype.addData = function(attrs) {
+  const user = this;
+
+  attrs.forEach(function(attr) {
+    $("#loggedInAs").data(attr).push(user.id);
+  });
 };
 
 User.prototype.getRecipes = function(preview) {
