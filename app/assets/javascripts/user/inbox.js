@@ -7,9 +7,10 @@ function Inbox(owner) {
 Inbox.prototype.display = function(destination) {
   const dfd = new $.Deferred();
   const pageObj = Paginate.createAndDestinate(this.owner.meta, destination)
+  const breadcrumb = Breadcrumb.current();
   pageObj.user = this.owner;
-  Breadcrumb.userAssets(this.owner, "Messages");
 
+  breadcrumb.addUserAssets(this.owner, "Messages");
   display.fromTemplate("inbox", {friends: this.recipients})
     .toElement(destination, "", true).done(function() {
       Listener.setInboxBtns(user);

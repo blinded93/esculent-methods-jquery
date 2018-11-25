@@ -51,6 +51,8 @@ Listener.setLogout = function(menu) {
 };
 
 Listener.confirmation = function(menu) {
+  const breadcrumb = Breadcrumb.current();
+
   $("#confirmNo").click(function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -69,7 +71,7 @@ Listener.confirmation = function(menu) {
         AlertMessage.createAutoDismiss("Logged out successfully.", "success");
         $("#loggedInAs").removeData();
         Recipe.getAllRecipes();
-        Breadcrumb.reset();
+        breadcrumb.reset();
       });
     });
   });

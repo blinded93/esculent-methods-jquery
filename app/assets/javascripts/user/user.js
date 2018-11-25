@@ -17,8 +17,10 @@ User.displayAllUsers = function(data, userType, destination) {
   const usersJson = data[`${userType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const users = User.createFrom(usersJson);
+  const breadcrumb = Breadcrumb.current();
 
-  if (destination === "#mainContent") {Breadcrumb.userAssets(data, "Friends");}
+  if (destination === "#mainContent") {breadcrumb.addUserAssets(data, "Friends");}
+
   if (isEmpty(users)) {
     display.nothingHere(destination);
   } else {
@@ -34,8 +36,8 @@ User.displayAllUsers = function(data, userType, destination) {
 User.prototype.displayInbox = function(destination) {
   const user = this;
   const friends = $("#loggedInAs").data("friends");
+  const breadcrumb = Breadcrumb.current();
 
-  if (destination === "#mainContent") {Breadcrumb.userAssets(user, "Messages");}
   Display.fromTemplate("inbox", {recipients:friends})
     .toElement(destination, "", true).done(function() {
       Listener.setInboxBtns(user);
@@ -45,6 +47,7 @@ User.prototype.displayInbox = function(destination) {
           pageObj.setLinks(`/users/${user.id}/messages`);
         });
     });
+  if (destination === "#mainContent") {breadcrumb.addUserAssets(user, "Messages");}
   display.fromTemplate("inbox", {recipients:friends})
          .toElement(destination, "", true).done(function() {
          });
@@ -79,14 +82,16 @@ User.createFrom = function(data) {
 
 User.prototype.displayProfile = function() {
   const user = this;
+  const breadcrumb = Breadcrumb.current();
+
   $.get(`/users/${user.id}`)
     .done(function(data) {
-          .done(function() {
-            Breadcrumb.profile(user);
-            Listener.setProfile(user);
-          });
       display.fromTemplate("user", user)
              .toElement("#mainContent")
+               .done(function() {
+                 breadcrumb.addProfile(user);
+                 Listener.setProfile(user);
+               });
     });
 };
 

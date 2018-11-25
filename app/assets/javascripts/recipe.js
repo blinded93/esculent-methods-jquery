@@ -29,8 +29,10 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const recipesJson = data[`${recipeType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const recipes = this.createFrom(recipesJson);
+  const breadcrumb = Breadcrumb.current();
+
   if (destination === "#mainContent") {
-    Breadcrumb.userAssets(data, `${capitalize(recipeType)}`);
+    breadcrumb.addUserAssets(data, `${capitalize(recipeType)}`);
   }
   if (isEmpty(recipes)) {
     display.nothingHere(destination);
@@ -60,6 +62,8 @@ Recipe.prototype.get = function() {
 
 Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
+  const breadcrumb = Breadcrumb.current();
+
   recipe.owner ? recipe.owner : recipe.owner = this.owner;
   display.fromTemplate("recipe", recipe)
     .toElement("#mainContent")

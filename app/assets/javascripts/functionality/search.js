@@ -42,12 +42,14 @@ Search.prototype.evaluateResp = function(resp) {
 
 Search.prototype.evaluateRecipes = function(resp) {
   const search = this;
+  const breadcrumb = Breadcrumb.current();
+
   if (!!resp.recipes.length) {
     Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
       .done(function(pageObj) {
         const url = $("#search").data("type") === ":r" ? "/recipe_search" : "/ingredient_search";
         pageObj.setLinks(url, {query:$("#search").data("query")});
-        Breadcrumb.search();
+        breadcrumb.addSearch();
       });
   } else {
     search.displayErrors();
@@ -56,11 +58,13 @@ Search.prototype.evaluateRecipes = function(resp) {
 
 Search.prototype.evaluateUsers = function(resp) {
   const search = this;
+  const breadcrumb = Breadcrumb.current();
+
   if (!!resp.users.length) {
     User.displayAllUsers(resp, "users", "#mainContent")
       .done(function(pageObj) {
         pageObj.setLinks("/user_search", {query:$("#search").data("query")});
-        Breadcrumb.search();
+        breadcrumb.addSearch();
       });
   } else {
     search.displayErrors();
@@ -77,7 +81,7 @@ Search.prototype.getError = function() {
   const selected = $("#type option:selected").text();
   this.errors = `No ${selected} found.`;
   Listener.setHome();
-  Breadcrumb.reset();
+  // Breadcrumb.reset();
 };
 
 Search.prototype.populateData = function(meta) {
