@@ -78,7 +78,9 @@ body {
 }
 
 .page-link {
-  padding: 0.25rem 0.65rem;
+  border-radius: 50% !important;
+  padding: 0.15rem 0.45rem;
+  margin: 1px;
 }
 
 button:focus {
@@ -123,6 +125,7 @@ hr {
 }
 
 .pagination a {
+  border: none;
   color:$cornflower;
 }
 
