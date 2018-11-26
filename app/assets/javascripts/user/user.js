@@ -151,6 +151,13 @@ User.prototype.confirmFriend = function(currentUserId) {
   };
 };
 
+User.prototype.setLoggedInAs = function() {
+  const html = `<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${this.username}</a>`;
+
+  $("#loggedInAs").html(html);
+  this.setData();
+}
+
 User.prototype.setData = function() {
   const user = this;
 
