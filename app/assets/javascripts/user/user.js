@@ -95,6 +95,7 @@ User.prototype.displayProfile = function() {
 User.prototype.displayPreview = function(tab, type) {
   const assets = this[tab.toLowerCase()];
   const destination = "#profileContent";
+
   Listener.setSeeAll(this, tab, type);
   if (type === "recipes") {
     Recipe.displayAllRecipes(this, tab.toLowerCase(), destination);
@@ -160,6 +161,7 @@ User.prototype.setLoggedInAs = function() {
 
 User.prototype.setData = function() {
   const user = this;
+  const linkFunc = linkSelectorFunction("#loggedInAs");
 
   user.getRecipients()
     .done(function(data) {
@@ -169,13 +171,15 @@ User.prototype.setData = function() {
       });
 
       $("#loggedInAs").data({
-        id:user.id,
-        username:user.username,
-        friends: friends,
+                      id: user.id,
+                username: user.username,
+                 friends: friends,
         pendingFriendIds: pendingIds,
-        friendIds: friends.map(f => f.id)
+               friendIds: friends.map(f => f.id)
       });
+      user.setUserLink(linkFunc);
     });
+  return this;
 };
 
 User.prototype.addData = function(attrs) {
