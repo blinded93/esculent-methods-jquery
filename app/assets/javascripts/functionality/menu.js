@@ -8,13 +8,18 @@ function Menu(template) {
 
 Menu.setup = function() {
   const menu = new this();
-
   menu.slideEffect()
-      .getType(menu);
+      .getType();
+};
+
+Menu.prototype.setSession = function() {
+  this.setForm()
+      .setFooterType()
+      .setFooter();
 };
 
 
-Menu.prototype.setFooter = function() {
+Menu.prototype.setFooterType = function() {
   switch (this.template) {
     case "login":
       this.footer = "toSignUp";
@@ -23,36 +28,68 @@ Menu.prototype.setFooter = function() {
       this.footer = "toLogIn";
       break;
     case "nav":
-      this.footer = undefined;
+      this.footer = null;
       break;
   }
+  return this;
 };
 
-Menu.prototype.getType = function(menu) {
-  $.get("/current_user", function(resp) {
-    menu.load(menu, resp)
-      .form = $("#dropdownMenu form");
-    if (!!menu.form.length) {
-      menu.setFooter();
-      Listener.setSession(menu);
-    } else {
-      Listener.setNav(menu, resp);
-      $("#loggedInAs").html(`<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${resp.user.username}</a>`)
-        .data({id:resp.user.id, username:resp.user.username});
-      const linkFunc = linkSelectorFunction("#loggedInAs");
-      const user = new User(resp.user);
-      user.setData();
-      Listener.setUser(user, linkFunc);
-    }
+
+Menu.prototype.setNav = function(user) {
+  const linkFunc = linkSelectorFunction("#menu");
+  const links = ["", "Recipes", "Favorites", "Friends", "Inbox"];
+
+  $("#menu").data({menu:menu});
+  this.setLogoutLink();
+  links.forEach(function(linkType) {
+    user[`setUser${linkType}Link`](linkFunc, "#mainContent")
   });
 };
 
-Menu.prototype.load = function(menu, resp) {
-  if (!!resp) {
-    menu.template = "nav";
+
+Menu.prototype.confirmSuccess = function() {
+  const menu = this;
+  const breadcrumb = $(".breadcrumb").data("breadcrumb");
+
+  return function() {
+    $("#loggedInAs").html("");
+    $("#dropdownMenu").slideUp(100, function() {
+      menu.template = "login";
+      menu.getType();
+      AlertMessage.createAutoDismiss("Logged out successfully.", "success");
+      $("#loggedInAs").removeData();
+      Recipe.getAllRecipes();
+      breadcrumb.reset();
+    });
   }
+};
+
+
+Menu.prototype.getType = function() {
+  const menu = this;
+
+  $.get("/current_user")
+    .done(function(resp) {
+      menu.load(resp);
+
+      if (!!menu.form.length) {
+        menu.setSession();
+      } else {
+        const user = new User(resp.user);
+
+        user.setData();
+        menu.setNav(user);
+      }
+    });
+};
+
+Menu.prototype.load = function(resp) {
+  const menu = this;
+  if (!!resp) { menu.template = "nav"; }
   const html = display.menuTemplate(menu.template, resp);
+
   menu.element.html(html);
+  menu.form = $("#dropdownMenu form");
   return this;
 };
 
@@ -71,10 +108,11 @@ Menu.prototype.slideEffect = function() {
 Menu.prototype.evaluateResp = function(menu, resp) {
   const respObj = resp.session || resp.user;
   const errors = respObj.errors;
+
   if (isEmpty(errors)) {
     menu.element.slideUp(200, function() {
       menu.template = "nav";
-      menu.getType(menu, resp);
+      menu.getType();
       AlertMessage.createAutoDismiss(`Logged in as ${respObj.username}`, "success");
     });
   } else {
@@ -85,21 +123,27 @@ Menu.prototype.evaluateResp = function(menu, resp) {
 Menu.prototype.formErrors = function(errors) {
   this.resetInputs();
   for (let field in errors) {
-    $(`#${field}`).addClass("is-invalid");
     const message = $("<dd>").html(`${errors[field]}`);
+
+    $(`#${field}`).addClass("is-invalid");
     $(`#${field}`).parent().children(".invalid-feedback").html(message);
   }
 };
 
 Menu.prototype.resetInputs = function() {
   const $inputs = $(".menuForm input");
+
   $inputs.each(function(index, value){
     $(value).removeClass("is-invalid");
   });
 };
 
-Menu.prototype.setTemplate = function(menu) {
-  menu.template = menu.template === "login" ? "signup" : "login";
+Menu.prototype.setTemplate = function() {
+  this.template = this.template === "login" ? "signup" : "login";
+  return this;
+};
+
+
 // Listeners //
 
 Menu.prototype.setForm = function() {
