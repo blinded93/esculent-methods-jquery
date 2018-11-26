@@ -100,5 +100,69 @@ Menu.prototype.resetInputs = function() {
 
 Menu.prototype.setTemplate = function(menu) {
   menu.template = menu.template === "login" ? "signup" : "login";
+// Listeners //
+
+Menu.prototype.setForm = function() {
+  const menu = this;
+
+  $("#menuSubmit").click(function(e) {
+    e.preventDefault();
+    $.post(`/${menu.template}`, menu.form.serialize())
+      .done(function(resp){
+        menu.evaluateResp(menu, resp);
+      });
+  });
+  return this;
+};
+
+
+Menu.prototype.setFooter = function() {
+  const menu = this;
+
+  $(`#${menu.footer}`).click(function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    menu.setTemplate(menu)
+        .getType();
+  });
+};
+
+Menu.prototype.setLogoutLink = function() {
+  $("#logout").click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#confirmLogout").slideDown(200);
+  });
+  this.confirmation();
+};
+
+Menu.prototype.confirmation = function() {
+  const menu = this;
+  const breadcrumb = Breadcrumb.current();
+
+  this.setConfirmNo()
+      .setConfirmYes();
+};
+
+Menu.prototype.setConfirmNo = function() {
+  $("#confirmNo").click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#confirmLogout").slideUp(200);
+  });
+  return this;
+};
+
+Menu.prototype.setConfirmYes = function() {
+  const menu = this;
+
+  $("#confirmYes").click(function(e){
+    e.preventDefault();
+    $.ajax({
+      url:"/logout",
+      method:"delete",
+      success: menu.confirmSuccess()
+    });
+  });
   return this;
 };
