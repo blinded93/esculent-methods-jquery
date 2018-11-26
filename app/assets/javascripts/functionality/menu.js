@@ -77,7 +77,7 @@ Menu.prototype.getType = function() {
       } else {
         const user = new User(resp.user);
 
-        user.setData();
+        user.setLoggedInAs();
         menu.setNav(user);
       }
     });

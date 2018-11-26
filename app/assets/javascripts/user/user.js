@@ -215,3 +215,86 @@ User.prototype.getMessages = function(scope) {
 User.prototype.getRecipients = function() {
   return $.get(`/users/${this.id}/friendships`);
 }
+
+//  Listeners //
+
+User.prototype.setUserLink = function(linkSelector) {
+  const user = this;
+
+  linkSelector(".userLink").click(function(e) {
+    e.preventDefault();
+    Search.backToResultsLink();
+    user.displayProfile();
+  }).addClass("linkCursor");
+  return this;
+};
+
+User.prototype.setUserRecipesLink = function(linkSelector, destination) {
+  const user = this;
+  const preview = destination === "#mainContent" ? null : true;
+
+  linkSelector(".recipesLink").click(function(e) {
+    e.preventDefault();
+    Search.backToResultsLink();
+    user.getRecipes(preview)
+      .done(function(data) {
+        user.assignAssetsAndMeta(data);
+        Recipe.displayAllRecipes(user, "recipes", destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/recipes`, preview);
+          });
+      });
+  });
+  return this;
+};
+
+User.prototype.setUserFavoritesLink = function(linkSelector, destination) {
+  const user = this;
+  const preview = destination === "#mainContent" ? null : true;
+
+  linkSelector(".favoritesLink").click(function(e) {
+    e.preventDefault();
+    Search.backToResultsLink();
+    user.getFavorites(preview)
+      .done(function(data) {
+        user.assignAssetsAndMeta(data);
+        Recipe.displayAllRecipes(user, "favorites", destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/favorites`, preview);
+          });
+      });
+  });
+  return this;
+};
+
+User.prototype.setUserFriendsLink = function(linkSelector, destination) {
+  const user = this;
+  const preview = destination === "#mainContent" ? null :true;
+
+  linkSelector(".friendsLink").click(function(e){
+    e.preventDefault();
+    user.getFriends()
+      .done(function(data) {
+        user.assignAssetsAndMeta(data);
+        User.displayAllUsers(user, "friends", destination)
+          .done(function(pageObj) {
+            pageObj.setLinks(`/users/${user.id}/friends`, preview);
+          });
+      });
+  });
+  return this;
+};
+
+User.prototype.setUserInboxLink = function(linkSelector, destination) {
+  const user = this;
+
+  linkSelector(".messagesLink").click(function(e) {
+    e.preventDefault();
+    user.getMessages("all")
+      .done(function(data) {
+        user.assignAssetsAndMeta(data);
+        user.displayInbox(destination)
+      });
+  });
+  return this;
+};
