@@ -1,45 +1,9 @@
 function Listener() {
 }
 
-// LogIn and SignUp menu listeners
-
-Listener.setSession = function(menu) {
-  this.setForm(menu);
-  this.setFooter(menu);
-};
-
-Listener.setForm = function(menu) {
-  $("#menuSubmit").click(function(e) {
-    e.preventDefault();
-    $.post(`/${menu.template}`, menu.form.serialize())
-      .done(function(resp){
-        menu.evaluateResp(menu, resp);
-      });
-  });
-};
-
-Listener.setFooter = function(menu) {
-  $(`#${menu.footer}`).click(function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    menu.setTemplate(menu)
-      .getType(menu);
-  });
-};
-
 // User profile menu listeners
 
-Listener.setNav = function(menu, resp) {
-  const user = new User(resp.user);
-  $("#menu").data({menu:menu});
-  const linkFunc = linkSelectorFunction("#menu");
-  this.setUser(user, linkFunc)
-    .setUserRecipes(user, linkFunc, "#mainContent")
-    .setUserFavorites(user, linkFunc, "#mainContent")
-    .setUserFriends(user, linkFunc, "#mainContent")
-    .setUserInbox(user, linkFunc, "#mainContent")
-    .setLogout(menu);
-};
+
 
 Listener.setLogout = function(menu) {
   $("#logout").click(function(e) {
@@ -67,7 +31,7 @@ Listener.confirmation = function(menu) {
       $("#loggedInAs").html("");
       menu.element.slideUp(100, function() {
         menu.template = "login";
-        menu.getType(menu);
+        menu.getType();
         AlertMessage.createAutoDismiss("Logged out successfully.", "success");
         $("#loggedInAs").removeData();
         Recipe.getAllRecipes();
@@ -89,6 +53,7 @@ Listener.setUserResults = function(users) {
   });
 };
 
+//
 Listener.setUser = function(user, linkSelector) {
   linkSelector(".userLink").click(function(e) {
     e.preventDefault();
@@ -106,6 +71,7 @@ Listener.setAddFriend = function(user, linkSelector) {
   });
 };
 
+//
 Listener.setUserRecipes = function(user, linkSelector, destination) {
   linkSelector(".recipesLink").click(function(e) {
     const preview = destination === "#mainContent" ? null : true;
@@ -396,7 +362,7 @@ Listener.setProfileImageSubmit = function(user) {
           $("#userAvatar").attr("src", url);
         }).fadeIn(200);
         const menu = $("#menu").data().menu;
-        menu.getType(menu);
+        menu.getType();
       }
     });
   };
