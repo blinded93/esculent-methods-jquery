@@ -73,6 +73,7 @@ Paginate.prototype.displayLinkAssets = function(data, url, params) {
     const selectedScope = $("#messageFilterInput option:selected").val();
     this.user.messages = data.messages;
     this.user.meta = data.meta;
+    
     this.user.displayMessages("#messageInbox", this)
       .done(function(pageObj) {
           pageObj.setLinks(url, {scope:selectedScope});
