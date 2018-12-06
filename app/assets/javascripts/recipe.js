@@ -14,6 +14,7 @@ function Recipe(json) {
   }
 }
 
+
 Recipe.getAllRecipes = function() {
   $.get("/recipes")
     .done(function(data) {
@@ -23,6 +24,7 @@ Recipe.getAllRecipes = function() {
         })
   });
 };
+
 
 Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const dfd = new $.Deferred();
@@ -47,18 +49,22 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
   return dfd.promise();
 };
 
+
 Recipe.createFrom = function(data) {
   return data ? data.map(recipe => new Recipe(recipe)) : [];
 };
 
+
 Recipe.prototype.get = function() {
   const recipe = this;
   const owner = this.owner;
+
   $.get(`/users/${owner.id}/recipes/${this.id}`)
     .done(function(data) {
       recipe.display(data);
     });
 };
+
 
 Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
@@ -78,9 +84,11 @@ Recipe.prototype.display = function(data) {
       });
 };
 
+
 Recipe.prototype.favorited = function() {
   const recipe = this;
   const dfd = new $.Deferred();
+
   $.get(`/recipes/${recipe.id}/favorited`)
     .done(function(resp) {
       recipe.toggleIcon(!!resp.favorite, "favorite");
@@ -89,8 +97,10 @@ Recipe.prototype.favorited = function() {
   return dfd.promise();
 };
 
+
 Recipe.prototype.favorite = function() {
   const recipe = this;
+
   $.post(`/recipes/${recipe.id}/favorite`)
     .done(function(resp) {
       if (isEmpty(resp.errors)) {
@@ -101,8 +111,10 @@ Recipe.prototype.favorite = function() {
     });
 };
 
+
 Recipe.prototype.toggleIcon = function(boolean, iconName) {
   const icon = `#${iconName}Img`;
+
   if (boolean) {
     changeIconSrc(icon, iconName);
     $(icon).off("mouseenter mouseleave");
@@ -114,6 +126,7 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
 
 Recipe.prototype.setShareSubmit = function() {
   const recipe = this;
+
   $("#shareRecipeForm").validate({
     onclick: function(element, event) {
       $(element).valid();
@@ -122,7 +135,7 @@ Recipe.prototype.setShareSubmit = function() {
       $(element).valid();
     },
     highlight: function(element, errorClass, validClass) {
-      $(element).parent().removeClass(validClass).  addClass(errorClass)
+      $(element).parent().removeClass(validClass).addClass(errorClass)
     },
     unhighlight: function(element, errorClass, validClass) {
       $(element).parent().removeClass(errorClass).addClass(validClass);

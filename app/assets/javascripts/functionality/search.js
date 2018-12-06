@@ -3,15 +3,16 @@ function Search() {
   this.submit = $("#submitSearch");
 }
 
+
 Search.setup = function() {
   const search = new Search();
 
   search.set();
 };
 
-Search.current = function() {
-  return $("#search").data("search");
-};
+
+Search.current = function() { return $("#search").data("search"); };
+
 
 Search.prototype.typeToURL = function(givenType) {
   const type = givenType || $("#type").val();
@@ -21,6 +22,7 @@ Search.prototype.typeToURL = function(givenType) {
   else if (type === ":u") { return "/users/search"; }
 };
 
+
 Search.prototype.processQuery = function() {
   if ($("#type").val() === ":i") {
     return $("#query").val().split(",").map(word => word.trim());
@@ -28,6 +30,7 @@ Search.prototype.processQuery = function() {
     return $("#query").val();
   }
 };
+
 
 Search.backToResultsLink = function() {
   if (!!$(".searchLink").length) {
@@ -38,15 +41,16 @@ Search.backToResultsLink = function() {
   }
 };
 
+
 Search.prototype.evaluateResp = function(resp) {
   const search = this;
 
   if (!!resp.recipes) { this.evaluateRecipes(resp); }
   else if (!!resp.users) { this.evaluateUsers(resp); }
-
   AlertMessage.createSearch(this.form.data("query"));
   return this;
 };
+
 
 Search.prototype.evaluateRecipes = function(resp) {
   const search = this;
@@ -64,6 +68,7 @@ Search.prototype.evaluateRecipes = function(resp) {
   }
 };
 
+
 Search.prototype.evaluateUsers = function(resp) {
   const search = this;
   const breadcrumb = Breadcrumb.current();
@@ -79,11 +84,13 @@ Search.prototype.evaluateUsers = function(resp) {
   }
 };
 
+
 Search.prototype.displayErrors = function() {
   this.getError();
   display.fromTemplate("error", this)
     .toElement("#mainContent");
 };
+
 
 Search.prototype.getError = function() {
   const selected = $("#type option:selected").text();
@@ -93,6 +100,7 @@ Search.prototype.getError = function() {
   breadcrumb.setHome();
 };
 
+
 Search.prototype.populateData = function(meta) {
   const data = {
       type: (this.type || $("#search").data("type")),
@@ -100,9 +108,11 @@ Search.prototype.populateData = function(meta) {
       page: meta.page,
     search: this
   };
+
   $("#search").data(data);
   return this;
 };
+
 
 Search.prototype.resetSearchAlert = function() {
   if ($("#toSearchResults").is(":visible")) {
@@ -125,7 +135,7 @@ Search.prototype.set = function() {
     e.preventDefault();
     $.get(url, {query:query})
       .done(function(data) {
-        if ($("#query").val()) {
+        if (!!$("#query").val()) {
           search.type = $("#type").val();
           search.query = $("#query").val();
           search.populateData(data.meta)

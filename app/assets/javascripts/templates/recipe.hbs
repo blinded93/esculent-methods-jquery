@@ -8,7 +8,6 @@
             <a href="" class="favorite">
               <img id="favoriteImg" src="/assets/icons/favorite-bw.png" alt="Favorite">
             </a>
-            {{#ifOwned owner.id}}
               <a href="" class="share" data-toggle="shareDropdown" aria-haspopup="true" aria-expanded="false">
                 <img id="shareImg" src="/assets/icons/share-bw.png" alt="Share">
               </a>
@@ -18,6 +17,7 @@
                   </div>
                 </div>
               </div>
+            {{#ifOwned owner.id}}
               <a href="" class="edit">
                 <img id="editImg" src="/assets/icons/edit-bw.png" alt="Edit">
               </a>

@@ -8,13 +8,14 @@ let display = {};
     templateHTML = templates[template](obj);
     return this;
   };
+  
 
   this.hbsPartial = function(template) {
     return templates[template];
   };
 
 
-  this.menuTemplate = function(template, obj) {
+  this.template = function(template, obj) {
     return templates[template](obj);
   };
 

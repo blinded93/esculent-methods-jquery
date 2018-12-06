@@ -12,6 +12,7 @@ function User(json) {
   }
 }
 
+
 User.displayAllUsers = function(data, userType, destination) {
   const dfd = new $.Deferred();
   const usersJson = data[`${userType}`];
@@ -33,6 +34,7 @@ User.displayAllUsers = function(data, userType, destination) {
   return dfd.promise();
 };
 
+
 User.prototype.displayInbox = function(destination) {
   const user = this;
   const friends = $("#loggedInAs").data("friends");
@@ -49,6 +51,7 @@ User.prototype.displayInbox = function(destination) {
                });
          });
 };
+
 
 User.prototype.displayMessages = function(destination) {
   const user = this;
@@ -73,9 +76,11 @@ User.prototype.displayMessages = function(destination) {
   return dfd.promise();
 };
 
+
 User.createFrom = function(data) {
   return data ? data.map(user => new User(user)) : [];
 };
+
 
 User.prototype.displayProfile = function() {
   const user = this;
@@ -92,6 +97,7 @@ User.prototype.displayProfile = function() {
     });
 };
 
+
 User.prototype.displayPreview = function(tab, type) {
   const assets = this[tab.toLowerCase()];
   const destination = "#profileContent";
@@ -107,12 +113,14 @@ User.prototype.displayPreview = function(tab, type) {
   }
 };
 
+
 User.prototype.displayUnreadCount = function() {
   if (isLoggedIn()) {
     this.getMessages("count")
       .done(function(data) { $("#unreadCount").text(`${data.unread_count}`)});
   }
 };
+
 
 User.prototype.assignAssetsAndMeta = function(data) {
   user = this;
@@ -139,6 +147,7 @@ User.prototype.addFriend = function(currentUserId) {
   };
 };
 
+
 User.prototype.confirmFriend = function(currentUserId) {
   const user = this;
 
@@ -152,12 +161,14 @@ User.prototype.confirmFriend = function(currentUserId) {
   };
 };
 
+
 User.prototype.setLoggedInAs = function() {
   const html = `<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${this.username}</a>`;
 
   $("#loggedInAs").html(html);
   this.setData();
-}
+};
+
 
 User.prototype.setData = function() {
   const user = this;
@@ -190,11 +201,13 @@ User.prototype.addData = function(attrs) {
   });
 };
 
+
 User.prototype.getRecipes = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
 
   return $.get(`/users/${this.id}/recipes`, previewObj);
 };
+
 
 User.prototype.getFavorites = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
@@ -202,19 +215,23 @@ User.prototype.getFavorites = function(preview) {
   return $.get(`/users/${this.id}/favorites`, previewObj);
 };
 
+
 User.prototype.getFriends = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
 
   return $.get(`/users/${this.id}/friends`, previewObj);
 };
 
+
 User.prototype.getMessages = function(scope) {
   return $.get(`/users/${this.id}/messages`, {"scope":scope});
 };
 
+
 User.prototype.getRecipients = function() {
   return $.get(`/users/${this.id}/friendships`);
-}
+};
+
 
 //  Listeners //
 

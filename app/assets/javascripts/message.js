@@ -9,9 +9,11 @@ function Message(json) {
   if (json.recipe) { this.recipe = new Recipe(json.recipe); }
 }
 
+
 Message.createFrom = function(data) {
   return data ? data.map(message => new Message(message)) : [];
 };
+
 
 Message.prototype.close = function(callback) {
   $("#messageDropdown").slideUp(200, callback);
@@ -28,9 +30,11 @@ Message.setCloseForm = function() {
 Message.deleteBtnOnCheck = function() {
   const $checks = $(".deleteChecks").change(function() {
     const checked = $checks.is(':checked');
+
     $("#deleteBtn").stop().fadeTo(200, checked ? 1 : 0);
   });
 };
+
 
 Message.setForm = function(user) {
   this.setCloseForm()
@@ -73,19 +77,24 @@ Message.submit = function(user, successFunc) {
   };
 };
 
+
 Message.prototype.display = function() {
   const html = display.hbsPartial("message");
+
   $("#messageDropdown").html(html(this));
   this.parse()
-    .markAsRead()
-    .setDelete(Message.deleteSuccess);
+      .markAsRead()
+      .setDelete(Message.deleteSuccess);
   return this;
 };
 
+
 Message.prototype.markAsRead = function() {
   const message = this;
+
   if (!message.readAt) {
     let unreadCount = parseInt($("#unreadCount").text());
+
     $.post(`/users/${currentUser("id")}/messages/${message.id}/read`)
       .done(function(resp) {
         $(`#message-${resp.message_id}`).removeClass("unread")
@@ -93,7 +102,8 @@ Message.prototype.markAsRead = function() {
       });
   }
   return this;
-}
+};
+
 
 Message.prototype.parse = function() {
   if (!!this.recipe) {
@@ -111,6 +121,7 @@ Message.prototype.parse = function() {
 Message.prototype.setAccept = function() {
   const message = this;
   const currentUserId = $("#loggedInAs").data("id");
+
   $("#accept").click(function(e) {
     message.close(message.sender.confirmFriend(currentUserId));
     AlertMessage.createAutoDismiss(`You are now friends with ${message.sender.username}!`, "success");
@@ -130,6 +141,7 @@ Message.prototype.setView = function() {
   });
 };
 
+
 Message.prototype.setReply = function() {
   const message = this;
 
@@ -148,6 +160,7 @@ Message.prototype.setReply = function() {
 
 Message.prototype.setClose = function(selectors) {
   const message = this;
+
   $(selectors).one("click", function(e) {
     e.preventDefault();
     message.close();
@@ -156,8 +169,10 @@ Message.prototype.setClose = function(selectors) {
   return this;
 };
 
+
 Message.prototype.setReplyCancel = function() {
   const message = this;
+
   $("#cancel").click(function(e) {
     e.preventDefault();
     message.close(function() {
@@ -168,8 +183,10 @@ Message.prototype.setReplyCancel = function() {
   return this;
 };
 
+
 Message.prototype.setReplySubmit = function(html) {
   const message = this;
+
   Message.setSubmit(this.sender, "#replyMessageForm", function(resp) {
     message.close();
     AlertMessage.createAutoDismiss("Message sent!", "success");
@@ -181,6 +198,7 @@ Message.prototype.setReplySubmit = function(html) {
 
 Message.prototype.setDelete = function(successFunc) {
   const message = this;
+
   $("#delete").click(function(e) {
     message.delete();
   });

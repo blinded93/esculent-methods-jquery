@@ -8,9 +8,11 @@ function Menu(template) {
 
 Menu.setup = function() {
   const menu = new this();
+  
   menu.slideEffect()
       .getType();
 };
+
 
 Menu.prototype.setSession = function() {
   this.setForm()
@@ -83,6 +85,7 @@ Menu.prototype.getType = function() {
     });
 };
 
+
 Menu.prototype.load = function(resp) {
   const menu = this;
   if (!!resp) { menu.template = "nav"; }
@@ -92,6 +95,7 @@ Menu.prototype.load = function(resp) {
   menu.form = $("#dropdownMenu form");
   return this;
 };
+
 
 Menu.prototype.slideEffect = function() {
   $('.dropdown').on('show.bs.dropdown', function() {
@@ -104,6 +108,7 @@ Menu.prototype.slideEffect = function() {
   });
   return this;
 };
+
 
 Menu.prototype.evaluateResp = function(menu, resp) {
   const respObj = resp.session || resp.user;
@@ -120,6 +125,7 @@ Menu.prototype.evaluateResp = function(menu, resp) {
   }
 };
 
+
 Menu.prototype.formErrors = function(errors) {
   this.resetInputs();
   for (let field in errors) {
@@ -130,6 +136,7 @@ Menu.prototype.formErrors = function(errors) {
   }
 };
 
+
 Menu.prototype.resetInputs = function() {
   const $inputs = $(".menuForm input");
 
@@ -137,6 +144,7 @@ Menu.prototype.resetInputs = function() {
     $(value).removeClass("is-invalid");
   });
 };
+
 
 Menu.prototype.setTemplate = function() {
   this.template = this.template === "login" ? "signup" : "login";
@@ -171,6 +179,7 @@ Menu.prototype.setFooter = function() {
   });
 };
 
+
 Menu.prototype.setLogoutLink = function() {
   $("#logout").click(function(e) {
     e.preventDefault();
@@ -180,6 +189,7 @@ Menu.prototype.setLogoutLink = function() {
   this.confirmation();
 };
 
+
 Menu.prototype.confirmation = function() {
   const menu = this;
   const breadcrumb = Breadcrumb.current();
@@ -187,6 +197,7 @@ Menu.prototype.confirmation = function() {
   this.setConfirmNo()
       .setConfirmYes();
 };
+
 
 Menu.prototype.setConfirmNo = function() {
   $("#confirmNo").click(function(e) {
@@ -196,6 +207,7 @@ Menu.prototype.setConfirmNo = function() {
   });
   return this;
 };
+
 
 Menu.prototype.setConfirmYes = function() {
   const menu = this;

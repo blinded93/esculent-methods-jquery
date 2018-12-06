@@ -13,10 +13,12 @@ function Paginate(meta) {
 Paginate.createAndDestinate = function(meta, destination) {
   if (meta) {
     const pageObj = new Paginate(meta);
+
     pageObj.destination = destination;
     return pageObj;
   }
 };
+
 
 Paginate.prototype.displayLinks = function(dfd, destination) {
   const pageObj = this;
@@ -28,6 +30,7 @@ Paginate.prototype.displayLinks = function(dfd, destination) {
   });
 };
 
+
 Paginate.prototype.setLinks = function(url, params) {
   const pageObj = this;
   this.links = $("a.page-link");
@@ -36,6 +39,7 @@ Paginate.prototype.setLinks = function(url, params) {
     pageObj.setLink(link, url, params);
   });
 };
+
 
 Paginate.prototype.setLink = function(link, url, params) {
   const pageObj = this;
@@ -52,6 +56,7 @@ Paginate.prototype.setLink = function(link, url, params) {
   });
 };
 
+
 Paginate.prototype.parseAndDisplayData = function(data, url, params) {
   const models = {"recipes": Recipe, "users": User};
   const destination = this.destination;
@@ -59,6 +64,7 @@ Paginate.prototype.parseAndDisplayData = function(data, url, params) {
   for (let key in data) {
     if (models[key]) {
       const model = models[key];
+
       model[`displayAll${capitalize(key)}`](data, key, destination)
         .done(function(pageObj) {
           pageObj.setLinks(url, params);
@@ -68,12 +74,13 @@ Paginate.prototype.parseAndDisplayData = function(data, url, params) {
   }
 };
 
+
 Paginate.prototype.displayLinkAssets = function(data, url, params) {
   if (data.messages) {
     const selectedScope = $("#messageFilterInput option:selected").val();
     this.user.messages = data.messages;
     this.user.meta = data.meta;
-    
+
     this.user.displayMessages("#messageInbox", this)
       .done(function(pageObj) {
           pageObj.setLinks(url, {scope:selectedScope});
