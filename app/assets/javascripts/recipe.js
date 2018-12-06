@@ -123,6 +123,68 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
   }
 };
 
+
+// Listeners //
+
+Recipe.setResults = function(recipes) {
+  recipes.forEach(recipe => {
+    const linkFunc = linkSelectorFunction(`#recipe-${recipe.id}`);
+
+    recipe.setShowLink(linkFunc)
+    recipe.owner.setProfileLink(linkFunc)
+  });
+};
+
+
+Recipe.prototype.setShowLink = function(linkSelector) {
+  const recipe = this;
+
+  linkSelector(".recipeLink").click(function(e) {
+    e.preventDefault();
+    goBack.show(this);
+    recipe.get();
+  });
+  return this;
+};
+
+
+Recipe.prototype.setSocialBtns = function() {
+  const links = $("#social a");
+  const recipe = this;
+
+  links.each(function(i, link) {
+    const linkType = capitalize( $(link).attr("class") );
+    recipe[`set${linkType}Link`](link)
+  });
+};
+
+
+Recipe.prototype.setFavoriteLink = function(link) {
+  const recipe = this;
+
+  $(link).click(function(e) {
+    e.preventDefault();
+    recipe.favorite();
+  });
+  return this;
+};
+
+
+Recipe.prototype.setShareLink = function(link) {
+  const recipe = this;
+  const $dropdown = $("#shareDropdown");
+
+  iconHover("#shareImg", "share");
+  recipe.displayShareForm();
+
+  $(link).click(function(e) {
+    e.preventDefault();
+    assignCurrentUser();
+    recipe.toggleShare();
+  return this;
+  });
+};
+
 Recipe.prototype.setShareSubmit = function() {
   const recipe = this;
 
@@ -165,29 +227,116 @@ Recipe.prototype.setShareSubmit = function() {
   });
 };
 
-Recipe.prototype.setShareForm = function() {
+
+Recipe.setForm = function(user, method, recipe) {
+  this.setAddItem("ingredient")
+      .setAddItem("direction")
+      .setRemoveItems("ingredient")
+      .setRemoveItems("direction")
+      .setImageLabel()
+      .setRecipeSubmit(user, method, recipe)
+};
+
+
+Recipe.setAddItem = function(itemType) {
+  const item = capitalize(itemType);
+
+  $(`#add${item}`).click(function(e) {
+    const itemObj = {id:randomId()};
+    const html = display.template(itemType, itemObj);
+
+    e.preventDefault();
+    $(`#recipe${item}s`).append(html);
+    Recipe.setRemoveItem(itemType, itemObj.id, $(`#remove-${itemObj.id}`));
+  });
+  return this;
+};
+
+
+Recipe.setRemoveItems = function(itemType) {
+  const item = capitalize(itemType);
+
+  $(`#recipe${item}s .close`).each(function(i, el) {
+    const id = $(el).attr("id").match(/\d+/)[0];
+
+    Recipe.setRemoveItem(itemType, id, el);
+  });
+  return this;
+};
+
+
+Recipe.setRemoveItem = function(itemType, id, el) {
+  $(el).one("click", function(e){
+    $(`#${itemType}-${id}`).remove();
+  });
+};
+
+
+Recipe.setImageLabel = function() {
+  $("#recipeImage").change(function(e) {
+    const labelText = !!this.files.length ? this.files[0].name : "Choose file (opt)...";
+
+    $(".custom-file-label").text(labelText);
+  });
+  return this;
+};
+
+
+Recipe.setRecipeSubmit = function(user, method, recipe) {
+  let path = `/users/${user.id}/recipes`;
+  path = recipe ? path + `/${recipe.id}` : path;
+
+  $("#recipeForm").validate({
+    onkeyup: function(element, event) {
+      $(element).valid();
+    },
+    rules: {
+      "recipe[image]": {
+        extension: "jpg|jpeg|png"
+      }
+    },
+    messages: {
+      "recipe[image]": {
+        extension: "Please upload a jpeg or png file."
+      }
+    },
+    onclick: function(element, event) {
+      $(element).valid();
+    },
+    errorClass: "its-invalid is-invalid",
+    validClass: "is-valid",
+    errorPlacement: function(error, element) {
+      $("#recipeFormErrors").html(error);
+    },
+    submitHandler: function(form, e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      $.ajax({
+          type: method,
+          url: path,
+          processData: false,
+          contentType: false,
+          data: formData,
+          success: function(resp) {
+            new Recipe(resp).display(resp);
+          }
+      });
+    }
+  });
+  return this;
+};
+
+Recipe.prototype.setEditLink = function(link) {
   const recipe = this;
-  const friends = $("#loggedInAs").data("friends");
 
-  display.fromTemplate("recipe_share", {friends:friends})
-    .toElement(".shareForm", 1)
-    .done(function(data) {
-      recipe.setShareSubmit();
-    });
-};
-
-Recipe.prototype.ownedBy = function(id) {
-  return id === this.owner.id;
-};
-
-Recipe.prototype.toggleShare = function() {
-  $("#shareDropdown").slideToggle(200);
-};
-
-Recipe.prototype.assignUser = function(user) {
-  return user ? new User(user) : undefined;
-};
-
-Recipe.prototype.assignIngredients = function(ingredients) {
-  return ingredients ? ingredients.map(i => new Ingredient(i)) : [];
+  iconHover("#editImg", "edit");
+  $(link).click(function(e) {
+    e.preventDefault();
+    assignCurrentUser();
+    display.fromTemplate("recipe_form", recipe)
+      .toElement("#mainContent")
+        .done(function() {
+          Recipe.setForm(recipe.owner, "PATCH", recipe);
+        });
+  });
 };
