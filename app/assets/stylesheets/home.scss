@@ -142,7 +142,7 @@ hr {
 #navRow {
   background-color:white;
   position: -webkit-sticky;
-  position:sticky;
+  position: sticky;
   top:0;
   height:90px;
   z-index:1030;
@@ -154,4 +154,13 @@ hr {
 
 .disabled {
   pointer-events: none;
+}
+
+#backButton {
+  top: 3px;
+  left: 10px;
+}
+
+#goBack {
+  display: none;
 }
