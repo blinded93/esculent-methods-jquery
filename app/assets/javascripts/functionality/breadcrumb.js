@@ -1,113 +1,105 @@
-function Breadcrumb() {
-  this.list = $(".breadcrumb");
-  this.home = $("#home");
-}
-
-Breadcrumb.prototype.listItems = function() { return $(".breadcrumb-item"); };
-
-Breadcrumb.current = function() {
-  return $(".breadcrumb").data("breadcrumb");
-};
+let breadcrumb = {};
+(function() {
+  const list = $(".breadcrumb");
+  const home = $("#home");
+  const listItems = $(".breadcrumb-item");
 
 
-Breadcrumb.createAndSave = function() {
-  const bc = new Breadcrumb();
+  this.listItems = function() { return $(".breadcrumb-item"); }
 
-  $("ol.breadcrumb").data("breadcrumb", bc);
-};
+  this.setHome = function() {
+    if (!$._data($("#home")[0], "events")) {
+      $("#home").addClass("linkCursor")
+                .one("click", function(e) {
+                  e.preventDefault();
+                  Recipe.getAllRecipes();
+                  breadcrumb.reset();
+                });
+    };
+    return this;
+  };
 
 
-Breadcrumb.prototype.setHome = function() {
-  const bc = this;
+  this.reset = function() {
+    this.listItems().not(":first").remove();
+    $("#home").removeClass("linkCursor");
+    return this;
+  };
 
-  if (!jQuery._data($("#home")[0], "events")) {
-    bc.home.addClass("linkCursor")
-      .one("click", function(e) {
-        e.preventDefault();
-        Recipe.getAllRecipes();
-        bc.reset();
-      });
+
+  this.addLink = function(title, classLink) {
+    const linkCursor = !title.includes("Messages") ? "linkCursor " : "";
+    const $li = $("<li>", {"class": `${linkCursor} breadcrumb-item ${classLink}`}).html(title);
+
+    this.setHome()
+    $(".breadcrumb").append($li);
+    return this;
   }
-  return this;
-};
 
 
-Breadcrumb.prototype.reset = function() {
-  this.listItems().not(":first").remove();
-  this.home.removeClass("linkCursor");
-  return this;
-};
+  this.addSearch = function() {
+    const userTitle = $("#type option:selected").text();
+    const searchQuery = $("#search").data("query");
+
+    this.reset()
+        .addLink(userTitle, "userLink")
+        .addLink(searchQuery, "searchLink");
+
+    return this;
+  };
 
 
-Breadcrumb.prototype.addLink = function(title, classLink) {
-  const $li = $("<li>", {"class": `breadcrumb-item ${classLink}`}).html(title);
+  this.addProfile = function(user) {
+    const userTitle = isLoggedInAs(user.id) ? "My Profile" : user.username;
 
-  this.setHome()
-      .list.append($li);
-  return this;
-};
-
-
-Breadcrumb.prototype.addSearch = function() {
-  const userTitle = $("#type option:selected").text();
-  const searchQuery = $("#search").data("query");
-
-  this.reset()
-      .addLink(userTitle, "userLink")
-      .addLink(searchQuery, "searchLink");
-  return this;
-};
+    this.reset()
+        .addLink(userTitle, "userLink");
+    return this;
+  };
 
 
-Breadcrumb.prototype.addProfile = function(user) {
-  const userTitle = isLoggedInAs(user.id) ? "My Profile" : user.username;
+  this.addUserAssets = function(user, items) {
+    const linkFunc = linkSelectorFunction(".breadcrumb");
 
-  this.reset()
-      .addLink(userTitle, "userLink");
-  return this;
-};
+    if (!!user.id) {
+      this.reset()
 
+      if (isLoggedInAs(user.id)) {
+        this.addLink(`My ${items}`, `${items.toLowerCase()}Link`)
+            .addNewRecipeLink(user);
 
-Breadcrumb.prototype.addUserAssets = function(user, items) {
-  const linkFunc = linkSelectorFunction(".breadcrumb");
-
-  if (!!user.id) {
-    this.reset();
-
-    if (isLoggedInAs(user.id)) {
-      this.addLink(`My ${items}`, `${items.toLowerCase()}Link`)
-          .addNewRecipeLink();
-    } else {
-      this.addProfile(user)
-          .addLink(items, `${items.toLowerCase()}Link`);
-      Listener.setUser(user, linkFunc);
+        if (!items.includes("Messages")) { user[`set${items}Link`](linkFunc, "#mainContent"); }
+      } else {
+        this.addProfile(user)
+            .addLink(items, `${items.toLowerCase()}Link`);
+        user.setProfileLink(linkFunc);
+      }
     }
-
-  }
-};
+  };
 
 
-Breadcrumb.prototype.addNewRecipeLink = function() {
-  const lastItem = this.listItems().last();
-  const html = "<a href=''id='createRecipe' class='black small'>&nbsp;&nbsp;(New)</a>";
+  this.addNewRecipeLink = function(user) {
+    const lastItem = this.listItems().last();
+    const html = "<a href='' id ='createRecipe' class'black small'>&nbsp;&nbsp;(New)</a>";
 
-  if (lastItem.text().includes("Recipes")) {
-    lastItem.append(html);
-    this.setNewRecipeLink();
-  }
-};
+    if (lastItem.text().includes("Recipes")) {
+      lastItem.append(html);
+      this.setNewRecipeLink(user);
+    }
+  };
 
 
-Breadcrumb.prototype.setNewRecipeLink = function() {
-  $("#createRecipe").one("click", function(e) {
-    const el = this;
+  this.setNewRecipeLink = function(user) {
+    $("#createRecipe").one("click", function(e) {
+      const el = this;
 
-    e.preventDefault()
-    e.stopPropagation();
-    display.fromTemplate("recipe_form").toElement("#mainContent")
-      .done(function() {
-        $(el).hide();
-        Listener.setRecipeForm(user, "POST");
-      });
-  });
-};
+      e.preventDefault();
+      e.stopPropagation();
+      display.fromTemplate("recipe_form").toElement("#mainContent")
+        .done(function() {
+          $(el).hide();
+          Recipe.setForm(user, "POST");
+        });
+    });
+  };
+}).apply(breadcrumb);
