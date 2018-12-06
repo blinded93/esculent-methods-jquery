@@ -23,15 +23,6 @@ AlertMessage.createAutoDismiss = function(message, type) {
 };
 
 
-AlertMessage.createSearch = function(query) {
-  const html = `<a href='' id='toSearchResults'>Return to results for '${query}'...</a><button id='alertDismiss' type='button' class='close'><span>&times;</span></button>`;
-  const alert = this.create(html, "light");
-
-  alert.setDismissLink("#alert", Listener.setBackToResults)
-       .setDismissLink("#alertDismiss");
-};
-
-
 AlertMessage.createEditImage = function(imgName, user) {
   const html = `Update your image to <b>${imgName}</b>? <span class='float-right'><a href='' id='confirmImg'>Yes</a> / <a href='' id='denyImg'>No</a></span>`;
   const alert = this.create(html, "warning");
