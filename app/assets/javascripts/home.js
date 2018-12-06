@@ -6,5 +6,4 @@ $(function() {
 function homeSetup() {
   Search.setup();
   Menu.setup();
-  Breadcrumb.createAndSave();
 };

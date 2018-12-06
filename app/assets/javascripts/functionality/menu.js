@@ -192,7 +192,6 @@ Menu.prototype.setLogoutLink = function() {
 
 Menu.prototype.confirmation = function() {
   const menu = this;
-  const breadcrumb = Breadcrumb.current();
 
   this.setConfirmNo()
       .setConfirmYes();

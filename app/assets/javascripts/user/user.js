@@ -18,7 +18,6 @@ User.displayAllUsers = function(data, userType, destination) {
   const usersJson = data[`${userType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
   const users = User.createFrom(usersJson);
-  const breadcrumb = Breadcrumb.current();
 
   if (destination === "#mainContent") {breadcrumb.addUserAssets(data, "Friends");}
 
@@ -38,7 +37,6 @@ User.displayAllUsers = function(data, userType, destination) {
 User.prototype.displayInbox = function(destination) {
   const user = this;
   const friends = $("#loggedInAs").data("friends");
-  const breadcrumb = Breadcrumb.current();
 
   if (destination === "#mainContent") {breadcrumb.addUserAssets(user, "Messages");}
   display.fromTemplate("inbox", {recipients:friends})
@@ -84,7 +82,6 @@ User.createFrom = function(data) {
 
 User.prototype.displayProfile = function() {
   const user = this;
-  const breadcrumb = Breadcrumb.current();
 
   $.get(`/users/${user.id}`)
     .done(function(data) {
@@ -128,6 +125,7 @@ User.prototype.assignAssetsAndMeta = function(data) {
     user[key] = data[key];
   });
 };
+
 
 User.prototype.addFriend = function(currentUserId) {
   const user = this;

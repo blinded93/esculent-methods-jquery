@@ -68,7 +68,6 @@ Recipe.prototype.get = function() {
 
 Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
-  const breadcrumb = Breadcrumb.current();
 
   recipe.owner ? recipe.owner : recipe.owner = this.owner;
   display.fromTemplate("recipe", recipe)

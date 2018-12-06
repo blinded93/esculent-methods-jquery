@@ -54,7 +54,6 @@ Search.prototype.evaluateResp = function(resp) {
 
 Search.prototype.evaluateRecipes = function(resp) {
   const search = this;
-  const breadcrumb = Breadcrumb.current();
 
   if (!!resp.recipes.length) {
     Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
@@ -71,7 +70,6 @@ Search.prototype.evaluateRecipes = function(resp) {
 
 Search.prototype.evaluateUsers = function(resp) {
   const search = this;
-  const breadcrumb = Breadcrumb.current();
 
   if (!!resp.users.length) {
     User.displayAllUsers(resp, "users", "#mainContent")
@@ -94,7 +92,6 @@ Search.prototype.displayErrors = function() {
 
 Search.prototype.getError = function() {
   const selected = $("#type option:selected").text();
-  const breadcrumb = Breadcrumb.current();
 
   this.errors = `No ${selected.toLowerCase()} found.`;
   breadcrumb.setHome();
