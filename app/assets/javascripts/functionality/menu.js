@@ -39,12 +39,12 @@ Menu.prototype.setFooterType = function() {
 
 Menu.prototype.setNav = function(user) {
   const linkFunc = linkSelectorFunction("#menu");
-  const links = ["", "Recipes", "Favorites", "Friends", "Inbox"];
+  const links = ["Profile", "Recipes", "Favorites", "Friends", "Inbox"];
 
-  $("#menu").data({menu:menu});
+  $("#menu").data({menu:this});
   this.setLogoutLink();
   links.forEach(function(linkType) {
-    user[`setUser${linkType}Link`](linkFunc, "#mainContent")
+    user[`set${linkType}Link`](linkFunc, "#mainContent")
   });
 };
 
