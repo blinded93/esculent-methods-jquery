@@ -27,11 +27,6 @@ class MessageService
     message = Message.create(message_attrs)
   end
 
-  def remove_request
-    request_message_params = request_params.tap {|h| h[:user_id] = self.sender_id}
-    Message.find_by(request_message_params).destroy
-  end
-
   private
     def request_params
       { subject: "You have a friend request!", user_id: self.recipient_id }
