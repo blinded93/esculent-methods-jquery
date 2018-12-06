@@ -79,6 +79,7 @@ Menu.prototype.getType = function() {
       } else {
         const user = new User(resp.user);
 
+        inbox.assignOwner(user);
         user.setLoggedInAs();
         menu.setNav(user);
       }
