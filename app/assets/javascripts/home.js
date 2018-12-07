@@ -5,5 +5,6 @@ $(function() {
 
 function homeSetup() {
   Search.setup();
+  goBack.set();
   Menu.setup();
 };
