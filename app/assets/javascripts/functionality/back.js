@@ -1,7 +1,8 @@
 let goBack = {};
 (function() {
+
   const o = {
-    url: "/recipes",
+    url: "",
     params: {
       page: 1
     },

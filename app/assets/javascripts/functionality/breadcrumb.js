@@ -38,8 +38,9 @@ let breadcrumb = {};
 
 
   this.addSearch = function() {
-    const userTitle = $("#type option:selected").text();
-    const searchQuery = $("#search").data("query");
+    const userTitle = capitalize(search.type());
+    const searchQuery = search.queryString();
+    const linkType = search.type().slice(0, -1);
 
     this.reset()
         .addLink(userTitle, "userLink")
