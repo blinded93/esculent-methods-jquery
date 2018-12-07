@@ -206,9 +206,7 @@ User.prototype.setData = function() {
   user.getRecipients()
     .done(function(data) {
       const friends = data.friendships.map(f => f.friend);
-      const pendingIds = data.friendships.map(function(f) {
-        if (!!f.request) { return f.friend.id }
-      });
+      const pendingIds = data.friendships.filter(f => !!f.request)
 
       $("#loggedInAs").data({
                       id: user.id,
@@ -222,7 +220,8 @@ User.prototype.setData = function() {
   return this;
 };
 
-User.prototype.addData = function(attrs) {
+
+User.prototype.addData = function(...attrs) {
   const user = this;
 
   attrs.forEach(function(attr) {
@@ -264,8 +263,23 @@ User.prototype.getRecipients = function() {
 
 //  Listeners //
 
-User.prototype.setUserLink = function(linkSelector) {
+User.prototype.setPreview = function(tab, type) {
   const user = this;
+  const $tab = $(`#user${tab}`);
+  const tabName = $tab.data("tab");
+
+  $tab.click(function(e) {
+    e.preventDefault();
+    user[`get${tabName}`](true)
+      .done(function(assets) {
+        $("ul.nav-tabs a.active").removeClass("active");
+        $tab.addClass("active");
+        user[tabName.toLowerCase()] = assets[tabName.toLowerCase()];
+        user.displayPreview(tabName, type);
+      });
+  });
+  return this;
+};
 
 
 User.prototype.setProfileLink = function(linkSelector) {
