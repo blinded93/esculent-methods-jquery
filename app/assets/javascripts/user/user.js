@@ -25,10 +25,11 @@ User.displayAllUsers = function(data, userType, destination) {
     display.nothingHere(destination);
   } else {
     display.fromTemplate("users", {users:users})
-           .toElement(destination).done(function() {
-             Listener.setUserResults(users);
-             if (pageObj) { pageObj.displayLinks(dfd, destination) }
-           });
+           .toElement(destination)
+             .done(function() {
+               User.setResults(users);
+               if (pageObj) { pageObj.displayLinks(dfd, destination) }
+             });
   }
   return dfd.promise();
 };
@@ -41,7 +42,7 @@ User.prototype.displayInbox = function(destination) {
   if (destination === "#mainContent") {breadcrumb.addUserAssets(user, "Messages");}
   display.fromTemplate("inbox", {recipients:friends})
          .toElement(destination, "", true).done(function() {
-           Listener.setInboxBtns(user);
+           inbox.setBtns();
            user.displayMessages("#messageInbox")
                .done(function(pageObj) {
                  Message.deleteBtnOnCheck();
@@ -66,7 +67,7 @@ User.prototype.displayMessages = function(destination) {
     display.fromTemplate("messages", {messages: user.messages})
            .toElement(destination, "", isInbox)
              .done(function() {
-               Listener.setMessages(user.messages);
+               Message.setAll(user.messages);
                if (pageObj) { pageObj.displayLinks(dfd, destination) }
                else { $(".deleteCheckSpans").remove(); }
              });
@@ -89,7 +90,7 @@ User.prototype.displayProfile = function() {
              .toElement("#mainContent")
                .done(function() {
                  breadcrumb.addProfile(user);
-                 Listener.setProfile(user);
+                 user.setProfile();
                });
     });
 };
@@ -98,15 +99,16 @@ User.prototype.displayProfile = function() {
 User.prototype.displayPreview = function(tab, type) {
   const assets = this[tab.toLowerCase()];
   const destination = "#profileContent";
+  const user = this;
 
-  Listener.setSeeAll(this, tab, type);
+  user.setSeeAll(tab, type);
   if (type === "recipes") {
-    Recipe.displayAllRecipes(this, tab.toLowerCase(), destination);
+    Recipe.displayAllRecipes(user, tab.toLowerCase(), destination);
   } else if (type === "users") {
-    User.displayAllUsers(this, tab.toLowerCase(), destination);
+    User.displayAllUsers(user, gtab.toLowerCase(), destination);
   } else if (type === "messages") {
-    $("#unreadCount").text(`${this.messages.length}`);
-    this.displayMessages(destination);
+    $("#unreadCount").text(`${user.messages.length}`);
+    user.displayMessages(destination);
   }
 };
 
@@ -114,13 +116,16 @@ User.prototype.displayPreview = function(tab, type) {
 User.prototype.displayUnreadCount = function() {
   if (isLoggedIn()) {
     this.getMessages("count")
-      .done(function(data) { $("#unreadCount").text(`${data.unread_count}`)});
+      .done(function(data) { $("#unreadCount").text(`${data.unread_count}`);
+    });
   }
+  return this;
 };
 
 
 User.prototype.assignAssetsAndMeta = function(data) {
-  user = this;
+  const user = this;
+
   Object.keys(data).forEach(function(key) {
     user[key] = data[key];
   });
@@ -190,7 +195,7 @@ User.prototype.setData = function() {
         pendingFriendIds: pendingIds,
                friendIds: friends.map(f => f.id)
       });
-      user.setUserLink(linkFunc);
+      user.setProfileLink(linkFunc);
     });
   return this;
 };
