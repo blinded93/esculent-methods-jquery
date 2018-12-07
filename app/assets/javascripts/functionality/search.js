@@ -32,16 +32,6 @@ Search.prototype.processQuery = function() {
 };
 
 
-Search.backToResultsLink = function() {
-  if (!!$(".searchLink").length) {
-    AlertMessage.toggle();
-    switchElementData(".searchLink", "#toSearchResults");
-    // this.setBackToResults();
-    Listener.setBackToResults();
-  }
-};
-
-
 Search.prototype.evaluateResp = function(resp) {
   const search = this;
 
@@ -148,15 +138,4 @@ Search.prototype.set = function() {
   });
 };
 
-Search.prototype.setBackToResults = function() {
-  const $goBack = $("#toSearchResults");
-  const data = $("#search").data();
-  const search = data.search;
-  const url = search.typeToURL(data.type);
-
-  $goBack.one("click", function(e) {
-    e.preventDefault();
-    $.get(url, {query:data.query, page: data.page})
-      .done(resp => search.evaluateResp(resp));
-  });
 };
