@@ -17,12 +17,26 @@ function Recipe(json) {
 
 Recipe.getAllRecipes = function() {
   $.get("/recipes")
-    .done(function(data) {
-      Recipe.displayAllRecipes(data, "recipes", "#mainContent")
-        .done(function(pageObj) {
-          pageObj.setLinks("/recipes")
-        })
-  });
+    .done(data => Recipe.displayAndSetPageLinks(data));
+};
+
+
+Recipe.displayAndSetPageLinks = function(data) {
+  goBack.updateCurrentResults(Recipe.resultsData(data));
+  breadcrumb.reset();
+  Recipe.displayAllRecipes(data, "recipes", "#mainContent")
+    .done(function(pageObj) {
+      pageObj.setLinks("/recipes");
+    });
+};
+
+
+Recipe.resultsData = function(data) {
+  return {
+    url: "/recipes",
+    params: { page: data.meta.page },
+    callback: data => Recipe.displayAndSetPageLinks(data)
+  }
 };
 
 
