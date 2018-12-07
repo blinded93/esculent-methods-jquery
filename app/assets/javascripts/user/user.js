@@ -290,7 +290,8 @@ User.prototype.setUserRecipesLink = function(linkSelector, destination) {
   return this;
 };
 
-User.prototype.setUserFavoritesLink = function(linkSelector, destination) {
+
+User.prototype.setFavoritesLink = function(linkSelector, destination) {
   const user = this;
   const preview = destination === "#mainContent" ? null : true;
 
@@ -304,7 +305,8 @@ User.prototype.setUserFavoritesLink = function(linkSelector, destination) {
   return this;
 };
 
-User.prototype.setUserFriendsLink = function(linkSelector, destination) {
+
+User.prototype.setFriendsLink = function(linkSelector, destination) {
   const user = this;
   const preview = destination === "#mainContent" ? null :true;
 
@@ -317,7 +319,8 @@ User.prototype.setUserFriendsLink = function(linkSelector, destination) {
   return this;
 };
 
-User.prototype.setUserInboxLink = function(linkSelector, destination) {
+
+User.prototype.setInboxLink = function(linkSelector, destination) {
   const user = this;
 
   linkSelector(".messagesLink").click(function(e) {
