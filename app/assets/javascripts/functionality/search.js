@@ -47,7 +47,7 @@ Search.prototype.evaluateResp = function(resp) {
 
   if (!!resp.recipes) { this.evaluateRecipes(resp); }
   else if (!!resp.users) { this.evaluateUsers(resp); }
-  AlertMessage.createSearch(this.form.data("query"));
+  goBack.hideIf();
   return this;
 };
 
@@ -138,6 +138,7 @@ Search.prototype.set = function() {
           search.populateData(data.meta)
                 .resetSearchAlert()
                 .evaluateResp(data);
+                goBack.updateCurrentResults(search.resultsData(data.meta));
           $("#query").val("");
         } else {
           $("#query").addClass("is-invalid");

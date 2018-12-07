@@ -124,6 +124,10 @@ User.prototype.assignAssetsAndMeta = function(data) {
   Object.keys(data).forEach(function(key) {
     user[key] = data[key];
   });
+  goBack.updateCurrentResults(user.resultsData(data));
+};
+
+
 };
 
 
@@ -238,7 +242,8 @@ User.prototype.setUserLink = function(linkSelector) {
 
   linkSelector(".userLink").click(function(e) {
     e.preventDefault();
-    Search.backToResultsLink();
+    goBack.show(this);
+    goBack.hideIf(isMenuItem(this));
     user.displayProfile();
   }).addClass("linkCursor");
   return this;
@@ -250,7 +255,8 @@ User.prototype.setUserRecipesLink = function(linkSelector, destination) {
 
   linkSelector(".recipesLink").click(function(e) {
     e.preventDefault();
-    Search.backToResultsLink();
+    goBack.show(this);
+    goBack.hideIf(isMenuItem(this));
     user.getRecipes(preview)
       .done(function(data) {
         user.assignAssetsAndMeta(data);
@@ -269,7 +275,8 @@ User.prototype.setUserFavoritesLink = function(linkSelector, destination) {
 
   linkSelector(".favoritesLink").click(function(e) {
     e.preventDefault();
-    Search.backToResultsLink();
+    goBack.show(this);
+    goBack.hideIf(isMenuItem(this));
     user.getFavorites(preview)
       .done(function(data) {
         user.assignAssetsAndMeta(data);
@@ -288,6 +295,7 @@ User.prototype.setUserFriendsLink = function(linkSelector, destination) {
 
   linkSelector(".friendsLink").click(function(e){
     e.preventDefault();
+    goBack.hideIf(isMenuItem(this));
     user.getFriends()
       .done(function(data) {
         user.assignAssetsAndMeta(data);
@@ -305,6 +313,7 @@ User.prototype.setUserInboxLink = function(linkSelector, destination) {
 
   linkSelector(".messagesLink").click(function(e) {
     e.preventDefault();
+    goBack.hideIf(isMenuItem(this));
     user.getMessages("all")
       .done(function(data) {
         user.assignAssetsAndMeta(data);

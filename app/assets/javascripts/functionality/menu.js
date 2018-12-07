@@ -90,7 +90,7 @@ Menu.prototype.getType = function() {
 Menu.prototype.load = function(resp) {
   const menu = this;
   if (!!resp) { menu.template = "nav"; }
-  const html = display.menuTemplate(menu.template, resp);
+  const html = display.template(menu.template, resp);
 
   menu.element.html(html);
   menu.form = $("#dropdownMenu form");

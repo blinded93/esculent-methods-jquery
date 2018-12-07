@@ -50,6 +50,7 @@ Paginate.prototype.setLink = function(link, url, params) {
     if (!$(link).parent().is(".disabled, .active")) {
       $.get(url + `?page=${page}`, params)
         .done(function(data) {
+          goBack.updateCurrentResults({params:{page: data.meta.page}});
           pageObj.displayLinkAssets(data, url, params);
         });
     }
