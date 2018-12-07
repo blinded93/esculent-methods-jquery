@@ -1,5 +1,5 @@
 {{#each messages}}
-  <div id="message-{{id}}" class="{{#unless readAt}}unread{{/unless}} input-group">
+  <div id="message-{{id}}" class="{{#unless readAt}}unread{{/unless}} message input-group">
     <div class="input-group-prepend">
       <span class="input-group-text deleteCheckSpans leftEdge message-cell">
         <input type="checkbox" value="{{id}}" class="deleteChecks" form="deleteSelectedForm" name='message_ids[]'>
