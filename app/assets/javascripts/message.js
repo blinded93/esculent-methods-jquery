@@ -19,13 +19,6 @@ Message.prototype.close = function(callback) {
   $("#messageDropdown").slideUp(200, callback);
 };
 
-Message.setCloseForm = function() {
-  $("#composeDropdown .closeMessage").click(function(e) {
-    e.preventDefault();
-    $("#composeDropdown").slideUp(200);
-  });
-  return this;
-};
 
 Message.deleteBtnOnCheck = function() {
   const $checks = $(".deleteChecks").change(function() {
@@ -38,29 +31,16 @@ Message.deleteBtnOnCheck = function() {
 
 Message.setForm = function(user) {
   this.setCloseForm()
-    .setSubmit(user, "#newMessageForm", function(resp) {
-      $("#composeDropdown").slideUp(200, function() {
-        $("#newMessageForm").trigger("reset");
-        Message.setForm(user);
+      .setSubmit(user, "#newMessageForm", function(resp) {
+        $("#composeDropdown").slideUp(200, function() {
+          $("#newMessageForm").trigger("reset");
+          Message.setForm(user);
+        });
+        AlertMessage.createAutoDismiss("Message sent!", "success");
       });
-      AlertMessage.createAutoDismiss("Message sent!", "success");
-    });
   return this;
 };
 
-Message.setSubmit = function(user, form, successFunc) {
-  $(form).validate({
-    onkeyup: function(element, event) {
-      $(element).valid();
-    },
-    errorClass: "its-invalid is-invalid",
-    validClass: "is-valid",
-    errorPlacement: function(error, element) {
-      $("#messageErrors").html(error);
-    },
-    submitHandler: Message.submit(user, successFunc)
-  });
-};
 
 Message.submit = function(user, successFunc) {
   return function(form, e) {
@@ -108,15 +88,83 @@ Message.prototype.markAsRead = function() {
 Message.prototype.parse = function() {
   if (!!this.recipe) {
     this.setView();
-    $("#messageBody").html(`<center class="h6 pt-1">${this.recipe.name}</center><img src="${this.recipe.imageUrl}" style="width:100%"/>`)
+    $("#messageBody").html(`<center class="h6 pt-1">${this.recipe.name}</center><img src="${this.recipe.imageUrl}" style="width:100%"/>`);
   } else if (!!this.user) {
+    let message;
+
     this.setAccept();
-    $("#messageBody").html(`<img src="${this.user.thumbURL}" class="pt-2 pr-2"/>${this.user.username} has sent you a friend request.`);
+    if (this.subject.includes("request")) {
+      message = `${this.sender.username} has sent you a friend request.`;
+    } else {
+      message = `${this.sender.username} has accepted your friend request.`;
+    }
+    $("#messageBody").html(`<img src="${this.sender.thumbURL}" class="pt-2 pr-2"/>${message}`);
   } else {
     this.setReply();
   }
   return this;
 };
+
+
+Message.prototype.delete = function() {
+  const message = this;
+
+  $.ajax({
+    url:`/users/1/messages/${this.id}`,
+    type:'DELETE',
+    success: Message.deleteSuccess
+  });
+};
+
+
+Message.deleteAll = function(ids) {
+  const message = this;
+
+  $.ajax({
+    url:`/users/1/messages`,
+    data:ids,
+    type:'DELETE',
+    success: Message.deleteSuccess
+  });
+};
+
+
+Message.deleteSuccess = function(resp) {
+  const messagesDeletedCount = resp.message_ids.length;
+  let unread = parseInt($("#unreadCount").text());
+
+  inbox.deleteMessageRows(resp);
+  $("#unreadCount").text(unread -= messagesDeletedCount);
+  $("#messageDropdown").slideUp(200);
+};
+
+
+// Listeners //
+
+
+Message.setCloseForm = function() {
+  $("#composeDropdown .closeMessage").click(function(e) {
+    e.preventDefault();
+    $("#composeDropdown").slideUp(200);
+  });
+  return this;
+};
+
+
+Message.setSubmit = function(user, form, successFunc) {
+  $(form).validate({
+    onkeyup: function(element, event) {
+      $(element).valid();
+    },
+    errorClass: "its-invalid is-invalid",
+    validClass: "is-valid",
+    errorPlacement: function(error, element) {
+      $("#messageErrors").html(error);
+    },
+    submitHandler: Message.submit(user, successFunc)
+  });
+};
+
 
 Message.prototype.setAccept = function() {
   const message = this;
@@ -128,6 +176,35 @@ Message.prototype.setAccept = function() {
     message.delete();
   });
 };
+
+
+Message.setAll = function(messages) {
+  messages.forEach(function(message, i) {
+    const linkFunc = linkSelectorFunction(`#message-${message.id}`);
+
+    message.sender.setProfileLink(linkFunc)
+    message.set(linkFunc);
+  });
+  return this;
+};
+
+
+Message.prototype.set = function(linkSelector) {
+  const message = this;
+  const $messageRow = $(`#message-${message.id} span`);
+
+  linkSelector(".messageLink").click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $messageRow.addClass("bg-light-blue");
+    message.display()
+           .setClose("html, #messageDropdown a.closeMessage");
+    $("#messageDropdown").click((e) => e.stopPropagation())
+      .slideDown(200);
+  }).addClass("linkCursor");
+  return this;
+};
+
 
 Message.prototype.setView = function() {
   const message = this;
@@ -150,8 +227,8 @@ Message.prototype.setReply = function() {
       display.fromTemplate("message_reply", message);
       $(this).html(Display.html).slideDown(200, function() {
         message.setReplyCancel()
-          .setReplySubmit()
-          .setClose("#messageDropdown .closeMessage");
+        .setReplySubmit()
+        .setClose("#messageDropdown .closeMessage");
       });
     });
   });
@@ -203,31 +280,4 @@ Message.prototype.setDelete = function(successFunc) {
     message.delete();
   });
   return this;
-};
-
-Message.prototype.delete = function() {
-  const message = this;
-  $.ajax({
-    url:`/users/1/messages/${this.id}`,
-    type:'DELETE',
-    success: Message.deleteSuccess
-  });
-};
-
-Message.deleteAll = function(ids) {
-  const message = this;
-  $.ajax({
-    url:`/users/1/messages`,
-    data:ids,
-    type:'DELETE',
-    success: Message.deleteSuccess
-  });
-};
-
-Message.deleteSuccess = function(resp) {
-  Inbox.deleteMessageRows(resp);
-  const messagesDeletedCount = resp.message_ids.length;
-  let unread = parseInt($("#unreadCount").text());
-  $("#unreadCount").text(unread -= messagesDeletedCount);
-  $("#messageDropdown").slideUp(200);
 };
