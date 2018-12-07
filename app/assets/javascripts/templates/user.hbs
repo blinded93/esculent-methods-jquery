@@ -30,17 +30,17 @@
     <div class="col">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a href="" id="userRecipes" data-tab="Recipes" class="nav-link active recipesLink">Recipes</a>
+          <a href="" id="userRecipes" data-tab="Recipes" data-type="recipes" class="nav-link active recipesLink">Recipes</a>
         </li>
         <li class="nav-item">
-          <a href="" id="userFavorites" data-tab="Favorites" class="nav-link favoritesLink">Favorites</a>
+          <a href="" id="userFavorites" data-tab="Favorites" data-type="recipes" class="nav-link favoritesLink">Favorites</a>
         </li>
         <li class="nav-item">
-          <a href="" id="userFriends" data-tab="Friends" class="nav-link friendsLink">Friends</a>
+          <a href="" id="userFriends" data-tab="Friends" data-type="users" class="nav-link friendsLink">Friends</a>
         </li>
         {{#ifOwned id}}
           <li class="nav-item">
-            <a href="" id="userNotifications" data-tab="Messages" class="nav-link messagesLink">Notifications <span class="small font-weight-bold black">(<span id="unreadCount" ></span>)</span></a>
+            <a href="" id="userMessages" data-tab="Messages" data-type="messages" class="nav-link messagesLink">Notifications <span class="small font-weight-bold black">(<span id="unreadCount" ></span>)</span></a>
           </li>
         {{/ifOwned }}
       </ul>
