@@ -44,8 +44,7 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
   const dfd = new $.Deferred();
   const recipesJson = data[`${recipeType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
-  const recipes = this.createFrom(recipesJson);
-  const breadcrumb = Breadcrumb.current();
+  const recipes = Recipe.createFrom(recipesJson);
 
   if (destination === "#mainContent") {
     breadcrumb.addUserAssets(data, `${capitalize(recipeType)}`);
@@ -56,7 +55,7 @@ Recipe.displayAllRecipes = function(data, recipeType, destination) {
     display.fromTemplate("recipes", {recipes:recipes})
       .toElement(destination)
         .done(function() {
-          Listener.setRecipeResults(recipes);
+          Recipe.setResults(recipes);
           if (pageObj) { pageObj.displayLinks(dfd, destination); }
         });
   }
@@ -91,7 +90,7 @@ Recipe.prototype.display = function(data) {
         if (isLoggedIn()) {
           recipe.favorited()
             .done(function(resp) {
-              Listener.setSocialBtns(recipe)
+              recipe.setSocialBtns()
             });
         }
       });
@@ -135,6 +134,33 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
     changeIconSrc(icon, `${iconName}-bw`)
     iconHover(icon, iconName);
   }
+};
+
+
+Recipe.prototype.displayShareForm = function() {
+  const recipe = this;
+  const friends = $("#loggedInAs").data("friends");
+
+  display.fromTemplate("recipe_share", {friends:friends})
+    .toElement(".shareForm", 1)
+    .done(function(data) {
+      recipe.setShareSubmit();
+    });
+};
+
+
+Recipe.prototype.toggleShare = function() {
+  $("#shareDropdown").slideToggle(200);
+};
+
+
+Recipe.prototype.assignUser = function(user) {
+  return user ? new User(user) : undefined;
+};
+
+
+Recipe.prototype.assignIngredients = function(ingredients) {
+  return ingredients ? ingredients.map(i => new Ingredient(i)) : [];
 };
 
 
