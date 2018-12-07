@@ -13,7 +13,7 @@ function User(json) {
 }
 
 
-User.displayAllUsers = function(data, userType, destination) {
+User.displayAll = function(data, userType, destination) {
   const dfd = new $.Deferred();
   const usersJson = data[`${userType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
@@ -103,9 +103,9 @@ User.prototype.displayPreview = function(tab, type) {
 
   user.setSeeAll(tab, type);
   if (type === "recipes") {
-    Recipe.displayAllRecipes(user, tab.toLowerCase(), destination);
+    Recipe.displayAll(user, tab.toLowerCase(), destination);
   } else if (type === "users") {
-    User.displayAllUsers(user, gtab.toLowerCase(), destination);
+    User.displayAll(user, tab.toLowerCase(), destination);
   } else if (type === "messages") {
     $("#unreadCount").text(`${user.messages.length}`);
     user.displayMessages(destination);
@@ -148,7 +148,7 @@ User.prototype.resultsData = function(data) {
 User.prototype.displayAssets = function(data, destination, preview = false) {
   const type = Object.keys(data)[0];
   const user = this;
-  const displayFunc = type === "friends" ? User.displayAllUsers : Recipe.displayAllRecipes;
+  const displayFunc = type === "friends" ? User.displayAll : Recipe.displayAll;
 
   this.assignAssetsAndMeta(data);
   displayFunc(user, type, destination)

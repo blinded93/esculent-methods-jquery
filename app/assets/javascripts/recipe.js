@@ -24,7 +24,7 @@ Recipe.getAllRecipes = function() {
 Recipe.displayAndSetPageLinks = function(data) {
   goBack.updateCurrentResults(Recipe.resultsData(data));
   breadcrumb.reset();
-  Recipe.displayAllRecipes(data, "recipes", "#mainContent")
+  Recipe.displayAll(data, "recipes", "#mainContent")
     .done(function(pageObj) {
       pageObj.setLinks("/recipes");
     });
@@ -40,7 +40,7 @@ Recipe.resultsData = function(data) {
 };
 
 
-Recipe.displayAllRecipes = function(data, recipeType, destination) {
+Recipe.displayAll = function(data, recipeType, destination) {
   const dfd = new $.Deferred();
   const recipesJson = data[`${recipeType}`];
   const pageObj = Paginate.createAndDestinate(data.meta, destination);
