@@ -267,6 +267,9 @@ User.prototype.getRecipients = function() {
 User.prototype.setUserLink = function(linkSelector) {
   const user = this;
 
+
+User.prototype.setProfileLink = function(linkSelector) {
+  const user = this;
   linkSelector(".userLink").click(function(e) {
     e.preventDefault();
     goBack.show(this);
@@ -276,7 +279,98 @@ User.prototype.setUserLink = function(linkSelector) {
   return this;
 };
 
-User.prototype.setUserRecipesLink = function(linkSelector, destination) {
+
+User.prototype.setProfile = function() {
+  const user = this;
+  const linkFunc = linkSelectorFunction(".profileImage");
+
+  $("#seeAll").show();
+  user.getRecipes(true)
+    .done(function(data) {
+      user.recipes = data.recipes;
+      user.displayPreview("Recipes", "recipes");
+    });
+  user.displayUnreadCount()
+      .setEditProfileImageBtn()
+      .setAddFriendBtn("24", linkFunc)
+      .setProfileTabs();
+};
+
+User.prototype.setProfileTabs = function() {
+  const user = this;
+  const navTabs = $(`#user-${this.id} .nav-link`);
+
+  navTabs.each(function(i, link) {
+    const [tab, type] = [$(link).data("tab"), $(link).data("type")]
+    user.setPreview(tab, type);
+  });
+};
+
+
+User.prototype.setEditProfileImageBtn = function() {
+  iconHover("#upload", "upload");
+  this.setProfileImageTypeCheck();
+  return this;
+};
+
+
+User.prototype.setProfileImageTypeCheck = function() {
+  const user = this;
+
+  $("#profileImageInput").change(function(e) {
+    const imgName = this.value.replace(/^.*[\\\/]/, '');
+
+    if (["jpeg", "jpg", "png"].includes(getExt(this))) {
+      AlertMessage.createEditImage(imgName, user);
+    } else {
+      window.setTimeout(changeIconSrc, 50, "#upload", "upload-wrong");
+      window.setTimeout(changeIconSrc, 2250, "#upload", "upload-bw");
+      $("#profileImageInput").val("");
+      AlertMessage.createError("Profile image must be jpeg or png.");
+    }
+  });
+};
+
+
+User.prototype.setProfileImageSubmit = function() {
+  const user = this;
+
+  return function() {
+    const form = document.getElementById("editProfileImage");
+    const formData = new FormData(form);
+
+    $.ajax({
+      type: 'PATCH',
+      url: `/users/${user.id}`,
+      processData: false,
+      contentType: false,
+      data: formData,
+      success: function(resp) {
+        const url = resp.user.avatar.url;
+        $("#userAvatar").fadeOut(200, function() {
+          $("#userAvatar").attr("src", url);
+        }).fadeIn(200);
+        const menu = $("#menu").data("menu");
+        menu.getType();
+      }
+    });
+  };
+};
+
+
+User.prototype.setSeeAll = function(tab, type) {
+  const $sa = $("#seeAllLink");
+  const tabName = tab === "Messages" ? "Inbox" : tab;
+
+  $sa.attr("href", "")
+    .removeClass().addClass(`${tab.toLowerCase()}Link`)
+    .off("click");
+  const linkFunc = linkSelectorFunction("#seeAll");
+  this[`set${tabName}Link`](linkFunc, "#mainContent");
+};
+
+
+User.prototype.setRecipesLink = function(linkSelector, destination) {
   const user = this;
   const preview = destination === "#mainContent" ? null : true;
 
@@ -333,4 +427,34 @@ User.prototype.setInboxLink = function(linkSelector, destination) {
       });
   });
   return this;
+};
+
+
+User.setResults = function(users) {
+  users.forEach(function(user) {
+    const linkFunc = linkSelectorFunction(`#user-${user.id}`);
+    const args = [linkFunc, "#mainContent"];
+
+    user.setProfileLink(linkFunc)
+        .setRecipesLink(...args)
+        .setFavoritesLink(...args)
+        .setAddFriendBtn("16", linkFunc);
+  });
+};
+
+
+User.prototype.setAddFriendBtn = function(size, linkFunc) {
+  iconHover(".addFriendImg", `add-friend-${size}`);
+  this.setAddFriend(linkFunc);
+  return this;
+};
+
+
+User.prototype.setAddFriend = function(linkSelector) {
+  const user = this;
+
+  linkSelector(".addFriend").click(function(e) {
+    e.preventDefault();
+    AlertMessage.createAddFriend(user);
+  });
 };
