@@ -1,152 +1,108 @@
-function Search() {
-  this.form = $("#search");
-  this.submit = $("#submitSearch");
-}
+let search = {};
+(function() {
+
+  let type, query, queryString;
+
+  this.type = () => type;
+  this.queryString = () => queryString;
+  this.searchTypeURL = () => `/${type}/search`;
 
 
-Search.setup = function() {
-  const search = new Search();
+  this.processQuery = function() {
+    queryString = $("#query").val();
 
-  search.set();
-};
-
-
-Search.current = function() { return $("#search").data("search"); };
-
-
-Search.prototype.typeToURL = function(givenType) {
-  const type = givenType || $("#type").val();
-
-  if (type === ":r") { return "/recipes/search"; }
-  else if (type === ":i") { return "/ingredients/search"; }
-  else if (type === ":u") { return "/users/search"; }
-};
+    if (type === "ingredients") {
+      return queryString.split(",").map(word => word.trim());
+    } else {
+      return queryString.trim();
+    }
+  };
 
 
-Search.prototype.processQuery = function() {
-  if ($("#type").val() === ":i") {
-    return $("#query").val().split(",").map(word => word.trim());
-  } else {
-    return $("#query").val();
-  }
-};
+  this.evaluateResp = function(resp) {
+    const modelType = Object.keys(resp)[0];
+    const displayFunc = modelType === "recipes" ? Recipe.displayAll : User.displayAll;
+
+    if (!!resp[modelType].length) {
+      displayFunc(resp, modelType, "#mainContent")
+        .done(pageObj => {
+          pageObj.setLinks(this.searchTypeURL(), {query: query});
+          breadcrumb.addSearch();
+        });
+    } else {
+      this.displayErrors();
+    }
+
+    goBack.hideIf(true);
+    return this;
+  };
 
 
-Search.prototype.evaluateResp = function(resp) {
-  const search = this;
-
-  if (!!resp.recipes) { this.evaluateRecipes(resp); }
-  else if (!!resp.users) { this.evaluateUsers(resp); }
-  goBack.hideIf();
-  return this;
-};
+  this.displayErrors = function() {
+    this.getError();
+    display.fromTemplate("error", this)
+           .toElement("#mainContent");
+  };
 
 
-Search.prototype.evaluateRecipes = function(resp) {
-  const search = this;
+  this.getError = function() {
+    const selected = $("#type option:selected").text();
 
-  if (!!resp.recipes.length) {
-    Recipe.displayAllRecipes(resp, "recipes", "#mainContent")
-      .done(function(pageObj) {
-        const url = $("#search").data("type") === ":r" ? "/recipes/search" : "/ingredients/search";
-        pageObj.setLinks(url, {query:$("#search").data("query")});
-        breadcrumb.addSearch();
-      });
-  } else {
-    search.displayErrors();
-  }
-};
+    this.errors = `No ${selected.toLowerCase()} found.`;
+    breadcrumb.setHome();
+  };
 
 
-Search.prototype.evaluateUsers = function(resp) {
-  const search = this;
-
-  if (!!resp.users.length) {
-    User.displayAllUsers(resp, "users", "#mainContent")
-      .done(function(pageObj) {
-        pageObj.setLinks("/users/search", {query:$("#search").data("query")});
-        breadcrumb.addSearch();
-      });
-  } else {
-    search.displayErrors();
-  }
-};
-
-
-Search.prototype.displayErrors = function() {
-  this.getError();
-  display.fromTemplate("error", this)
-    .toElement("#mainContent");
-};
-
-
-Search.prototype.getError = function() {
-  const selected = $("#type option:selected").text();
-
-  this.errors = `No ${selected.toLowerCase()} found.`;
-  breadcrumb.setHome();
-};
-
-
-Search.prototype.populateData = function(meta) {
-  const data = {
+  this.populateData = function(meta) {
+    const data = {
       type: (this.type || $("#search").data("type")),
      query: (this.query || $("#search").data("query")),
       page: meta.page,
     search: this
+    };
+
+    $("#search").data(data);
+    return this;
   };
 
-  $("#search").data(data);
-  return this;
-};
+
+  // Listeners //
+
+  this.set = function() {
+    const search = this;
+
+    $("#query").on("keyup", (e) => $(this).removeClass("is-invalid"));
+
+    $("#submitSearch").click(e => {
+      type = $("#type").val();
+      query = this.processQuery();
+
+      e.preventDefault();
+      if (!!query) {
+        $.get(this.searchTypeURL(), {query: query})
+          .done(data => {
+            this.evaluateResp(data);
+            goBack.updateCurrentResults(search.resultsData(data.meta));
+            $("#query").val("");
+          });
+      } else {
+        $("#query").addClass("is-invalid");
+        AlertMessage.createError("As search term is required.");
+      }
+    });
+  };
 
 
-Search.prototype.resetSearchAlert = function() {
-  if ($("#toSearchResults").is(":visible")) {
-    AlertMessage.toggle();
-  }
-  return this;
-};
+  this.resultsData = function(meta) {
+    return {
+          url: this.searchTypeURL(),
+       params: {
+          query: query,
+           page: meta.page
+      },
+     callback: resp => this.evaluateResp(resp)
+   };
+  };
 
 
-// Listener //
-
-Search.prototype.set = function() {
-  const search = this;
-  $("#query").on("keyup", (e) => $(this).removeClass("is-invalid"));
-
-  search.submit.click(function(e) {
-    const url = search.typeToURL();
-    const query = search.processQuery();
-
-    e.preventDefault();
-    $.get(url, {query:query})
-      .done(function(data) {
-        if (!!$("#query").val()) {
-          search.type = $("#type").val();
-          search.query = $("#query").val();
-          search.populateData(data.meta)
-                .resetSearchAlert()
-                .evaluateResp(data);
-                goBack.updateCurrentResults(search.resultsData(data.meta));
-          $("#query").val("");
-        } else {
-          $("#query").addClass("is-invalid");
-          AlertMessage.createError("A search term is required.");
-        }
-      });
-  });
-};
-
-Search.prototype.resultsData = function(meta) {
-  const type = $("#type").val();
-
-  return {
-    url: this.typeToURL(type),
-    params: {
-      query: $("#query").val(),
-      page: meta.page
-    },
-    callback: resp => this.evaluateResp(resp)
-  }
-};
+}).apply(search);
