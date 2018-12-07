@@ -4,7 +4,7 @@ $(function() {
 });
 
 function homeSetup() {
-  Search.setup();
+  search.set();
   goBack.set();
   Menu.setup();
 };
