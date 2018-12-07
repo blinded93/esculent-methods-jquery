@@ -21,9 +21,9 @@
             </div>
             <%= form_tag :search, id:"search", class:"form-inline ml-auto" do %>
               <%= select_tag(:type, options_for_select([
-                                              ["Recipes", ":r"],
-                                              ["Ingredients", ":i"],
-                                              ["Users", ":u"]], 1),
+                                              ["Recipes", "recipes"],
+                                              ["Ingredients", "ingredients"],
+                                              ["Users", "users"]], 1),
                                     class:"form-control form-control-sm mr-sm-2") %>
               <%= text_field_tag :query, "", class:"form-control form-control-sm mr-sm-2", placeholder:"Search", required:true %>
               <%= button_tag :Search, class:"btn btn-sm btn-outline-primary my-2", id:"submitSearch" %>
