@@ -27,9 +27,9 @@ let breadcrumb = {};
   };
 
 
-  this.addLink = function(title, classLink) {
-    const linkCursor = !title.includes("Messages") ? "linkCursor " : "";
-    const $li = $("<li>", {"class": `${linkCursor} breadcrumb-item ${classLink}`}).html(title);
+  this.addLink = function(title, classLink, linkCursor = true) {
+    const cursor = linkCursor ? "linkCursor " : "";
+    const $li = $("<li>", {"class": `${cursor}breadcrumb-item ${classLink}`}).html(title);
 
     this.setHome()
     $(".breadcrumb").append($li);
@@ -43,8 +43,8 @@ let breadcrumb = {};
     const linkType = search.type().slice(0, -1);
 
     this.reset()
-        .addLink(userTitle, "userLink")
-        .addLink(searchQuery, "searchLink");
+        .addLink(userTitle, `${linkType}Link`, false)
+        .addLink(searchQuery, "searchLink", false);
 
     return this;
   };
@@ -66,13 +66,13 @@ let breadcrumb = {};
       this.reset()
 
       if (isLoggedInAs(user.id)) {
-        this.addLink(`My ${items}`, `${items.toLowerCase()}Link`)
+        this.addLink(`My ${items}`, `${items.toLowerCase()}Link`, false)
             .addNewRecipeLink(user);
 
         if (!items.includes("Messages")) { user[`set${items}Link`](linkFunc, "#mainContent"); }
       } else {
         this.addProfile(user)
-            .addLink(items, `${items.toLowerCase()}Link`);
+            .addLink(items, `${items.toLowerCase()}Link`, false);
         user.setProfileLink(linkFunc);
       }
     }
