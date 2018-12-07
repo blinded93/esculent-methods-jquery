@@ -133,6 +133,17 @@ User.prototype.assignAssetsAndMeta = function(data) {
 };
 
 
+User.prototype.resultsData = function(data) {
+  const user = this;
+  const type = Object.keys(data)[0];
+
+  return  {
+    url: `/users/${user.id}/${type}`,
+    params:{ page: user.meta.page },
+    callback: data => user.displayAssets(data, "#mainContent")
+  };
+};
+
 };
 
 
