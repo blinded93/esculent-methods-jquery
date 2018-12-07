@@ -144,6 +144,17 @@ User.prototype.resultsData = function(data) {
   };
 };
 
+
+User.prototype.displayAssets = function(data, destination, preview = false) {
+  const type = Object.keys(data)[0];
+  const user = this;
+  const displayFunc = type === "friends" ? User.displayAllUsers : Recipe.displayAllRecipes;
+
+  this.assignAssetsAndMeta(data);
+  displayFunc(user, type, destination)
+    .done(function(pageObj) {
+      pageObj.setLinks(`/users/${user.id}/${type}`, preview)
+    })
 };
 
 
@@ -274,13 +285,7 @@ User.prototype.setUserRecipesLink = function(linkSelector, destination) {
     goBack.show(this);
     goBack.hideIf(isMenuItem(this));
     user.getRecipes(preview)
-      .done(function(data) {
-        user.assignAssetsAndMeta(data);
-        Recipe.displayAllRecipes(user, "recipes", destination)
-          .done(function(pageObj) {
-            pageObj.setLinks(`/users/${user.id}/recipes`, preview);
-          });
-      });
+      .done(data => user.displayAssets(data, destination, preview));
   });
   return this;
 };
@@ -294,13 +299,7 @@ User.prototype.setUserFavoritesLink = function(linkSelector, destination) {
     goBack.show(this);
     goBack.hideIf(isMenuItem(this));
     user.getFavorites(preview)
-      .done(function(data) {
-        user.assignAssetsAndMeta(data);
-        Recipe.displayAllRecipes(user, "favorites", destination)
-          .done(function(pageObj) {
-            pageObj.setLinks(`/users/${user.id}/favorites`, preview);
-          });
-      });
+      .done(data => user.displayAssets(data, destination, preview));
   });
   return this;
 };
@@ -313,13 +312,7 @@ User.prototype.setUserFriendsLink = function(linkSelector, destination) {
     e.preventDefault();
     goBack.hideIf(isMenuItem(this));
     user.getFriends()
-      .done(function(data) {
-        user.assignAssetsAndMeta(data);
-        User.displayAllUsers(user, "friends", destination)
-          .done(function(pageObj) {
-            pageObj.setLinks(`/users/${user.id}/friends`, preview);
-          });
-      });
+      .done(data => user.displayAssets(data, destination, preview));
   });
   return this;
 };
