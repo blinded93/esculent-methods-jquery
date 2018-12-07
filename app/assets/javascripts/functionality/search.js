@@ -138,4 +138,15 @@ Search.prototype.set = function() {
   });
 };
 
+Search.prototype.resultsData = function(meta) {
+  const type = $("#type").val();
+
+  return {
+    url: this.typeToURL(type),
+    params: {
+      query: $("#query").val(),
+      page: meta.page
+    },
+    callback: resp => this.evaluateResp(resp)
+  }
 };
