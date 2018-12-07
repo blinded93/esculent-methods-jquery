@@ -3,11 +3,11 @@ function capitalize(string) {
 }
 
 function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
-    }
-    return true;
+  for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+          return false;
+  }
+  return true;
 }
 
 function switchElementData(from, to) {
@@ -85,4 +85,12 @@ function linkSelectorFunction(parent) {
 function toggleClass(element, klass, boolean) {
   if (boolean) { element.addClass(klass); }
   else { element.removeClass(klass); }
+}
+
+function isMessage(el) {
+  return !!$(el).parents(".message").length;
+}
+
+function isMenuItem(el) {
+  return $(el).parent().is("#menu");
 }
