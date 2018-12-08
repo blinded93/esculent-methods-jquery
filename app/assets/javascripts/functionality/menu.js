@@ -1,224 +1,192 @@
-function Menu(template) {
-  this.element = $("#dropdownMenu");
-  this.template = template || "login";
-  this.form = null;
-  this.footer = null;
-}
+let menu = {};
+(function() {
+
+  let template = "login";
+  let footer;
+  const footerTypes = {
+    "login"  : "toSignUp",
+    "signup" : "toLogIn",
+    "nav"    : null
+  };
 
 
-Menu.setup = function() {
-  const menu = new this();
-  
-  menu.slideEffect()
-      .getType();
-};
+  this.set = function() {
+    this.slideEffect()
+        .getType();
+  };
 
 
-Menu.prototype.setSession = function() {
-  this.setForm()
-      .setFooterType()
-      .setFooter();
-};
+  this.slideEffect = function() {
+    $('.dropdown').on('show.bs.dropdown', function() {
+      $("#dropdownMenu").slideDown(200);
+    });
+    $('.dropdown').on('hide.bs.dropdown', function() {
+      $("#dropdownMenu").slideUp(200, function() {
+        $("#confirmLogout").hide();
+      });
+    });
+    return this;
+  };
 
 
-Menu.prototype.setFooterType = function() {
-  switch (this.template) {
-    case "login":
-      this.footer = "toSignUp";
-      break;
-    case "signup":
-      this.footer = "toLogIn";
-      break;
-    case "nav":
-      this.footer = null;
-      break;
-  }
-  return this;
-};
+  this.getType = function() {
+    $.get("/current_user")
+      .done(resp => {
+        this.load(resp);
+
+        if (!!$("#dropdownMenu form").length) {
+          this.setSession();
+        } else {
+          const user = new User(resp.user);
+
+          inbox.assignOwner(user);
+          user.setLoggedInAs();
+          this.setNav(user);
+        }
+      });
+  };
 
 
-Menu.prototype.setNav = function(user) {
-  const linkFunc = linkSelectorFunction("#menu");
-  const links = ["Profile", "Recipes", "Favorites", "Friends", "Inbox"];
-
-  $("#menu").data({menu:this});
-  this.setLogoutLink();
-  links.forEach(function(linkType) {
-    user[`set${linkType}Link`](linkFunc, "#mainContent")
-  });
-};
+  this.load = function(resp) {
+    if (!!resp) { template = "nav"; }
+    const html = display.template(template, resp);
+    $("#dropdownMenu").html(html);
+    return this;
+  };
 
 
-Menu.prototype.confirmSuccess = function() {
-  const menu = this;
-  const breadcrumb = $(".breadcrumb").data("breadcrumb");
+  this.confirmation = function() {
+    this.setConfirmNo()
+        .setConfirmYes();
+  };
 
-  return function() {
-    $("#loggedInAs").html("");
+
+  this.confirmSuccess = function() {
+    $("#loggedInas").html("");
     $("#dropdownMenu").slideUp(100, function() {
-      menu.template = "login";
+      template = "login";
       menu.getType();
       AlertMessage.createAutoDismiss("Logged out successfully.", "success");
       $("#loggedInAs").removeData();
-      Recipe.getAllRecipes();
+      Recipe.getAll();
       breadcrumb.reset();
     });
-  }
-};
+  };
 
 
-Menu.prototype.getType = function() {
-  const menu = this;
-
-  $.get("/current_user")
-    .done(function(resp) {
-      menu.load(resp);
-
-      if (!!menu.form.length) {
-        menu.setSession();
-      } else {
-        const user = new User(resp.user);
-
-        inbox.assignOwner(user);
-        user.setLoggedInAs();
-        menu.setNav(user);
-      }
-    });
-};
-
-
-Menu.prototype.load = function(resp) {
-  const menu = this;
-  if (!!resp) { menu.template = "nav"; }
-  const html = display.template(menu.template, resp);
-
-  menu.element.html(html);
-  menu.form = $("#dropdownMenu form");
-  return this;
-};
-
-
-Menu.prototype.slideEffect = function() {
-  $('.dropdown').on('show.bs.dropdown', function() {
-    $("#dropdownMenu").slideDown(200);
-  });
-  $('.dropdown').on('hide.bs.dropdown', function() {
-    $("#dropdownMenu").slideUp(200, function() {
-      $("#confirmLogout").hide();
-    });
-  });
-  return this;
-};
-
-
-Menu.prototype.evaluateResp = function(menu, resp) {
-  const respObj = resp.session || resp.user;
-  const errors = respObj.errors;
-
-  if (isEmpty(errors)) {
-    menu.element.slideUp(200, function() {
-      menu.template = "nav";
-      menu.getType();
-      AlertMessage.createAutoDismiss(`Logged in as ${respObj.username}`, "success");
-    });
-  } else {
-    menu.formErrors(errors);
-  }
-};
-
-
-Menu.prototype.formErrors = function(errors) {
-  this.resetInputs();
-  for (let field in errors) {
-    const message = $("<dd>").html(`${errors[field]}`);
-
-    $(`#${field}`).addClass("is-invalid");
-    $(`#${field}`).parent().children(".invalid-feedback").html(message);
-  }
-};
-
-
-Menu.prototype.resetInputs = function() {
-  const $inputs = $(".menuForm input");
-
-  $inputs.each(function(index, value){
-    $(value).removeClass("is-invalid");
-  });
-};
-
-
-Menu.prototype.setTemplate = function() {
-  this.template = this.template === "login" ? "signup" : "login";
-  return this;
-};
-
-
-// Listeners //
-
-Menu.prototype.setForm = function() {
-  const menu = this;
-
-  $("#menuSubmit").click(function(e) {
-    e.preventDefault();
-    $.post(`/${menu.template}`, menu.form.serialize())
-      .done(function(resp){
-        menu.evaluateResp(menu, resp);
+  this.evaluateResp = function(resp) {
+    const respObj = resp.session || resp.user;
+    if (isEmpty(respObj.errors)) {
+      $("#dropdownMenu").slideUp(200, () => {
+        template = "nav";
+        this.getType();
+        AlertMessage.createAutoDismiss(`Logged in as ${respObj.username}`, "success");
       });
-  });
-  return this;
-};
+    } else {
+      this.formErrors(respObj.errors);
+    }
+  };
 
 
-Menu.prototype.setFooter = function() {
-  const menu = this;
+  this.formErrors = function(errors) {
+    this.resetInputs();
+    for(let field in errors) {
+      const message = $("<dd>").html(`${errors[field]}`);
 
-  $(`#${menu.footer}`).click(function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    menu.setTemplate(menu)
-        .getType();
-  });
-};
-
-
-Menu.prototype.setLogoutLink = function() {
-  $("#logout").click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#confirmLogout").slideDown(200);
-  });
-  this.confirmation();
-};
+      $(`#${field}`).addClass("is-invalid");
+      $(`#${field}`).parent().children(".invalid-feedback").html(message);
+    }
+  };
 
 
-Menu.prototype.confirmation = function() {
-  const menu = this;
+  this.resetInputs = function() {
+    const $inputs = $(".menuForm input");
 
-  this.setConfirmNo()
-      .setConfirmYes();
-};
-
-
-Menu.prototype.setConfirmNo = function() {
-  $("#confirmNo").click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#confirmLogout").slideUp(200);
-  });
-  return this;
-};
+    $inputs.each((index, value) => $(value).removeClass("is-invalid"));
+  };
 
 
-Menu.prototype.setConfirmYes = function() {
-  const menu = this;
+  // Listeners //
 
-  $("#confirmYes").click(function(e){
-    e.preventDefault();
-    $.ajax({
-      url:"/logout",
-      method:"delete",
-      success: menu.confirmSuccess()
+  this.setSession = function() {
+    this.setForm()
+        .setFooter();
+  };
+
+
+  this.setForm = function() {
+    $("#menuSubmit").click(e => {
+      e.preventDefault();
+      $.post(`/${template}`, $("#dropdownMenu form").serialize())
+        .done(resp => {
+          this.evaluateResp(resp);
+        });
     });
-  });
-  return this;
-};
+    return this;
+  };
+
+
+  this.setFooter = function() {
+    footer = footerTypes[template];
+    if (!!footer) {
+      $(`#${footer}`).click(e => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setTemplate()
+            .getType();
+      });
+    }
+  };
+
+
+  this.setTemplate = function() {
+    template = template === "login" ? "signup" : "login";
+    return this;
+  };
+
+
+  this.setNav = function(user) {
+    const linkFunc = linkSelectorFunction("#menu");
+    const links = ["Profile", "Recipes", "Favorites", "Friends", "Inbox"];
+
+    this.setLogoutLink();
+    links.forEach(linkType => {
+      user[`set${linkType}Link`](linkFunc, "#mainContent");
+    });
+  };
+
+
+  this.setLogoutLink = function() {
+    $("#logout").click(e => {
+      e.stopPropagation();
+      e.preventDefault();
+      $("#confirmLogout").slideDown(200)
+    });
+    this.confirmation();
+  };
+
+
+  this.setConfirmNo = function() {
+    $("#confirmNo").click(e => {
+      e.stopPropagation();
+      e.preventDefault();
+      $("#confirmLogout").slideUp(200);
+    });
+    return this;
+  };
+
+
+  this.setConfirmYes = function() {
+    $("#confirmYes").click(e => {
+      e.preventDefault();
+      $.ajax({
+        url     : "/logout",
+        method  : "delete",
+        success : this.confirmSuccess
+      });
+    });
+    return this;
+  };
+
+
+}).apply(menu);
