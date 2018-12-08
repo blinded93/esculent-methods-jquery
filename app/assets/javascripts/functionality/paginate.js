@@ -66,7 +66,7 @@ Paginate.prototype.parseAndDisplayData = function(data, url, params) {
     if (models[key]) {
       const model = models[key];
 
-      model[`displayAll${capitalize(key)}`](data, key, destination)
+      model[`displayAll`](data, key, destination)
         .done(function(pageObj) {
           pageObj.setLinks(url, params);
         });

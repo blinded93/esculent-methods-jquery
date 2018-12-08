@@ -1,6 +1,6 @@
 $(function() {
   homeSetup();
-  Recipe.getAllRecipes();
+  Recipe.getAll();
 });
 
 function homeSetup() {

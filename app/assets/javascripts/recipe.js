@@ -15,7 +15,7 @@ function Recipe(json) {
 }
 
 
-Recipe.getAllRecipes = function() {
+Recipe.getAll = function() {
   $.get("/recipes")
     .done(data => Recipe.displayAndSetPageLinks(data));
 };
