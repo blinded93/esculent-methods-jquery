@@ -38,6 +38,7 @@ AlertMessage.createAddFriend = function(user) {
   const html = `Send "${user.username}" a friend request? <span class='float-right'><a href='' id='confirmFriend'>Yes</a> / <a href='' id='denyFriend'>No</a></span>`;
   const alert = this.create(html, "warning");
 
+  this.toggle();
   alert.setDismissLink("#confirmFriend", user.addFriend(currentUserId))
        .setDismissLink("#denyFriend");
 };

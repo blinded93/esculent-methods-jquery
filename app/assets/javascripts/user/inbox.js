@@ -48,7 +48,7 @@ let inbox = {};
 
   this.setComposeBtn = function() {
     Message.setForm(owner);
-    $("#composeBtn").click(function(e) {
+    $("#composeBtn").click(e => {
       e.preventDefault();
       $("#composeDropdown").slideToggle(200);
     });
@@ -57,9 +57,9 @@ let inbox = {};
 
 
   this.setDeleteBtn = function() {
-    const checked = $(".deleteChecks:checked");
+    $("#deleteBtn").click(e => {
+      const checked = $(".deleteChecks:checked");
 
-    $("#deleteBtn").click(function(e) {
       e.preventDefault();
       Message.deleteAll(checked);
     });

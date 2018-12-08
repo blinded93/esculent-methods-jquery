@@ -1,6 +1,7 @@
 class MessagesController < ApplicationController
   def create
     message = current_user.sent_messages.build(message_params)
+    
     message.save
     render json: message,
            status: 200
@@ -18,6 +19,7 @@ class MessagesController < ApplicationController
 
   def destroy
     message_ids = params[:message_ids] || [params[:id]]
+
     Message.delete(message_ids) if logged_in?
     render json: {message_ids: message_ids},
            status: 200

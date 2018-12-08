@@ -21,7 +21,7 @@ Message.prototype.close = function(callback) {
 
 
 Message.deleteBtnOnCheck = function() {
-  const $checks = $(".deleteChecks").change(function() {
+  const $checks = $(".deleteChecks").change(() => {
     const checked = $checks.is(':checked');
 
     $("#deleteBtn").stop().fadeTo(200, checked ? 1 : 0);
@@ -31,8 +31,8 @@ Message.deleteBtnOnCheck = function() {
 
 Message.setForm = function(user) {
   this.setCloseForm()
-      .setSubmit(user, "#newMessageForm", function(resp) {
-        $("#composeDropdown").slideUp(200, function() {
+      .setSubmit(user, "#newMessageForm", resp => {
+        $("#composeDropdown").slideUp(200, () => {
           $("#newMessageForm").trigger("reset");
           Message.setForm(user);
         });
@@ -44,8 +44,9 @@ Message.setForm = function(user) {
 
 Message.submit = function(user, successFunc) {
   return function(form, e) {
-    e.preventDefault();
     const formData = new FormData(form);
+
+    e.preventDefault();
     $.ajax({
       type: "post",
       url: `/users/${user.id}/messages`,
@@ -70,15 +71,17 @@ Message.prototype.display = function() {
 
 
 Message.prototype.markAsRead = function() {
-  const message = this;
+  if (!this.readAt) {
+    $.post(`/users/${currentUser("id")}/messages/${this.id}/read`)
+      .done(resp => {
+        $(`#message-${resp.message_id}`).removeClass("unread");
+        const countStr = $("#unreadCount").text();
 
-  if (!message.readAt) {
-    let unreadCount = parseInt($("#unreadCount").text());
+        if (!isEmpty(countStr)) {
+          let unreadCount = parseInt(countStr);
 
-    $.post(`/users/${currentUser("id")}/messages/${message.id}/read`)
-      .done(function(resp) {
-        $(`#message-${resp.message_id}`).removeClass("unread")
-        $("#unreadCount").text(unreadCount -= 1);
+          $("#unreadCount").text(unreadCount -= 1);
+        }
       });
   }
   return this;
@@ -92,8 +95,8 @@ Message.prototype.parse = function() {
   } else if (!!this.user) {
     let message;
 
-    this.setAccept();
     if (this.subject.includes("request")) {
+      this.setAccept();
       message = `${this.sender.username} has sent you a friend request.`;
     } else {
       message = `${this.sender.username} has accepted your friend request.`;
@@ -107,8 +110,6 @@ Message.prototype.parse = function() {
 
 
 Message.prototype.delete = function() {
-  const message = this;
-
   $.ajax({
     url:`/users/1/messages/${this.id}`,
     type:'DELETE',
@@ -118,8 +119,6 @@ Message.prototype.delete = function() {
 
 
 Message.deleteAll = function(ids) {
-  const message = this;
-
   $.ajax({
     url:`/users/1/messages`,
     data:ids,
@@ -143,7 +142,7 @@ Message.deleteSuccess = function(resp) {
 
 
 Message.setCloseForm = function() {
-  $("#composeDropdown .closeMessage").click(function(e) {
+  $("#composeDropdown .closeMessage").click(e => {
     e.preventDefault();
     $("#composeDropdown").slideUp(200);
   });
@@ -153,12 +152,12 @@ Message.setCloseForm = function() {
 
 Message.setSubmit = function(user, form, successFunc) {
   $(form).validate({
-    onkeyup: function(element, event) {
+    onkeyup: (element, event) => {
       $(element).valid();
     },
     errorClass: "its-invalid is-invalid",
     validClass: "is-valid",
-    errorPlacement: function(error, element) {
+    errorPlacement: (error, element) => {
       $("#messageErrors").html(error);
     },
     submitHandler: Message.submit(user, successFunc)
@@ -167,19 +166,18 @@ Message.setSubmit = function(user, form, successFunc) {
 
 
 Message.prototype.setAccept = function() {
-  const message = this;
   const currentUserId = $("#loggedInAs").data("id");
 
-  $("#accept").click(function(e) {
-    message.close(message.sender.confirmFriend(currentUserId));
-    AlertMessage.createAutoDismiss(`You are now friends with ${message.sender.username}!`, "success");
-    message.delete();
+  $("#accept").click(e => {
+    this.close(this.sender.confirmFriend(currentUserId));
+    AlertMessage.createAutoDismiss(`You are now friends with ${this.sender.username}!`, "success");
+    this.delete();
   });
 };
 
 
 Message.setAll = function(messages) {
-  messages.forEach(function(message, i) {
+  messages.forEach((message, i) => {
     const linkFunc = linkSelectorFunction(`#message-${message.id}`);
 
     message.sender.setProfileLink(linkFunc)
@@ -190,31 +188,26 @@ Message.setAll = function(messages) {
 
 
 Message.prototype.set = function(linkSelector) {
-  const message = this;
-  const $messageRow = $(`#message-${message.id} span`);
+  const $messageRow = $(`#message-${this.id} span`);
 
-  linkSelector(".messageLink").click(function(e) {
+  linkSelector(".messageLink").click(e => {
     e.preventDefault();
     e.stopPropagation();
     $messageRow.addClass("bg-light-blue");
-    message.display()
+    this.display()
            .setClose("html, #messageDropdown a.closeMessage");
-    $("#messageDropdown").click((e) => e.stopPropagation())
-      .slideDown(200);
+    $("#messageDropdown").click(e => e.stopPropagation())
+                         .slideDown(200);
   }).addClass("linkCursor");
   return this;
 };
 
 
 Message.prototype.setView = function() {
-  const message = this;
-  const recipe_data = {recipe:message.recipe};
-
-  $("#view").click(function(e) {
-    message.close(function() {
-      message.recipe.get();
+  $("#view").click(e => {
+    this.close(() => {
+      this.recipe.get();
     });
-
   });
 };
 
@@ -222,26 +215,23 @@ Message.prototype.setView = function() {
 Message.prototype.setReply = function() {
   const message = this;
 
-  $("#reply").click(function(e) {
-    message.close(function() {
-      display.fromTemplate("message_reply", message);
-      $(this).html(Display.html).slideDown(200, function() {
-        message.setReplyCancel()
-        .setReplySubmit()
-        .setClose("#messageDropdown .closeMessage");
-      });
+  $("#reply").click(e => {
+    this.close(function() {
+      const html = display.template("message_reply", this);
+      $(this).html(html).slideDown(200)
+      message.setReplyCancel()
+             .setReplySubmit()
+             .setClose("#messageDropdown .closeMessage");
     });
   });
   return this;
 };
 
 Message.prototype.setClose = function(selectors) {
-  const message = this;
-
-  $(selectors).one("click", function(e) {
+  $(selectors).one("click", e => {
     e.preventDefault();
-    message.close();
-    $(`#message-${message.id} span`).removeClass("bg-light-blue");
+    this.close();
+    $(`#message-${this.id} span`).removeClass("bg-light-blue");
   });
   return this;
 };
@@ -250,9 +240,9 @@ Message.prototype.setClose = function(selectors) {
 Message.prototype.setReplyCancel = function() {
   const message = this;
 
-  $("#cancel").click(function(e) {
+  $("#cancel").click(e => {
     e.preventDefault();
-    message.close(function() {
+    this.close(function() {
       message.display();
       $(this).slideDown(200);
     });
@@ -262,10 +252,8 @@ Message.prototype.setReplyCancel = function() {
 
 
 Message.prototype.setReplySubmit = function(html) {
-  const message = this;
-
-  Message.setSubmit(this.sender, "#replyMessageForm", function(resp) {
-    message.close();
+  Message.setSubmit(this.sender, "#replyMessageForm", resp => {
+    this.close();
     AlertMessage.createAutoDismiss("Message sent!", "success");
   });
   return this;
@@ -274,10 +262,6 @@ Message.prototype.setReplySubmit = function(html) {
 
 
 Message.prototype.setDelete = function(successFunc) {
-  const message = this;
-
-  $("#delete").click(function(e) {
-    message.delete();
-  });
+  $("#delete").click(e => { this.delete(); });
   return this;
 };
