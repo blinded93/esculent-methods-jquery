@@ -48,13 +48,10 @@ AlertMessage.createError = function(message) {
 };
 
 
-
-
-
 AlertMessage.prototype.setDismissLink = function(dismisser, afterDismissFunc) {
   const alert = this;
 
-  $(dismisser).one("click", function(e) {
+  $(dismisser).one("click", (e) => {
     e.preventDefault();
     alert.element.slideUp(200, function() {
       $("#mainContent").animate({'padding-top':16}, 200);

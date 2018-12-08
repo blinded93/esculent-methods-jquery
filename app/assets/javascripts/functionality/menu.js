@@ -62,7 +62,7 @@ let menu = {};
 
 
   this.confirmSuccess = function() {
-    $("#loggedInas").html("");
+    $("#loggedInAs").html("");
     $("#dropdownMenu").slideUp(100, function() {
       template = "login";
       menu.getType();
@@ -73,18 +73,12 @@ let menu = {};
     });
   };
 
-
-  this.evaluateResp = function(resp) {
-    const respObj = resp.session || resp.user;
-    if (isEmpty(respObj.errors)) {
-      $("#dropdownMenu").slideUp(200, () => {
-        template = "nav";
-        this.getType();
-        AlertMessage.createAutoDismiss(`Logged in as ${respObj.username}`, "success");
-      });
-    } else {
-      this.formErrors(respObj.errors);
-    }
+  this.displayNav = function(user) {
+    $("#dropdownMenu").slideUp(200, () => {
+      template = "nav";
+      this.getType();
+      AlertMessage.createAutoDismiss(`Logged in as ${user.username}`, "success");
+    });
   };
 
 
@@ -117,10 +111,7 @@ let menu = {};
   this.setForm = function() {
     $("#menuSubmit").click(e => {
       e.preventDefault();
-      $.post(`/${template}`, $("#dropdownMenu form").serialize())
-        .done(resp => {
-          this.evaluateResp(resp);
-        });
+      session[template]();
     });
     return this;
   };
@@ -178,12 +169,10 @@ let menu = {};
 
   this.setConfirmYes = function() {
     $("#confirmYes").click(e => {
+      const successFunc = this.confirmSuccess;
+
       e.preventDefault();
-      $.ajax({
-        url     : "/logout",
-        method  : "delete",
-        success : this.confirmSuccess
-      });
+      session.logout(successFunc);
     });
     return this;
   };
