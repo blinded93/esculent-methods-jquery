@@ -6,5 +6,5 @@ $(function() {
 function homeSetup() {
   search.set();
   goBack.set();
-  Menu.setup();
+  menu.set();
 };
