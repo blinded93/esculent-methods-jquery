@@ -395,46 +395,41 @@ User.prototype.setSeeAll = function(tab, type) {
 };
 
 
-User.prototype.setRecipesLink = function(linkSelector, destination) {
+User.prototype.setAssetsLinks = function(types, linkSelector, destination) {
+  types.forEach(type => {
+    this.setAssetsLink(type, linkSelector)
+  });
+};
+
+
+User.prototype.setAssetsLink = function(type, linkSelector, destination) {
   const user = this;
   const preview = destination === "#mainContent" ? null : true;
 
-  linkSelector(".recipesLink").click(function(e) {
+  linkSelector(`.${type.toLowerCase()}Link`).click(function(e) {
     e.preventDefault();
     goBack.show(this);
     goBack.hideIf(isMenuItem(this));
-    user.getRecipes(preview)
+    user[`get${type}`](preview)
       .done(data => user.displayAssets(data, destination, preview));
   });
+};
+
+
+User.prototype.setRecipesLink = function(linkSelector, destination) {
+  this.setAssetsLink("Recipes", linkSelector, destination);
   return this;
 };
 
 
 User.prototype.setFavoritesLink = function(linkSelector, destination) {
-  const user = this;
-  const preview = destination === "#mainContent" ? null : true;
-
-  linkSelector(".favoritesLink").click(function(e) {
-    e.preventDefault();
-    goBack.show(this);
-    goBack.hideIf(isMenuItem(this));
-    user.getFavorites(preview)
-      .done(data => user.displayAssets(data, destination, preview));
-  });
+  this.setAssetsLink("Favorites", linkSelector, destination);
   return this;
 };
 
 
 User.prototype.setFriendsLink = function(linkSelector, destination) {
-  const user = this;
-  const preview = destination === "#mainContent" ? null :true;
-
-  linkSelector(".friendsLink").click(function(e){
-    e.preventDefault();
-    goBack.hideIf(isMenuItem(this));
-    user.getFriends()
-      .done(data => user.displayAssets(data, destination, preview));
-  });
+  this.setAssetsLink("Friends", linkSelector, destination);
   return this;
 };
 
