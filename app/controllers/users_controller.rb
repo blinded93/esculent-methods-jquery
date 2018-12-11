@@ -47,13 +47,6 @@ class UsersController < ApplicationController
            status: 200
   end
 
-  def friendships
-    friendships = Friendship.where(user_id:current_user.id)
-    render json: friendships,
-           each_serializer: FriendshipSerializer,
-           status: 200
-  end
-
   def messages
     if params[:scope] == "count"
       count = current_user.received_messages.unread.count

@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     get '/favorites' => 'users#favorites'
     post '/friend' => 'users#friend'
     get '/friends' => 'users#friends'
-    get '/friendships' => 'users#friendships'
+    get '/friendships' => 'friendships#index'
     post '/messages/:id/read' => 'messages#read'
   end
 end
