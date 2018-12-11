@@ -203,26 +203,29 @@ User.prototype.setData = function() {
   const user = this;
   const linkFunc = linkSelectorFunction("#loggedInAs");
 
-  user.getRecipients()
+  user.getFriendships()
     .done(function(data) {
-      const friends = data.friendships.map(f => f.friend);
-      const pendingIds = data.friendships.filter(f => !!f.request)
-
-      $("#loggedInAs").data({
-                      id: user.id,
-                username: user.username,
-                 friends: friends,
-        pendingFriendIds: pendingIds,
-               friendIds: friends.map(f => f.id)
-      });
+      $("#loggedInAs").data(user.friendshipData(data));
       user.setProfileLink(linkFunc);
     });
   return this;
 };
 
 
-User.prototype.addData = function(...attrs) {
-  const user = this;
+User.prototype.friendshipData = function(data) {
+  const friends = data.friendships.filter(f => f.request === false)
+                                  .map(f => f.friend);
+  const pending = data.friendships.filter(f => f.request === true)
+                                  .map(f => f.friend);
+  const userData = {
+                  id: this.id,
+            username: this.username,
+             friends: friends,
+           friendIds: friends.map(f => f.id),
+    pendingFriendIds: pending.map(f => f.id)
+  }
+  return userData;
+};
 
   attrs.forEach(function(attr) {
     $("#loggedInAs").data(attr).push(user.id);
