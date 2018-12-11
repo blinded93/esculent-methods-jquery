@@ -12,7 +12,8 @@ let menu = {};
 
   this.set = function() {
     this.slideEffect()
-        .getType();
+        .getType()
+          .done(user => user.setLoggedInAs());
   };
 
 
@@ -30,6 +31,8 @@ let menu = {};
 
 
   this.getType = function() {
+    const dfd = new $.Deferred();
+
     $.get("/current_user")
       .done(resp => {
         this.load(resp);
@@ -40,10 +43,12 @@ let menu = {};
           const user = new User(resp.user);
 
           inbox.assignOwner(user);
-          user.setLoggedInAs();
+
           this.setNav(user);
+          dfd.resolve(user);
         }
       });
+      return dfd.promise();
   };
 
 
@@ -73,10 +78,13 @@ let menu = {};
     });
   };
 
-  this.displayNav = function(user) {
+  this.displayNav = function(userData) {
+    const user = new User(userData);
+
     $("#dropdownMenu").slideUp(200, () => {
       template = "nav";
       this.getType();
+      user.setLoggedInAs();
       AlertMessage.createAutoDismiss(`Logged in as ${user.username}`, "success");
     });
   };
