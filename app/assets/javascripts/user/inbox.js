@@ -16,10 +16,10 @@ let inbox = {};
     breadcrumb.addUserAssets(this.owner, "Messages");
     display.fromTemplate("inbox", {friends: this.recipients})
       .toElement(destination, "", true)
-        .done(function() {
+        .done(() => {
           inbox.setBtns();
           user.displayMessages("#messageInbox", pageObj)
-              .done(function() {
+              .done(() => {
                 Message.deleteBtnOnCheck();
                 if (pageObj) { pageObj.displayLinks(dfd, destination); }
               });
@@ -70,13 +70,15 @@ let inbox = {};
   this.setFilterSelect = function() {
     $("#messageFilterInput").change(function(e) {
       const selectedScope = $(this).children("option:selected").val();
+
       owner.getMessages(selectedScope)
-           .done(function(data) {
+           .done(data => {
              owner.messages = data.messages;
-             user.displayMessages("#messageInbox")
-                 .done(function() {
-                   inbox.deleteBtnOnCheck();
-                 });
+
+             owner.displayMessages("#messageInbox")
+                  .done(() => {
+                    inbox.deleteBtnOnCheck();
+                  });
            });
     });
     return this;
