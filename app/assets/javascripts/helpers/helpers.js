@@ -10,6 +10,13 @@ function isEmpty(obj) {
   return true;
 }
 
+function removeFrom(value, array) {
+  const index = array.indexOf(value);
+
+  if (index > -1) { array.splice(index, -1) };
+  return array;
+}
+
 function switchElementData(from, to) {
   const data = $(from).data();
 
