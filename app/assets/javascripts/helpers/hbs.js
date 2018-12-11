@@ -91,7 +91,7 @@ Handlebars.registerHelper("ifLoggedIn", function(options) {
 
 Handlebars.registerHelper("ifFriend", function(id, options) {
   if (id && !isLoggedInAs(id)) {
-    if ($("#loggedInAs").data("friendIds").includes(id)) {
+    if (isFriend(id) || isPending(id)) {
       return options.fn(this);
     } else {
       return options.inverse(this);
@@ -100,7 +100,7 @@ Handlebars.registerHelper("ifFriend", function(id, options) {
 });
 
 Handlebars.registerHelper("ifPending", function(id, options) {
-  if ($("#loggedInAs").data("pendingFriendIds").includes(id)) {
+  if (isPending(id)) {
     return options.fn(this);
   }
 });

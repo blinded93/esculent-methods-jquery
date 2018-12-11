@@ -94,3 +94,11 @@ function isMessage(el) {
 function isMenuItem(el) {
   return $(el).parent().is("#menu");
 }
+
+function isFriend(id) {
+  return $("#loggedInAs").data("friendIds").includes(id);
+}
+
+function isPending(id) {
+  return $("#loggedInAs").data("pendingFriendIds").includes(id);
+}
