@@ -25,7 +25,7 @@ Recipe.displayAndSetPageLinks = function(data) {
   goBack.updateCurrentResults(Recipe.resultsData(data));
   breadcrumb.reset();
   Recipe.displayAll(data, "recipes", "#mainContent")
-    .done(function(pageObj) {
+    .done(pageObj => {
       pageObj.setLinks("/recipes");
     });
 };
@@ -54,7 +54,7 @@ Recipe.displayAll = function(data, recipeType, destination) {
   } else {
     display.fromTemplate("recipes", {recipes:recipes})
       .toElement(destination)
-        .done(function() {
+        .done(() => {
           Recipe.setResults(recipes);
           if (pageObj) { pageObj.displayLinks(dfd, destination); }
         });
@@ -69,27 +69,24 @@ Recipe.createFrom = function(data) {
 
 
 Recipe.prototype.get = function() {
-  const recipe = this;
-  const owner = this.owner;
-
-  $.get(`/users/${owner.id}/recipes/${this.id}`)
-    .done(function(data) {
-      recipe.display(data);
+  $.get(`/users/${this.owner.id}/recipes/${this.id}`)
+    .done(data => {
+      this.display(data);
     });
 };
 
 
 Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
+  recipe.owner = recipe.owner ? recipe.owner : this.owner;
 
-  recipe.owner ? recipe.owner : recipe.owner = this.owner;
   display.fromTemplate("recipe", recipe)
     .toElement("#mainContent")
-      .done(function() {
+      .done(() => {
         breadcrumb.addUserAssets(recipe.owner, "Recipes");
         if (isLoggedIn()) {
           recipe.favorited()
-            .done(function(resp) {
+            .done(resp => {
               recipe.setSocialBtns()
             });
         }
@@ -98,12 +95,11 @@ Recipe.prototype.display = function(data) {
 
 
 Recipe.prototype.favorited = function() {
-  const recipe = this;
   const dfd = new $.Deferred();
 
-  $.get(`/recipes/${recipe.id}/favorited`)
-    .done(function(resp) {
-      recipe.toggleIcon(!!resp.favorite, "favorite");
+  $.get(`/recipes/${this.id}/favorited`)
+    .done(resp => {
+      this.toggleIcon(!!resp.favorite, "favorite");
       dfd.resolve(resp);
     });
   return dfd.promise();
@@ -111,12 +107,10 @@ Recipe.prototype.favorited = function() {
 
 
 Recipe.prototype.favorite = function() {
-  const recipe = this;
-
-  $.post(`/recipes/${recipe.id}/favorite`)
-    .done(function(resp) {
+  $.post(`/recipes/${this.id}/favorite`)
+    .done(resp => {
       if (isEmpty(resp.errors)) {
-        recipe.toggleIcon(!!resp.favoriteStatus, "favorite");
+        this.toggleIcon(!!resp.favoriteStatus, "favorite");
       } else if (!!resp.errors.loggedOut) {
         AlertMessage.createAutoDismiss(resp.errors.loggedOut, "danger");
       }
@@ -138,14 +132,13 @@ Recipe.prototype.toggleIcon = function(boolean, iconName) {
 
 
 Recipe.prototype.displayShareForm = function() {
-  const recipe = this;
   const friends = $("#loggedInAs").data("friends");
 
   display.fromTemplate("recipe_share", {friends:friends})
-    .toElement(".shareForm", 1)
-    .done(function(data) {
-      recipe.setShareSubmit();
-    });
+         .toElement(".shareForm", 1)
+           .done(data => {
+             this.setShareValidate();
+           });
 };
 
 
@@ -170,19 +163,17 @@ Recipe.setResults = function(recipes) {
   recipes.forEach(recipe => {
     const linkFunc = linkSelectorFunction(`#recipe-${recipe.id}`);
 
-    recipe.setShowLink(linkFunc)
-    recipe.owner.setProfileLink(linkFunc)
+    recipe.setShowLink(linkFunc);
+    recipe.owner.setProfileLink(linkFunc);
   });
 };
 
 
 Recipe.prototype.setShowLink = function(linkSelector) {
-  const recipe = this;
-
-  linkSelector(".recipeLink").click(function(e) {
+  linkSelector(".recipeLink").click(e => {
     e.preventDefault();
     goBack.show(this);
-    recipe.get();
+    this.get();
   });
   return this;
 };
@@ -190,11 +181,10 @@ Recipe.prototype.setShowLink = function(linkSelector) {
 
 Recipe.prototype.setSocialBtns = function() {
   const links = $("#social a");
-  const recipe = this;
 
-  links.each(function(i, link) {
+  links.each((i, link) => {
     const linkType = capitalize( $(link).attr("class") );
-    recipe[`set${linkType}Link`](link)
+    this[`set${linkType}Link`](link)
   });
 };
 
@@ -202,48 +192,46 @@ Recipe.prototype.setSocialBtns = function() {
 Recipe.prototype.setFavoriteLink = function(link) {
   const recipe = this;
 
-  $(link).click(function(e) {
+  $(link).click(e => {
     e.preventDefault();
-    recipe.favorite();
+    this.favorite();
   });
   return this;
 };
 
 
 Recipe.prototype.setShareLink = function(link) {
-  const recipe = this;
   const $dropdown = $("#shareDropdown");
 
   iconHover("#shareImg", "share");
-  recipe.displayShareForm();
+  this.displayShareForm();
 
-  $(link).click(function(e) {
+  $(link).click(e => {
     e.preventDefault();
     assignCurrentUser();
-    recipe.toggleShare();
+    this.toggleShare();
   return this;
   });
 };
 
-Recipe.prototype.setShareSubmit = function() {
-  const recipe = this;
 
+Recipe.prototype.setShareValidate = function() {
   $("#shareRecipeForm").validate({
-    onclick: function(element, event) {
+    onclick: (element, event) => {
       $(element).valid();
     },
-    onchange: function(element, event) {
+    onchange: (element, event) => {
       $(element).valid();
     },
-    highlight: function(element, errorClass, validClass) {
+    highlight: (element, errorClass, validClass) => {
       $(element).parent().removeClass(validClass).addClass(errorClass)
     },
-    unhighlight: function(element, errorClass, validClass) {
+    unhighlight: (element, errorClass, validClass) => {
       $(element).parent().removeClass(errorClass).addClass(validClass);
     },
     errorClass: "its-invalid is-invalid",
     validClass: "is-valid",
-    errorPlacement: function(error, element) {
+    errorPlacement: (error, element) => {
       $("#idontexist").html(error);
     },
     submitHandler: function(form, e) {
