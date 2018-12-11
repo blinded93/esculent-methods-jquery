@@ -12,7 +12,7 @@ let breadcrumb = {};
       $("#home").addClass("linkCursor")
                 .one("click", function(e) {
                   e.preventDefault();
-                  Recipe.getAllRecipes();
+                  Recipe.getAll();
                   breadcrumb.reset();
                 });
     };

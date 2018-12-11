@@ -19,7 +19,7 @@ let session = {};
     if (isEmpty(respObj.errors)) {
       menu.displayNav(respObj);
     } else {
-      menu.formerrors(respObj.errors);
+      menu.formErrors(respObj.errors);
     }
   };
 
