@@ -234,25 +234,32 @@ Recipe.prototype.setShareValidate = function() {
     errorPlacement: (error, element) => {
       $("#idontexist").html(error);
     },
-    submitHandler: function(form, e) {
-      e.preventDefault();
-      const formData = new FormData(form);
-      $.ajax({
-        type: 'post',
-        url: `/recipes/${recipe.id}/share`,
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function(resp) {
-          if (isEmpty(resp.errors)) {
-            recipe.toggleShare();
-            AlertMessage.createAutoDismiss(`Shared ${recipe.name} with `, "success");
-            $(form).trigger("reset");
-          }
-        }
-      });
-    }
+    submitHandler: (form, e) => this.setShareSubmit(form, e)
   });
+};
+
+
+Recipe.prototype.setShareSubmit = function(form, e) {
+  const formData = new FormData(form);
+
+  e.preventDefault();
+  $.ajax({
+    type: 'post',
+    url: `/recipes/${this.id}/share`,
+    processData: false,
+    contentType: false,
+    data: formData,
+    success: resp => this.setShareSuccessFunc(resp)
+  });
+};
+
+
+Recipe.prototype.setShareSuccessFunc = function(resp) {
+  if (isEmpty(resp.errors)) {
+    this.toggleShare();
+    AlertMessage.createAutoDismiss(`Shared ${this.name} with ${resp.friend.username}`, "success");
+    $("#shareRecipeForm").trigger("reset");
+  }
 };
 
 
