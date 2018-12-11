@@ -227,9 +227,6 @@ User.prototype.friendshipData = function(data) {
   return userData;
 };
 
-  attrs.forEach(function(attr) {
-    $("#loggedInAs").data(attr).push(user.id);
-  });
 
 User.prototype.addFriendData = function(friendType) {
   const data = {id: this.id, username: this.username};
@@ -271,7 +268,7 @@ User.prototype.getMessages = function(scope) {
 };
 
 
-User.prototype.getRecipients = function() {
+User.prototype.getFriendships = function() {
   return $.get(`/users/${this.id}/friendships`);
 };
 
@@ -283,7 +280,7 @@ User.prototype.setPreview = function(tab, type) {
   const $tab = $(`#user${tab}`);
   const tabName = $tab.data("tab");
 
-  $tab.click(function(e) {
+  $tab.click(e => {
     e.preventDefault();
     user[`get${tabName}`](true)
       .done(function(assets) {
@@ -310,28 +307,27 @@ User.prototype.setProfileLink = function(linkSelector) {
 
 
 User.prototype.setProfile = function() {
-  const user = this;
   const linkFunc = linkSelectorFunction(".profileImage");
 
   $("#seeAll").show();
-  user.getRecipes(true)
-    .done(function(data) {
-      user.recipes = data.recipes;
-      user.displayPreview("Recipes", "recipes");
+  this.getRecipes(true)
+    .done(data => {
+      this.recipes = data.recipes;
+      this.displayPreview("Recipes", "recipes");
     });
-  user.displayUnreadCount()
+  this.displayUnreadCount()
       .setEditProfileImageBtn()
       .setAddFriendBtn("24", linkFunc)
       .setProfileTabs();
 };
 
 User.prototype.setProfileTabs = function() {
-  const user = this;
   const navTabs = $(`#user-${this.id} .nav-link`);
 
-  navTabs.each(function(i, link) {
-    const [tab, type] = [$(link).data("tab"), $(link).data("type")]
-    user.setPreview(tab, type);
+  navTabs.each((i, link) => {
+    const [tab, type] = [$(link).data("tab"), $(link).data("type")];
+
+    this.setPreview(tab, type);
   });
 };
 
@@ -392,8 +388,8 @@ User.prototype.setSeeAll = function(tab, type) {
   const tabName = tab === "Messages" ? "Inbox" : tab;
 
   $sa.attr("href", "")
-    .removeClass().addClass(`${tab.toLowerCase()}Link`)
-    .off("click");
+     .removeClass().addClass(`${tab.toLowerCase()}Link`)
+     .off("click");
   const linkFunc = linkSelectorFunction("#seeAll");
   this[`set${tabName}Link`](linkFunc, "#mainContent");
 };
@@ -480,10 +476,8 @@ User.prototype.setAddFriendBtn = function(size, linkFunc) {
 
 
 User.prototype.setAddFriend = function(linkSelector) {
-  const user = this;
-
-  linkSelector(".addFriend").click(function(e) {
+  linkSelector(".addFriend").click(e => {
     e.preventDefault();
-    AlertMessage.createAddFriend(user);
+    AlertMessage.createAddFriend(this);
   });
 };
