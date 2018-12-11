@@ -168,7 +168,7 @@ User.prototype.addFriend = function(currentUserId) {
 
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
-        user.addData("friendIds", "pendingFriendIds");
+        user.addFriendData("pending");
         AlertMessage.createAutoDismiss(`Friend invitation has been sent to ${data.friendship.friend.username}!`, "success");
         $addFriendLink.after(pendingHtml)
                       .remove();
@@ -184,7 +184,7 @@ User.prototype.confirmFriend = function(currentUserId) {
     const params = {"friend_id": user.id};
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
-        user.addData("friendIds");
+        user.addFriendData();
         AlertMessage.createAutoDismiss(`You are now friends with ${data.friendship.friend.username}!`, "success");
       });
   };
@@ -227,6 +227,18 @@ User.prototype.addData = function(...attrs) {
   attrs.forEach(function(attr) {
     $("#loggedInAs").data(attr).push(user.id);
   });
+
+User.prototype.addFriendData = function(friendType) {
+  const data = {id: this.id, username: this.username};
+  const  $userData = $("#loggedInAs").data();
+
+  if (friendType === "pending") {
+    $userData.pendingFriendIds.push(this.id);
+    $userData.friendIds.push(this.id);
+  } else {
+    $userData.friends.push(data);
+    removeFrom(this.id, $userData.pendingFriendIds);
+  }
 };
 
 
