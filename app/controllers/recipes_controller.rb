@@ -54,11 +54,11 @@ class RecipesController < ApplicationController
   end
 
   def share
-    recipe = Recipe.find_by(id:params[:recipe_id])
+    friend = User.find_by(id: params[:friend_id])
+
     if logged_in?
-      share = ShareService.create_and_send(share_params)
-      render json: recipe,
-             serializer: RecipeIngredientsSerializer,
+      ShareService.create_and_send(share_params)
+      render json: {friend: friend},
              status: 200
     else
       # recipe.errors << ""
