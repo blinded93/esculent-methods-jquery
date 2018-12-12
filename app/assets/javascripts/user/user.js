@@ -334,12 +334,12 @@ User.prototype.setProfileTabs = function() {
 
 User.prototype.setEditProfileImageBtn = function() {
   iconHover("#upload", "upload");
-  this.setProfileImageTypeCheck();
+  this.profileImageValidate();
   return this;
 };
 
 
-User.prototype.setProfileImageTypeCheck = function() {
+User.prototype.profileImageValidate = function() {
   const user = this;
 
   $("#profileImageInput").change(function(e) {
@@ -370,17 +370,21 @@ User.prototype.setProfileImageSubmit = function() {
       processData: false,
       contentType: false,
       data: formData,
-      success: function(resp) {
-        const url = resp.user.avatar.url;
-        $("#userAvatar").fadeOut(200, function() {
-          $("#userAvatar").attr("src", url);
-        }).fadeIn(200);
-        const menu = $("#menu").data("menu");
-        menu.getType();
+      success: resp => {
+        user.profileImageSuccess(resp)
       }
     });
   };
 };
+
+
+User.prototype.profileImageSuccess = function(resp) {
+  const url = resp.user.avatar.url;
+  $("#userAvatar").fadeOut(100, function() {
+    $("#userAvatar").attr("src", url);
+  }).fadeIn(100);
+  menu.getType();
+}
 
 
 User.prototype.setSeeAll = function(tab, type) {

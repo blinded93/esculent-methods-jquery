@@ -234,21 +234,19 @@ Recipe.prototype.setShareValidate = function() {
     errorPlacement: (error, element) => {
       $("#idontexist").html(error);
     },
-    submitHandler: (form, e) => this.setShareSubmit(form, e)
+    submitHandler: (form, e) => this.shareSubmit(form, e)
   });
 };
 
 
-Recipe.prototype.setShareSubmit = function(form, e) {
-  const formData = new FormData(form);
-
+Recipe.prototype.shareSubmit = function(form, e) {
   e.preventDefault();
   $.ajax({
     type: 'post',
     url: `/recipes/${this.id}/share`,
     processData: false,
     contentType: false,
-    data: formData,
+    data: new FormData(form),
     success: resp => this.setShareSuccessFunc(resp)
   });
 };
@@ -259,6 +257,8 @@ Recipe.prototype.setShareSuccessFunc = function(resp) {
     this.toggleShare();
     AlertMessage.createAutoDismiss(`Shared ${this.name} with ${resp.friend.username}`, "success");
     $("#shareRecipeForm").trigger("reset");
+  } else {
+
   }
 };
 
@@ -269,14 +269,14 @@ Recipe.setForm = function(user, method, recipe) {
       .setRemoveItems("ingredient")
       .setRemoveItems("direction")
       .setImageLabel()
-      .setRecipeSubmit(user, method, recipe)
+      .setRecipeValidate(user, method, recipe)
 };
 
 
 Recipe.setAddItem = function(itemType) {
   const item = capitalize(itemType);
 
-  $(`#add${item}`).click(function(e) {
+  $(`#add${item}`).click(e => {
     const itemObj = {id:randomId()};
     const html = display.template(itemType, itemObj);
 
@@ -291,7 +291,7 @@ Recipe.setAddItem = function(itemType) {
 Recipe.setRemoveItems = function(itemType) {
   const item = capitalize(itemType);
 
-  $(`#recipe${item}s .close`).each(function(i, el) {
+  $(`#recipe${item}s .close`).each((i, el) => {
     const id = $(el).attr("id").match(/\d+/)[0];
 
     Recipe.setRemoveItem(itemType, id, el);
@@ -301,7 +301,7 @@ Recipe.setRemoveItems = function(itemType) {
 
 
 Recipe.setRemoveItem = function(itemType, id, el) {
-  $(el).one("click", function(e){
+  $(el).one("click", e => {
     $(`#${itemType}-${id}`).remove();
   });
 };
@@ -317,7 +317,7 @@ Recipe.setImageLabel = function() {
 };
 
 
-Recipe.setRecipeSubmit = function(user, method, recipe) {
+Recipe.setRecipeValidate = function(user, method, recipe) {
   let path = `/users/${user.id}/recipes`;
   path = recipe ? path + `/${recipe.id}` : path;
 
@@ -343,29 +343,34 @@ Recipe.setRecipeSubmit = function(user, method, recipe) {
     errorPlacement: function(error, element) {
       $("#recipeFormErrors").html(error);
     },
-    submitHandler: function(form, e) {
-      e.preventDefault();
-      const formData = new FormData(form);
-      $.ajax({
-          type: method,
-          url: path,
-          processData: false,
-          contentType: false,
-          data: formData,
-          success: function(resp) {
-            new Recipe(resp).display(resp);
-          }
-      });
+    submitHandler: (form, e) => {
+      e.preventDefault()
+      Recipe.submit(form, method, path);
     }
   });
   return this;
 };
 
+
+Recipe.submit = function(form, method, path) {
+  $.ajax({
+      type: method,
+      url: path,
+      processData: false,
+      contentType: false,
+      data: new FormData(form),
+      success: function(resp) {
+        new Recipe(resp).display(resp);
+      }
+  });
+};
+
+
 Recipe.prototype.setEditLink = function(link) {
   const recipe = this;
 
   iconHover("#editImg", "edit");
-  $(link).click(function(e) {
+  $(link).click(e => {
     e.preventDefault();
     assignCurrentUser();
     display.fromTemplate("recipe_form", recipe)
