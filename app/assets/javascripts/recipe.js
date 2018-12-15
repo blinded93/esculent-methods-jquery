@@ -164,7 +164,7 @@ Recipe.setResults = function(recipes) {
     const linkFunc = linkSelectorFunction(`#recipe-${recipe.id}`);
 
     recipe.setShowLink(linkFunc);
-    recipe.owner.setProfileLink(linkFunc);
+    profile.setLink(recipe.owner, linkFunc);
   });
 };
 

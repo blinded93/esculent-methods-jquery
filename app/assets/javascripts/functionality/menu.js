@@ -43,7 +43,6 @@ let menu = {};
           const user = new User(resp.user);
 
           inbox.assignOwner(user);
-
           this.setNav(user);
           dfd.resolve(user);
         }
@@ -146,8 +145,10 @@ let menu = {};
 
   this.setNav = function(user) {
     const linkFunc = linkSelectorFunction("#menu");
-    const links = ["Profile", "Recipes", "Favorites", "Friends", "Inbox"];
+    const links = ["Recipes", "Favorites", "Friends"];
 
+    inbox.setLink(linkFunc, "#mainContent");
+    profile.setLink(user, linkFunc);
     this.setLogoutLink();
     links.forEach(linkType => {
       user[`set${linkType}Link`](linkFunc, "#mainContent");

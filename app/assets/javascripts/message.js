@@ -180,7 +180,7 @@ Message.setAll = function(messages) {
   messages.forEach((message, i) => {
     const linkFunc = linkSelectorFunction(`#message-${message.id}`);
 
-    message.sender.setProfileLink(linkFunc)
+    profile.setLink(message.sender, linkFunc);
     message.set(linkFunc);
   });
   return this;

@@ -73,7 +73,7 @@ let breadcrumb = {};
       } else {
         this.addProfile(user)
             .addLink(items, `${items.toLowerCase()}Link`, false);
-        user.setProfileLink(linkFunc);
+        profile.setLink(user, linkFunc);
       }
     }
   };

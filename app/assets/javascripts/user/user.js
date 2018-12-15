@@ -206,7 +206,7 @@ User.prototype.setData = function() {
   user.getFriendships()
     .done(function(data) {
       $("#loggedInAs").data(user.friendshipData(data));
-      user.setProfileLink(linkFunc);
+      profile.setLink(user, linkFunc);
     });
   return this;
 };
@@ -459,8 +459,8 @@ User.setResults = function(users) {
     const linkFunc = linkSelectorFunction(`#user-${user.id}`);
     const args = [linkFunc, "#mainContent"];
 
-    user.setProfileLink(linkFunc)
-        .setRecipesLink(...args)
+    profile.setLink(user, linkFunc);
+    user.setRecipesLink(...args)
         .setFavoritesLink(...args)
         .setAddFriendBtn("16", linkFunc);
   });
