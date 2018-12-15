@@ -20,19 +20,6 @@ Message.prototype.close = function(callback) {
 };
 
 
-Message.setForm = function(user) {
-  this.setCloseForm()
-      .setSubmit(user, "#newMessageForm", resp => {
-        $("#composeDropdown").slideUp(200, () => {
-          $("#newMessageForm").trigger("reset");
-          Message.setForm(user);
-        });
-        AlertMessage.createAutoDismiss("Message sent!", "success");
-      });
-  return this;
-};
-
-
 Message.submit = function(user, successFunc) {
   return function(form, e) {
     const formData = new FormData(form);
@@ -130,6 +117,19 @@ Message.deleteSuccess = function(resp) {
 
 
 // Listeners //
+
+
+Message.setForm = function(user) {
+  this.setCloseForm()
+      .setSubmit(user, "#newMessageForm", resp => {
+        $("#composeDropdown").slideUp(200, () => {
+          $("#newMessageForm").trigger("reset");
+          Message.setForm(user);
+        });
+        AlertMessage.createAutoDismiss("Message sent!", "success");
+      });
+  return this;
+};
 
 
 Message.setCloseForm = function() {
