@@ -1,9 +1,11 @@
 {{#each messages}}
   <div id="message-{{id}}" class="{{#unless readAt}}unread{{/unless}} message input-group">
     <div class="input-group-prepend">
-      <span class="input-group-text deleteCheckSpans leftEdge message-cell">
-        <input type="checkbox" value="{{id}}" class="deleteChecks" form="deleteSelectedForm" name='message_ids[]'>
-      </span>
+      {{#isInbox}}
+        <span class="input-group-text deleteCheckSpans leftEdge message-cell">
+          <input type="checkbox" value="{{id}}" class="deleteChecks" form="deleteSelectedForm" name='message_ids[]'>
+        </span>
+      {{/isInbox}}
       <span style="width:75px;" class="input-group-text message-cell">{{formattedDate createdAt}}</span>
       <span style="width:150px;" class="userLink input-group-text message-cell"><a href="" class="userLink">{{sender.username}}</a></span>
     </div>
