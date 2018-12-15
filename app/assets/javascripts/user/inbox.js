@@ -9,24 +9,18 @@ let inbox = {};
 
 
   this.display = function(destination) {
-    const dfd = new $.Deferred();
-    const pageObj = Paginate.createAndDestinate(this.owner.meta, destination);
-    pageObj.user = this.owner;
+    const recipients = $("#loggedInAs").data("friends");
 
-    breadcrumb.addUserAssets(this.owner, "Messages");
-    display.fromTemplate("inbox", {friends: this.recipients})
+    breadcrumb.addUserAssets(owner, "Messages");
+    display.fromTemplate("inbox", {recipients: recipients})
       .toElement(destination, "", true)
         .done(() => {
           inbox.setBtns();
-          user.displayMessages("#messageInbox", pageObj)
-              .done(() => {
-                Message.deleteBtnOnCheck();
-                if (pageObj) { pageObj.displayLinks(dfd, destination); }
+          owner.displayMessages("#messageInbox")
+              .done((pageObj) => {
+                pageObj.setLinks(`/users/${owner.id}/messages`);
               });
         });
-    return dfd.promise();
-  };
-
 
   this.setBtns = function() {
     this.deleteBtnOnCheck()
