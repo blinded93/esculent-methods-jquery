@@ -11,7 +11,7 @@ function Paginate(meta) {
 }
 
 Paginate.createAndDestinate = function(meta, destination) {
-  if (meta) {
+  if (!isEmpty(meta)) {
     const pageObj = new Paginate(meta);
 
     pageObj.destination = destination;
@@ -25,9 +25,10 @@ Paginate.prototype.displayLinks = function(dfd, destination) {
   const isInbox = destination === "#messageInbox" ? true : false;
 
   display.fromTemplate("pagination", pageObj)
-    .toElement("#paginationNav", 1, isInbox).done(function() {
-      dfd.resolve(pageObj);
-  });
+    .toElement("#paginationNav", 1, isInbox)
+      .done(function() {
+        dfd.resolve(pageObj);
+      });
 };
 
 

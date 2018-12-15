@@ -63,12 +63,14 @@ User.prototype.displayMessages = function(destination) {
 
   if (isEmpty(user.messages)) {
     display.nothingHere(destination, "", isInbox);
+    $("#paginationNav").empty();
   } else {
     display.fromTemplate("messages", {messages: user.messages})
            .toElement(destination, "", isInbox)
              .done(function() {
                Message.setAll(user.messages);
-               if (pageObj) { pageObj.displayLinks(dfd, destination) }
+               // debugger;
+               if (pageObj.last > 1) { pageObj.displayLinks(dfd, destination) }
                else { $(".deleteCheckSpans").remove(); }
              });
   }
