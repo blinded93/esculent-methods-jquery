@@ -49,12 +49,14 @@ Message.prototype.display = function() {
 
 
 Message.prototype.markAsRead = function() {
-  if (!this.readAt) {
+  const message = this;
+  const countStr = $("#unreadCount").text();
+
+  if (currentUser("id") !== this.sender.id && !this.readAt) {
     $.post(`/users/${currentUser("id")}/messages/${this.id}/read`)
       .done(resp => {
-        $(`#message-${resp.message_id}`).removeClass("unread");
-        const countStr = $("#unreadCount").text();
-
+        $(`#message-${resp.message.id}`).removeClass("unread");
+        message.readAt = resp.message.read_at;
         if (!isEmpty(countStr)) {
           let unreadCount = parseInt(countStr);
 
@@ -111,7 +113,6 @@ Message.deleteSuccess = function(resp) {
   let unread = parseInt($("#unreadCount").text());
 
   inbox.deleteMessageRows(resp);
-  $("#unreadCount").text(unread -= messagesDeletedCount);
   $("#messageDropdown").slideUp(200);
 };
 
