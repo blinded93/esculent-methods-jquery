@@ -21,12 +21,6 @@ let inbox = {};
                 pageObj.setLinks(`/users/${owner.id}/messages`);
               });
         });
-
-  this.setBtns = function() {
-    this.deleteBtnOnCheck()
-        .setComposeBtn()
-        .setDeleteBtn()
-        .setFilterSelect();
   };
 
 
@@ -40,7 +34,41 @@ let inbox = {};
   };
 
 
+  this.deleteMessageRows = function(resp) {
+    resp.message_ids.forEach(function(id, i, arr){
+      $(`#message-${id}`).slideUp(200, function() {
+        $(this).remove();
+        if (!$(".deleteChecks").length) {
+          display.nothingHere("#messageInbox", "", true);
+        }
+        $("#deleteBtn").fadeOut(200);
+      });
+    });
+  };
+
+  // Listeners //
+
+  this.setLink = function(linkSelector, destination) {
+    linkSelector(".messagesLink").click(function(e) {
+      e.preventDefault();
+      goBack.hideIf(isMenuItem(this));
+      owner.getMessages("all")
+        .done(function(data) {
+          owner.assignAssetsAndMeta(data);
+          inbox.display(destination);
+        });
+    });
+    return this;
+  };
+
+  this.setBtns = function() {
     this.deleteBtnOnCheck()
+        .setComposeBtn()
+        .setDeleteBtn()
+        .setFilterSelect();
+  };
+
+
   this.setComposeBtn = function() {
     Message.setForm(owner);
     $("#composeBtn").click(e => {
@@ -67,28 +95,15 @@ let inbox = {};
       const selectedScope = $(this).children("option:selected").val();
 
       owner.getMessages(selectedScope)
-           .done(data => {
-             owner.messages = data.messages;
-
-             owner.displayMessages("#messageInbox")
-                  .done(() => {
-                    inbox.deleteBtnOnCheck();
-                  });
-           });
+         .done(data => {
+           owner.assignAssetsAndMeta(data);
+           owner.displayMessages("#messageInbox")
+              .done((pageObj) => {
+                inbox.deleteBtnOnCheck();
+                pageObj.setLinks(`/users/${owner.id}/messages`, {scope: selectedScope});
+              });
+         });
     });
     return this;
-  };
-
-
-  this.deleteMessageRows = function(resp) {
-    resp.message_ids.forEach(function(id, i, arr){
-      $(`#message-${id}`).slideUp(200, function() {
-        $(this).remove();
-        if (!$(".deleteChecks").length) {
-          display.nothingHere("#messageInbox", "", true);
-        }
-        $("#deleteBtn").fadeOut(200);
-      });
-    });
   };
 }).apply(inbox);
