@@ -20,15 +20,6 @@ Message.prototype.close = function(callback) {
 };
 
 
-Message.deleteBtnOnCheck = function() {
-  const $checks = $(".deleteChecks").change(() => {
-    const checked = $checks.is(':checked');
-
-    $("#deleteBtn").stop().fadeTo(200, checked ? 1 : 0);
-  });
-};
-
-
 Message.setForm = function(user) {
   this.setCloseForm()
       .setSubmit(user, "#newMessageForm", resp => {
@@ -177,6 +168,7 @@ Message.prototype.setAccept = function() {
 
 
 Message.setAll = function(messages) {
+  inbox.deleteBtnOnCheck();
   messages.forEach((message, i) => {
     const linkFunc = linkSelectorFunction(`#message-${message.id}`);
 

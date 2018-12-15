@@ -46,6 +46,7 @@ let inbox = {};
   };
 
 
+    this.deleteBtnOnCheck()
   this.setComposeBtn = function() {
     Message.setForm(owner);
     $("#composeBtn").click(e => {
