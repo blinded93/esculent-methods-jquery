@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :users, except: [:index] do
     get '/messages' => 'users#messages'
+    get '/message_count' => 'messages#count'
     resources :messages, except: [:index, :new, :edit]
     delete '/messages' => 'messages#destroy'
     resources :recipes, except: [:index, :new, :edit]

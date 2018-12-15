@@ -38,6 +38,11 @@ body {
   }
 }
 
+#EsculentMethods span {
+  color: lighten($cornflower, 10%);
+  font-size: 125%;
+}
+
 .btn-outline-danger {
   color: $danger;
   border-color: $danger;

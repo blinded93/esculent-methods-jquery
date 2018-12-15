@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   def create
     message = current_user.sent_messages.build(message_params)
-    
+
     message.save
     render json: message,
            status: 200
@@ -13,8 +13,13 @@ class MessagesController < ApplicationController
       m.save
     end
 
-    render json: {message_id: message.id},
+    render json: message,
            status: 200
+  end
+
+  def count
+    count = current_user.received_messages.unread.count
+    render json: {unread_count: count}, status: 200
   end
 
   def destroy
