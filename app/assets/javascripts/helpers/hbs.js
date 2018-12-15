@@ -110,3 +110,9 @@ Handlebars.registerHelper("unlessResponse", function(subject, options) {
     return options.fn(this);
   }
 });
+
+Handlebars.registerHelper("isInbox", function(options) {
+  if (!!document.getElementById("messageInbox")) {
+    return options.fn(this);
+  };
+});
