@@ -22,12 +22,21 @@ Recipe.getAll = function() {
 
 
 Recipe.displayAndSetPageLinks = function(data) {
-  goBack.updateCurrentResults(Recipe.resultsData(data));
+  goBack.updateCurrentResult(Recipe.resultsData(data));
   breadcrumb.reset();
   Recipe.displayAll(data, "recipes", "#mainContent")
     .done(pageObj => {
       pageObj.setLinks("/recipes");
     });
+};
+
+
+Recipe.prototype.resultData = function(data) {
+  return {
+    url: `/users/${data.recipe.owner.id}/recipes/${this.id}`,
+    params: {},
+    callback: data => this.display(data)
+  }
 };
 
 
@@ -80,6 +89,7 @@ Recipe.prototype.display = function(data) {
   const recipe = new Recipe(data.recipe);
   recipe.owner = recipe.owner ? recipe.owner : this.owner;
 
+  goBack.updateCurrentResult(this.resultData(data));
   display.fromTemplate("recipe", recipe)
     .toElement("#mainContent")
       .done(() => {
