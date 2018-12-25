@@ -89,6 +89,15 @@ Message.prototype.parse = function() {
 };
 
 
+Message.resultsData = function(data, user) {
+  return  {
+    url: `/users/${user.id}/messages`,
+    params:{ scope: data.meta.vars.scope, page: user.meta.page },
+    callback: data => inbox.display(data, "#mainContent")
+  };
+};
+
+
 Message.prototype.delete = function() {
   $.ajax({
     url:`/users/1/messages/${this.id}`,
