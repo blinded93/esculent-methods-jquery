@@ -33,14 +33,18 @@ AlertMessage.createEditImage = function(imgName, user) {
 };
 
 
-AlertMessage.createAddFriend = function(user) {
+AlertMessage.createFriendAction = function(type, user) {
   const currentUserId = $("#loggedInAs").data("id");
-  const html = `Send "${user.username}" a friend request? <span class='float-right'><a href='' id='confirmFriend'>Yes</a> / <a href='' id='denyFriend'>No</a></span>`;
+  const messages = {
+    "add":`Send '${user.username}' a friend request?`,
+    "remove":`Remove ${user.username}?`
+  }
+  const html = `${messages[type]} <span class='float-right'><a href='' id='confirm'>Yes</a> / <a href='' id='deny'>No</a></span>`;
   const alert = this.create(html, "warning");
 
   this.toggle();
-  alert.setDismissLink("#confirmFriend", user.addFriend(currentUserId))
-       .setDismissLink("#denyFriend");
+  alert.setDismissLink("#confirm", user[`${type}Friend`](currentUserId))
+       .setDismissLink("#deny");
 };
 
 
