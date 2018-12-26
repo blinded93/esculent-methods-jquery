@@ -31,6 +31,7 @@ class Recipe < ApplicationRecord
   scope :alphabetized, -> { order(:name).pluck(:name) }
   scope :preview, -> () { order(Arel.sql("random()")).limit(5) }
 
+
   def ingredient_attributes=(ingredients)
     ingredients.each do |ingredient|
       i = Ingredient.find_or_create_by(name:ingredient[:name].downcase)

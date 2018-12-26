@@ -1,5 +1,6 @@
 class FriendshipService
   attr_accessor :friend_id, :user_id, :request, :type
+  
   def initialize(params)
     @friend_id = params[:friend_id]
     @user_id = params[:user_id]

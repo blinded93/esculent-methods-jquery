@@ -4,7 +4,6 @@ class FavoritedRecipeService
   def initialize(params)
     @recipe_id = params[:recipe_id]
     @current_user = params[:current_user]
-    @errors = {}
   end
 
   def favorited?

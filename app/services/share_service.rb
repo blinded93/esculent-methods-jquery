@@ -5,6 +5,7 @@ class ShareService
     @user_id = params[:user_id]
     @friend_id = params[:friend_id]
     @recipe_id = params[:recipe_id]
+    @errors = {}
   end
 
   def self.create_and_send(params)

@@ -17,7 +17,6 @@ class MessagesService
   end
 
   def message_scope
-    self.scope == "sent" || self.scope == "all" ? nil :
     ["sent", "all"].include?(self.scope) ? nil : self.scope
   end
 end

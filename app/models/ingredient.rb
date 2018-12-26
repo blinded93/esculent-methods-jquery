@@ -8,9 +8,6 @@ class Ingredient < ApplicationRecord
   }
   scope :from_name, -> (name) { where(name:name).take }
   scope :id_from_name, -> (name) { from_name(name).pluck(:id) }
-  scope :ids_from_names, -> (names) {
-    select(:id).where(name:names).
-    collect(&:id)
-  }
+  scope :ids_from_names, -> (names) { select(:id).where(name:names).collect(&:id) }
 
 end
