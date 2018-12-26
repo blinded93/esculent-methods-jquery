@@ -45,13 +45,14 @@ Paginate.prototype.setLinks = function(url, params) {
 Paginate.prototype.setLink = function(link, url, params) {
   const pageObj = this;
   const page = $(link).data("page");
+  const pageURL = url + `?page=${page}`;
 
   $(link).click(function(e) {
     e.preventDefault();
     if (!$(link).parent().is(".disabled, .active")) {
-      $.get(url + `?page=${page}`, params)
+      $.get(pageURL, params)
         .done(function(data) {
-          goBack.updateCurrentResults({params:{page: data.meta.page}});
+          goBack.updateCurrentResult({params:{page: data.meta.page}});
           pageObj.displayLinkAssets(data, url, params);
         });
     }
