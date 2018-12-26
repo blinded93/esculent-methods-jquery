@@ -125,13 +125,11 @@ User.prototype.displayUnreadCount = function() {
 };
 
 
-User.prototype.assignAssetsAndMeta = function(data) {
-  const user = this;
-
-  Object.keys(data).forEach(function(key) {
-    user[key] = data[key];
-  });
-  goBack.updateCurrentResults(user.resultsData(data));
+User.prototype.resultData = function(data) {
+  return  {
+    url: `/users/${this.id}`,
+    params:{},
+    callback: data => profile.display(this)
 };
 };
 
@@ -141,9 +139,9 @@ User.prototype.resultsData = function(data) {
   const type = Object.keys(data)[0];
 
   return  {
-    url: `/users/${user.id}/${type}`,
-    params:{ page: user.meta.page },
-    callback: data => user.displayAssets(data, "#mainContent")
+    url: `/users/${this.id}/${type}`,
+    params:{ page: this.meta.page },
+    callback: data => this.displayAssets(data, "#mainContent")
   };
 };
 
