@@ -2,16 +2,13 @@ let goBack = {};
 (function() {
 
   const array = [];
-  
+
 
   this.last = function (key) {
     const lastEl = array[array.length - 1];
     return key ? lastEl[key] : lastEl;
   };
 
-  this.data = function() {
-    return o;
-  }
 
   this.updateCurrentResult = function(obj) {
     let newObj
@@ -39,19 +36,10 @@ let goBack = {};
     });
     return this;
   };
+  
 
-
-  this.show = function(el) {
-    if (!isMessage(el) && !isMenuItem(el)) {
-      $("#goBack").fadeIn();
-    }
+  this.toggle = function() {
+    if (array.length < 2) { $("#goBack").fadeOut(100); }
+    else { $("#goBack").fadeIn(100) };
   }
-
-
-  this.hideIf = function(bool) { if (bool) { $("#goBack").fadeOut(); } };
-
-
-  this.now = function() {
-
-  };
 }).apply(goBack);
