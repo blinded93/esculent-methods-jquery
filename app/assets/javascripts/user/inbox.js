@@ -8,10 +8,12 @@ let inbox = {};
   };
 
 
-  this.display = function(destination) {
+  this.display = function(data, destination) {
     const recipients = $("#loggedInAs").data("friends");
 
+    owner.assignAssetsAndMeta(data);
     breadcrumb.addUserAssets(owner, "Messages");
+    goBack.updateCurrentResult(Message.resultsData(data, owner));
     display.fromTemplate("inbox", {recipients: recipients})
       .toElement(destination, "", true)
         .done(() => {
@@ -51,11 +53,9 @@ let inbox = {};
   this.setLink = function(linkSelector, destination) {
     linkSelector(".messagesLink").click(function(e) {
       e.preventDefault();
-      goBack.hideIf(isMenuItem(this));
       owner.getMessages("all")
         .done(function(data) {
-          owner.assignAssetsAndMeta(data);
-          inbox.display(destination);
+          inbox.display(data, destination);
         });
     });
     return this;
@@ -97,6 +97,7 @@ let inbox = {};
       owner.getMessages(selectedScope)
          .done(data => {
            owner.assignAssetsAndMeta(data);
+           goBack.updateCurrentResult(Message.resultsData(data, owner));
            owner.displayMessages("#messageInbox")
               .done((pageObj) => {
                 inbox.deleteBtnOnCheck();
