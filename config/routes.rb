@@ -23,7 +23,8 @@ Rails.application.routes.draw do
     resources :recipes, except: [:index, :new, :edit]
     get '/recipes' => 'users#recipes'
     get '/favorites' => 'users#favorites'
-    post '/friend' => 'users#friend'
+    post '/friend' => 'friendships#create'
+    delete '/unfriend' => 'friendships#destroy'
     get '/friends' => 'users#friends'
     get '/friendships' => 'friendships#index'
     post '/messages/:id/read' => 'messages#read'
