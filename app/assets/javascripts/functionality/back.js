@@ -13,11 +13,18 @@ let goBack = {};
     return o;
   }
 
+  this.updateCurrentResult = function(obj) {
+    let newObj
 
-  this.updateCurrentResults = function(obj) {
-    for (let key in obj) {
-      o[key] = obj[key];
+    if (Object.keys(obj).length === 3) {
+      newObj = obj;
+    } else {
+      const params = {...this.last("params"), ...obj.params};
+
+      newObj = {...this.last(), ...{params:params}};
     }
+    if (!equalTo(newObj, this.last())) array.push(newObj);
+    goBack.toggle();
   };
 
 
