@@ -192,6 +192,28 @@ User.prototype.confirmFriend = function(currentUserId) {
 };
 
 
+User.prototype.removeFriend = function(currentUserId) {
+  const user = this;
+
+  return function() {
+    const params = {"friend_id": user.id};
+    const $removeFriendLink = $(`#user-${user.id} .removeFriend`);
+
+    $.ajax({
+      type: 'delete',
+      url: `/users/${currentUserId}/unfriend`,
+      data: params,
+      success: (data) => {
+        user.removeFriendData();
+        AlertMessage.createAutoDismiss(`${data.friendship.friend.username} has been removed from your friends list.`, "success");
+        $removeFriendLink.next("small").remove();
+        $removeFriendLink.remove();
+      }
+    });
+  };
+};
+
+
 User.prototype.setLoggedInAs = function() {
   const html = `<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${this.username}</a>`;
 
@@ -241,6 +263,16 @@ User.prototype.addFriendData = function(friendType) {
     removeFrom(this.id, $userData.pendingFriendIds);
   }
 };
+
+
+User.prototype.removeFriendData = function() {
+  const data = { id: this.id, username: this.username };
+  const $userData = $("#loggedInAs").data();
+
+  removeFrom(this.id, $userData.pendingFriendIds);
+  removeFrom(this.id, $userData.friendIds);
+  removeFrom(data, $userData.friends);
+}
 
 
 User.prototype.getRecipes = function(preview) {
