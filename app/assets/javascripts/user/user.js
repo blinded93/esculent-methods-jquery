@@ -270,6 +270,8 @@ User.prototype.getMessages = function(scope) {
 };
 
 
+
+
 User.prototype.getFriendships = function() {
   return $.get(`/users/${this.id}/friendships`);
 };

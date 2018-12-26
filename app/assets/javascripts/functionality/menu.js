@@ -54,6 +54,7 @@ let menu = {};
   this.load = function(resp) {
     if (!!resp) { template = "nav"; }
     const html = display.template(template, resp);
+    
     $("#dropdownMenu").html(html);
     return this;
   };

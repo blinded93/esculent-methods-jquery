@@ -8,7 +8,7 @@ let display = {};
     templateHTML = templates[template](obj);
     return this;
   };
-  
+
 
   this.hbsPartial = function(template) {
     return templates[template];

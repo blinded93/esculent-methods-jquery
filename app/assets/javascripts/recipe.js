@@ -182,7 +182,6 @@ Recipe.setResults = function(recipes) {
 Recipe.prototype.setShowLink = function(linkSelector) {
   linkSelector(".recipeLink").click(e => {
     e.preventDefault();
-    goBack.show(this);
     this.get();
   });
   return this;

@@ -33,7 +33,7 @@ let search = {};
       this.displayErrors();
     }
 
-    goBack.hideIf(true);
+    // goBack.hideIf(true);
     return this;
   };
 
@@ -82,7 +82,7 @@ let search = {};
         $.get(this.searchTypeURL(), {query: query})
           .done(data => {
             this.evaluateResp(data);
-            goBack.updateCurrentResults(search.resultsData(data.meta));
+            goBack.updateCurrentResult(search.resultsData(data.meta));
             $("#query").val("");
           });
       } else {
