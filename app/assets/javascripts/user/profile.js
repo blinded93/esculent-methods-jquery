@@ -77,11 +77,11 @@ let profile = {};
   // Listener //
 
   this.setLink = function(user, linkSelector) {
-    linkSelector(".userLink").click(function(e) {
+    linkSelector(".userLink").off("click")
+                             .click(function(e) {
       e.preventDefault();
-      goBack.show(this);
-      goBack.hideIf(isMenuItem(this));
-      profile.display(user);
+                               user.getSelf()
+                                .done(data => profile.display(user, data));
     }).addClass("linkCursor");
     return this;
   };
