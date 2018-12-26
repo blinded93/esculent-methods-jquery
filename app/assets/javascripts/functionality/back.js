@@ -1,12 +1,12 @@
 let goBack = {};
 (function() {
 
-  const o = {
-    url: "",
-    params: {
-      page: 1
-    },
-    callback: () => {}
+  const array = [];
+  
+
+  this.last = function (key) {
+    const lastEl = array[array.length - 1];
+    return key ? lastEl[key] : lastEl;
   };
 
   this.data = function() {
