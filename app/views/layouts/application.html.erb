@@ -16,7 +16,8 @@
         </div>
         <div id="navigation" class="col-10">
           <nav class="navbar navbar-light">
-            <a id="EsculentMethods" class="navbar-brand"><span>E</span>sculent<span>M</span>ethods</a>
+            <a id="EsculentMethods-lg" class="navbar-brand"><span>E</span>sculent<span>M</span>ethods</a>
+            <a id="EsculentMethods-sm" class="navbar-brand"><span>EM</span></a>
             <div id="dropdownMobile" class="dropdown">
             </div>
             <%= form_tag :search, id:"search", class:"form-inline ml-auto" do %>
@@ -24,8 +25,8 @@
                                               ["Recipes", "recipes"],
                                               ["Ingredients", "ingredients"],
                                               ["Users", "users"]], 1),
-                                    class:"form-control form-control-sm mr-sm-2") %>
-              <%= text_field_tag :query, "", class:"form-control form-control-sm mr-sm-2", placeholder:"Search", required:true %>
+                                    class:"form-control mr-sm-2") %>
+              <%= text_field_tag :query, "", class:"form-control mr-sm-2", placeholder:"Search", required:true %>
               <%= button_tag :Search, class:"btn btn-sm btn-outline-primary my-2", id:"submitSearch" %>
             <% end %>
             <div class="dropdownWeb">
