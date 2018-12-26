@@ -1,0 +1,25 @@
+.profileImage {
+  position:relative;
+
+  & > form input {
+    display:none;
+  }
+  label, div {
+    z-index: 1000;
+    position: absolute;
+    bottom: -35px;
+    right: 15px;
+  }
+  & img {
+    cursor:pointer;
+  }
+}
+
+.friendIcon {
+  vertical-align: bottom;
+  -webkit-transform:scale(0.65);
+  -moz-transform:scale(0.65);
+  -ms-transform:scale(0.65);
+  -o-transform:scale(0.65);
+  transform:scale(0.65);
+}
