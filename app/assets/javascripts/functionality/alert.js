@@ -27,8 +27,8 @@ AlertMessage.createEditImage = function(imgName, user) {
   const html = `Update your image to <b>${imgName}</b>? <span class='float-right'><a href='' id='confirmImg'>Yes</a> / <a href='' id='denyImg'>No</a></span>`;
   const alert = this.create(html, "warning");
 
-  alert.setDismissLink("#confirmImg", user.setProfileImageSubmit())
-       .setDismissLink("#denyImg")
+  alert.setDismissLink("#confirmImg", profile.setImageSubmit())
+       .setDismissLink("#denyImg", () => $("#profileImageInput").val(""))
        .toggle();
 };
 
