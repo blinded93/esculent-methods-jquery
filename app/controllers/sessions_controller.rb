@@ -1,5 +1,4 @@
 class SessionsController < ApplicationController
-
   def current_session_user
     if current_user
       render json: current_user, status: 200

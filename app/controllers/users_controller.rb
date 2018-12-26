@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
+  before_action :error_if_not_logged_in, only: [:update, :friend, :messages]
+
   def create
     user = User.new(user_params)
+
     user.save
     session[:user_id] = user.id
     render json: user, status: 200
@@ -8,17 +11,20 @@ class UsersController < ApplicationController
 
   def update
     user = User.find(params[:id].to_i)
+
     user.update(user_params)
     render json: user, status: 200
   end
 
   def show
     user = User.find(params[:id])
+
     render json: user, status: 200
   end
 
   def recipes
     pagy, recipes = pagy_resp(params)
+
     render json: recipes,
            meta: pagy,
            status: 200
@@ -26,21 +32,16 @@ class UsersController < ApplicationController
 
   def favorites
     pagy, favorites = pagy_resp(params)
+
     render json: favorites,
            root: :favorites,
            meta: pagy,
            status: 200
   end
 
-  def friend
-    friendship = FriendshipService.create(params)
-    render json: friendship,
-           status: 200
-
-  end
-
   def friends
     pagy, friends = pagy_resp(params)
+
     render json: friends,
            root: :friends,
            meta: pagy,
@@ -50,7 +51,9 @@ class UsersController < ApplicationController
   def messages
     message_scope = MessagesService.new(params, current_user)
     pagy, messages = pagy(message_scope.filter, {items:2,
-                                                 assets:params[:action]})
+                                                 assets:params[:action],
+                                                 scope: params[:scope]})
+
     render json: messages,
            include: "**",
            meta: pagy,
@@ -62,6 +65,7 @@ class UsersController < ApplicationController
                       items: 2,
                       query:params[:query]
                       })
+
     render json: users,
            meta: meta,
            status: 200
@@ -79,6 +83,7 @@ class UsersController < ApplicationController
                       else
                         [user.send(params[:action]), {items:5}]
                       end
+
       pagy(assets, items)
     end
 end

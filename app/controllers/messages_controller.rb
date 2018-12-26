@@ -1,4 +1,6 @@
 class MessagesController < ApplicationController
+  before_action :error_if_not_logged_in, only: [:create, :read, :count, :destroy]
+
   def create
     message = current_user.sent_messages.build(message_params)
 
@@ -19,6 +21,7 @@ class MessagesController < ApplicationController
 
   def count
     count = current_user.received_messages.unread.count
+
     render json: {unread_count: count}, status: 200
   end
 
