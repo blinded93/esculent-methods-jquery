@@ -275,6 +275,11 @@ User.prototype.removeFriendData = function() {
 }
 
 
+User.prototype.getSelf = function() {
+  return $.get(`/users/${this.id}`);
+}
+
+
 User.prototype.getRecipes = function(preview) {
   const previewObj = preview ? {"preview":preview} : {};
 
