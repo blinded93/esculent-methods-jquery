@@ -64,12 +64,13 @@ let profile = {};
 
 
   this.imageSuccess = function(resp) {
-    const url = resp.user.avatar.url;
+    owner = new User(resp.user);
 
     $("#userAvatar").fadeOut(100, function() {
-      $("#userAvatar").attr("src", url);
+      $("#userAvatar").attr("src", owner.avatarURL);
     }).fadeIn(100);
-    menu.getType();
+    const linkFunc = linkSelectorFunction("#navRow")
+    this.setLink(owner, linkFunc);
   };
 
 
