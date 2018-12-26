@@ -35,23 +35,6 @@ User.displayAll = function(data, userType, destination) {
 };
 
 
-User.prototype.displayInbox = function(destination) {
-  const user = this;
-  const friends = $("#loggedInAs").data("friends");
-
-  if (destination === "#mainContent") {breadcrumb.addUserAssets(user, "Messages");}
-  display.fromTemplate("inbox", {recipients:friends})
-         .toElement(destination, "", true).done(function() {
-           inbox.setBtns();
-           user.displayMessages("#messageInbox")
-               .done(function(pageObj) {
-                 Message.deleteBtnOnCheck();
-                 pageObj.setLinks(`/users/${user.id}/messages`);
-               });
-         });
-};
-
-
 User.prototype.displayMessages = function(destination) {
   const user = this;
   const dfd = new $.Deferred();
@@ -69,7 +52,6 @@ User.prototype.displayMessages = function(destination) {
            .toElement(destination, "", isInbox)
              .done(function() {
                Message.setAll(user.messages);
-               // debugger;
                if (pageObj.last > 1) { pageObj.displayLinks(dfd, destination) }
                else { $(".deleteCheckSpans").remove(); }
              });
@@ -83,43 +65,9 @@ User.createFrom = function(data) {
 };
 
 
-User.prototype.displayProfile = function() {
-  const user = this;
-
-  $.get(`/users/${user.id}`)
-    .done(function(data) {
-      display.fromTemplate("user", user)
-             .toElement("#mainContent")
-               .done(function() {
-                 breadcrumb.addProfile(user);
-                 user.setProfile();
-               });
-    });
-};
-
-
-User.prototype.displayPreview = function(tab, type) {
-  const assets = this[tab.toLowerCase()];
-  const destination = "#profileContent";
-  const user = this;
-
-  user.setSeeAll(tab, type);
-  if (type === "recipes") {
-    Recipe.displayAll(user, tab.toLowerCase(), destination);
-  } else if (type === "users") {
-    User.displayAll(user, tab.toLowerCase(), destination);
-  } else if (type === "messages") {
-    $("#unreadCount").text(`${user.messages.length}`);
-    user.displayMessages(destination);
-  }
-};
-
-
-User.prototype.displayUnreadCount = function() {
-  if (isLoggedIn()) {
-    this.getMessages("count")
-      .done(function(data) { $("#unreadCount").text(`${data.unread_count}`);
-    });
+User.prototype.assignAssetsAndMeta = function(data) {
+  for (let key in data) {
+    this[key] = data[key];
   }
   return this;
 };
@@ -130,12 +78,11 @@ User.prototype.resultData = function(data) {
     url: `/users/${this.id}`,
     params:{},
     callback: data => profile.display(this)
-};
+  };
 };
 
 
 User.prototype.resultsData = function(data) {
-  const user = this;
   const type = Object.keys(data)[0];
 
   return  {
@@ -216,20 +163,20 @@ User.prototype.removeFriend = function(currentUserId) {
 
 User.prototype.setLoggedInAs = function() {
   const html = `<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${this.username}</a>`;
+  const linkFunc = linkSelectorFunction("#loggedInAs");
 
   $("#loggedInAs").html(html);
+  profile.setLink(this, linkFunc);
   this.setData();
 };
 
 
 User.prototype.setData = function() {
   const user = this;
-  const linkFunc = linkSelectorFunction("#loggedInAs");
 
   user.getFriendships()
     .done(function(data) {
       $("#loggedInAs").data(user.friendshipData(data));
-      profile.setLink(user, linkFunc);
     });
   return this;
 };
@@ -306,6 +253,9 @@ User.prototype.getMessages = function(scope) {
 };
 
 
+User.prototype.getUnreadCount = function() {
+  return $.get(`/users/${this.id}/message_count`)
+};
 
 
 User.prototype.getFriendships = function() {
@@ -314,130 +264,6 @@ User.prototype.getFriendships = function() {
 
 
 //  Listeners //
-
-User.prototype.setPreview = function(tab, type) {
-  const user = this;
-  const $tab = $(`#user${tab}`);
-  const tabName = $tab.data("tab");
-
-  $tab.click(e => {
-    e.preventDefault();
-    user[`get${tabName}`](true)
-      .done(function(assets) {
-        $("ul.nav-tabs a.active").removeClass("active");
-        $tab.addClass("active");
-        user[tabName.toLowerCase()] = assets[tabName.toLowerCase()];
-        user.displayPreview(tabName, type);
-      });
-  });
-  return this;
-};
-
-
-User.prototype.setProfileLink = function(linkSelector) {
-  const user = this;
-  linkSelector(".userLink").click(function(e) {
-    e.preventDefault();
-    goBack.show(this);
-    goBack.hideIf(isMenuItem(this));
-    user.displayProfile();
-  }).addClass("linkCursor");
-  return this;
-};
-
-
-User.prototype.setProfile = function() {
-  const linkFunc = linkSelectorFunction(".profileImage");
-
-  $("#seeAll").show();
-  this.getRecipes(true)
-    .done(data => {
-      this.recipes = data.recipes;
-      this.displayPreview("Recipes", "recipes");
-    });
-  this.displayUnreadCount()
-      .setEditProfileImageBtn()
-      .setAddFriendBtn("24", linkFunc)
-      .setProfileTabs();
-};
-
-User.prototype.setProfileTabs = function() {
-  const navTabs = $(`#user-${this.id} .nav-link`);
-
-  navTabs.each((i, link) => {
-    const [tab, type] = [$(link).data("tab"), $(link).data("type")];
-
-    this.setPreview(tab, type);
-  });
-};
-
-
-User.prototype.setEditProfileImageBtn = function() {
-  iconHover("#upload", "upload");
-  this.profileImageValidate();
-  return this;
-};
-
-
-User.prototype.profileImageValidate = function() {
-  const user = this;
-
-  $("#profileImageInput").change(function(e) {
-    const imgName = this.value.replace(/^.*[\\\/]/, '');
-
-    if (["jpeg", "jpg", "png"].includes(getExt(this))) {
-      AlertMessage.createEditImage(imgName, user);
-    } else {
-      window.setTimeout(changeIconSrc, 50, "#upload", "upload-wrong");
-      window.setTimeout(changeIconSrc, 2250, "#upload", "upload-bw");
-      $("#profileImageInput").val("");
-      AlertMessage.createError("Profile image must be jpeg or png.");
-    }
-  });
-};
-
-
-User.prototype.setProfileImageSubmit = function() {
-  const user = this;
-
-  return function() {
-    const form = document.getElementById("editProfileImage");
-    const formData = new FormData(form);
-
-    $.ajax({
-      type: 'PATCH',
-      url: `/users/${user.id}`,
-      processData: false,
-      contentType: false,
-      data: formData,
-      success: resp => {
-        user.profileImageSuccess(resp)
-      }
-    });
-  };
-};
-
-
-User.prototype.profileImageSuccess = function(resp) {
-  const url = resp.user.avatar.url;
-  $("#userAvatar").fadeOut(100, function() {
-    $("#userAvatar").attr("src", url);
-  }).fadeIn(100);
-  menu.getType();
-}
-
-
-User.prototype.setSeeAll = function(tab, type) {
-  const $sa = $("#seeAllLink");
-  const tabName = tab === "Messages" ? "Inbox" : tab;
-
-  $sa.attr("href", "")
-     .removeClass().addClass(`${tab.toLowerCase()}Link`)
-     .off("click");
-  const linkFunc = linkSelectorFunction("#seeAll");
-  this[`set${tabName}Link`](linkFunc, "#mainContent");
-};
-
 
 User.prototype.setAssetsLinks = function(types, linkSelector, destination) {
   types.forEach(type => {
@@ -452,8 +278,6 @@ User.prototype.setAssetsLink = function(type, linkSelector, destination) {
 
   linkSelector(`.${type.toLowerCase()}Link`).click(function(e) {
     e.preventDefault();
-    goBack.show(this);
-    goBack.hideIf(isMenuItem(this));
     user[`get${type}`](preview)
       .done(data => user.displayAssets(data, destination, preview));
   });
@@ -474,22 +298,6 @@ User.prototype.setFavoritesLink = function(linkSelector, destination) {
 
 User.prototype.setFriendsLink = function(linkSelector, destination) {
   this.setAssetsLink("Friends", linkSelector, destination);
-  return this;
-};
-
-
-User.prototype.setInboxLink = function(linkSelector, destination) {
-  const user = this;
-
-  linkSelector(".messagesLink").click(function(e) {
-    e.preventDefault();
-    goBack.hideIf(isMenuItem(this));
-    user.getMessages("all")
-      .done(function(data) {
-        user.assignAssetsAndMeta(data);
-        user.displayInbox(destination)
-      });
-  });
   return this;
 };
 
