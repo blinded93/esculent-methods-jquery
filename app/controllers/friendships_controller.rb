@@ -6,4 +6,21 @@ class FriendshipsController < ApplicationController
     render json: friendships,
            status: 200
   end
+
+  def create
+    friendship = FriendshipService.create(params)
+
+    render json: friendship,
+           status: 200
+
+  end
+
+  def destroy
+    friendship = Friendship.find_by({user_id: params[:user_id],
+                                   friend_id: params[:friend_id]}).destroy
+
+    render json: friendship,
+           status: 200
+
+  end
 end
