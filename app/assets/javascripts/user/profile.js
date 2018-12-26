@@ -11,13 +11,12 @@ let profile = {};
   this.display = function(user, data) {
     this.assignOwner(user);
     goBack.updateCurrentResult(user.resultData(data));
-        display.fromTemplate("user", user)
-               .toElement("#mainContent")
-                 .done(() => {
-                   breadcrumb.addProfile(owner);
-                   this.set();
-                 });
-      });
+    display.fromTemplate("user", user)
+           .toElement("#mainContent")
+             .done(() => {
+               breadcrumb.addProfile(owner);
+               this.set();
+             });
   };
 
 
@@ -79,10 +78,10 @@ let profile = {};
   this.setLink = function(user, linkSelector) {
     linkSelector(".userLink").off("click")
                              .click(function(e) {
-      e.preventDefault();
+                               e.preventDefault();
                                user.getSelf()
                                 .done(data => profile.display(user, data));
-    }).addClass("linkCursor");
+                             }).addClass("linkCursor");
     return this;
   };
 
@@ -90,7 +89,6 @@ let profile = {};
   this.set = function() {
     const linkFunc = linkSelectorFunction(".profileImage");
 
-    $("#seeAll").show();
     owner.getRecipes(true)
       .done(data => {
         owner.recipes = data.recipes;
@@ -99,7 +97,7 @@ let profile = {};
     this.displayUnreadCount()
         .setEditImageBtn()
         .setTabs(owner);
-    owner.setAddFriendBtn("24", linkFunc)
+    owner.setFriendBtn("add", linkFunc)
   };
 
 
@@ -122,7 +120,7 @@ let profile = {};
         contentType: false,
         data: formData,
         success: resp => {
-          owner.profileImageSuccess(resp)
+          profile.imageSuccess(resp)
         }
       });
     };
@@ -142,13 +140,13 @@ let profile = {};
 
   this.setSeeAll = function(tab, type) {
     const $sa = $("#seeAllLink");
-    const tabName = tab === "Messages" ? "Inbox" : tab;
+    const linkFunc = linkSelectorFunction("#seeAll");
 
     $sa.attr("href", "")
        .removeClass().addClass(`${tab.toLowerCase()}Link`)
        .off("click");
-    const linkFunc = linkSelectorFunction("#seeAll");
-    owner[`set${tabName}Link`](linkFunc, "#mainContent");
+    if (tab === "Messages") { inbox.setLink(linkFunc, "#mainContent"); }
+    else { owner[`set${tab}Link`](linkFunc, "#mainContent"); }
   };
 
 
@@ -160,12 +158,10 @@ let profile = {};
       e.preventDefault();
       owner[`get${tabName}`](true)
         .done(data => {
-          // debugger
           $("ul.nav-tabs a.active").removeClass("active");
           $tab.addClass("active");
           owner.assignAssetsAndMeta(data);
           profile.displayPreview(tabName, type);
-          // owner[tabName.toLowerCase()] = data[tabName.toLowerCase()];
         });
     });
     return this;
