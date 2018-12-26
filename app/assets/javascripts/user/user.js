@@ -133,6 +133,7 @@ User.prototype.assignAssetsAndMeta = function(data) {
   });
   goBack.updateCurrentResults(user.resultsData(data));
 };
+};
 
 
 User.prototype.resultsData = function(data) {
@@ -184,6 +185,7 @@ User.prototype.confirmFriend = function(currentUserId) {
 
   return function() {
     const params = {"friend_id": user.id};
+    
     $.post(`/users/${currentUserId}/friend`, params)
       .done(function(data) {
         user.addFriendData();
