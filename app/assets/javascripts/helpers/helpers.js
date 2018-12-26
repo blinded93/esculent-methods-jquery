@@ -109,3 +109,14 @@ function isFriend(id) {
 function isPending(id) {
   return $("#loggedInAs").data("pendingFriendIds").includes(id);
 }
+
+function equalTo(obj1, obj2) {
+  if (obj1 === obj2) return true;
+  if (typeof obj1 !== typeof obj2) return false;
+  if (Object(obj1) !== obj1) return false;
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+  for (const key in obj1) {
+    if (!equalTo(obj1[key], obj2[key])) return false;
+  }
+  return true;
+}
