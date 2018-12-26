@@ -8,10 +8,9 @@ let profile = {};
   };
 
 
-  this.display = function(user) {
+  this.display = function(user, data) {
     this.assignOwner(user);
-    $.get(`/users/${user.id}`)
-      .done(data => {
+    goBack.updateCurrentResult(user.resultData(data));
         display.fromTemplate("user", user)
                .toElement("#mainContent")
                  .done(() => {
