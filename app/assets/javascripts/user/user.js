@@ -152,10 +152,9 @@ User.prototype.displayAssets = function(data, destination, preview = false) {
   const displayFunc = type === "friends" ? User.displayAll : Recipe.displayAll;
 
   this.assignAssetsAndMeta(data);
-  displayFunc(user, type, destination)
-    .done(function(pageObj) {
-      pageObj.setLinks(`/users/${user.id}/${type}`, preview)
-    })
+  goBack.updateCurrentResult(this.resultsData(data));
+  displayFunc(this, type, destination)
+    .done(pageObj => { pageObj.setLinks(`/users/${this.id}/${type}`, preview); });
 };
 
 
