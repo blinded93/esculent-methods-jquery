@@ -502,21 +502,22 @@ User.setResults = function(users) {
     profile.setLink(user, linkFunc);
     user.setRecipesLink(...args)
         .setFavoritesLink(...args)
-        .setAddFriendBtn("16", linkFunc);
+        .setFriendBtn("add", linkFunc)
+        .setFriendBtn("remove", linkFunc);
   });
 };
 
 
-User.prototype.setAddFriendBtn = function(size, linkFunc) {
-  iconHover(".addFriendImg", `add-friend-${size}`);
-  this.setAddFriend(linkFunc);
+User.prototype.setFriendBtn = function(type, linkFunc) {
+  iconHover(`.${type}FriendImg`, `${type}-friend`);
+  this.setFriendAction(type, linkFunc);
   return this;
 };
 
 
-User.prototype.setAddFriend = function(linkSelector) {
-  linkSelector(".addFriend").click(e => {
+User.prototype.setFriendAction = function(type, linkSelector) {
+  linkSelector(`.${type}Friend`).click(e => {
     e.preventDefault();
-    AlertMessage.createAddFriend(this);
+    AlertMessage.createFriendAction(type, this);
   });
 };
