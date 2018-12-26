@@ -23,11 +23,12 @@ let goBack = {};
 
   this.set = function() {
     $("#backButton").off("click");
-    $("#backButton").click(function(e) {
+    $("#backButton").click(e => {
       e.preventDefault();
-      $.get(o.url, o.params)
-        .done(o.callback);
-        $("#goBack").fadeOut();
+      array.pop();
+      $.get(this.last("url"), this.last("params"))
+        .done(this.last("callback"))
+        .done(() => this.toggle());
     });
     return this;
   };
