@@ -2,22 +2,23 @@ $cornflower: lighten(#1c4587, 20%);
 $lightCornflower: lighten($cornflower, 40%);
 $danger: darken(#dc3545, 15%);
 
-@media screen and (max-width:805px) {
+@media screen and (min-width:1065px) {
   body {
-    #contentRow {
-      padding-top:132px;
-    }
+    a#EsculentMethods-lg { display: inline; }
+
+    a#EsculentMethods-sm { display: none; }
   }
 }
-@media screen and (max-width:570px) {
+@media screen and (max-width:1065px) {
   body {
-    #contentRow {
-      padding-top:210px;
-    }
+    a#EsculentMethods-sm { display: inline; }
+
+    a#EsculentMethods-lg { display: none; }
   }
 }
 
 body {
+  zoom: 125%;
   margin:auto;
   max-width: 1000px;
   overflow: scroll;
@@ -38,7 +39,7 @@ body {
   }
 }
 
-#EsculentMethods span {
+.navbar-brand span {
   color: lighten($cornflower, 10%);
   font-size: 125%;
 }
@@ -66,13 +67,14 @@ body {
   .breadcrumb-item:last-child {
     color:$cornflower;
   }
-  .linkCursor {
-    cursor: pointer;
-  }
   .breadcrumb-item:only-child {
     color:$cornflower;
   }
 }
+
+.linkCursor {
+    cursor: pointer;
+  }
 
 .btn-outline-primary {
   color:$cornflower;
@@ -168,4 +170,8 @@ hr {
 
 #goBack {
   display: none;
+}
+
+select {
+  padding: 0px 0px 0px 5px !important;
 }
