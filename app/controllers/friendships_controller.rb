@@ -1,5 +1,5 @@
 class FriendshipsController < ApplicationController
-  before_action :error_if_not_logged_in, only [:create, :destroy]
+  before_action :error_if_not_logged_in, only: [:create, :destroy]
   def index
     friendships = current_user.friendships
 
