@@ -54,7 +54,7 @@ let search = {};
   this.set = function() {
     const search = this;
 
-    $("#query").on("keyup", (e) => $(this).removeClass("is-invalid"));
+    $("#query").on("keyup", function() { $(this).removeClass("is-invalid"); })
 
     $("#submitSearch").click(e => {
       type = $("#type").val();
