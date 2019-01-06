@@ -3,7 +3,7 @@
     <input type="hidden" name="recipe[ingredient_attributes][][id]" value="{{id}}">
   {{/if}}
   <input type="number" name="recipe[ingredient_attributes][][quantity]" class="ml-1 col-2 form-control form-control-sm" placeholder="Amount" min="0" value="{{quantity}}" required>
-  <select name="recipe[ingredient_attributes][][unit]" class="unit ml-2 col-2 form-control form-control-sm" required>
+  <select name="recipe[ingredient_attributes][][unit]" class="unit ml-2 col-2 form-control form-control-sm">
     {{#selectAttribute unit}}
       <option value="">Unit..</option>
       <option disabled class="black font-weight-bold">Volume</option>
@@ -19,7 +19,7 @@
     {{/selectAttribute}}
   </select>
   <input type="text" name="recipe[ingredient_attributes][][name]" class="ml-2 col-3 form-control form-control-sm" placeholder="Name" value="{{name}}" required>
-  <select name="recipe[ingredient_attributes][][state]" class="state ml-2 col-3 form-control form-control-sm" required>
+  <select name="recipe[ingredient_attributes][][state]" class="state ml-2 col-3 form-control form-control-sm">
     {{#selectAttribute state}}
       <option value="">State (opt)..</option>
       <option value="whole">Whole</option>
