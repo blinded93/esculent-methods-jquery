@@ -32,8 +32,6 @@ let search = {};
     } else {
       this.displayErrors();
     }
-
-    // goBack.hideIf(true);
     return this;
   };
 
@@ -46,23 +44,8 @@ let search = {};
 
 
   this.getError = function() {
-    const selected = $("#type option:selected").text();
-
-    this.errors = `No ${selected.toLowerCase()} found.`;
+    this.errors = `No ${this.type()} found.`;
     breadcrumb.setHome();
-  };
-
-
-  this.populateData = function(meta) {
-    const data = {
-      type: (this.type || $("#search").data("type")),
-     query: (this.query || $("#search").data("query")),
-      page: meta.page,
-    search: this
-    };
-
-    $("#search").data(data);
-    return this;
   };
 
 
