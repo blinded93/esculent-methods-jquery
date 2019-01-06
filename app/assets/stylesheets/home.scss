@@ -118,7 +118,7 @@ button:focus {
   background-color:$lightCornflower !important;
 }
 
-a {
+a, .linkCursor {
   color:$cornflower;
   &:hover {
     text-decoration:none;
