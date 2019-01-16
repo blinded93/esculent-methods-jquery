@@ -68,13 +68,10 @@ AlertMessage.prototype.setDismissLink = function(dismisser, afterDismissFunc) {
 
 
 AlertMessage.prototype.toggle = function() {
-  const $el = this.element;
-  if ($el.is(":hidden")) {
-    $el.slideDown(200);
-    $("#mainContent").animate({ 'padding-top':35}, 200);
+  if (this.element.is(":hidden")) {
+    this.down();
   } else {
-    $el.slideUp(200);
-    $("#mainContent").animate({'padding-top':16}, 200);
+    this.up();
   }
   return this;
 };
