@@ -37,9 +37,9 @@ let breadcrumb = {};
   }
 
 
-  this.addSearch = function() {
+  this.addSearch = function(newQuery) {
     const userTitle = capitalize(search.type());
-    const searchQuery = search.queryString();
+    const searchQuery = newQuery || search.queryString();
     const linkType = search.type().slice(0, -1);
 
     this.reset()
