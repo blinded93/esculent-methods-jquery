@@ -76,9 +76,6 @@ AlertMessage.prototype.toggle = function() {
   return this;
 };
 
-AlertMessage.toggle = function() {
-  (new this()).toggle();
-};
 
 AlertMessage.prototype.down = function() { this.element.slideDown(200); };
 AlertMessage.prototype.up = function() { this.element.slideUp(200); };
