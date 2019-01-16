@@ -60,7 +60,7 @@ class RecipesController < ApplicationController
   end
 
   def search
-    meta, recipes = pagy(Recipe.search(params[:query]), {items: 3, query:params[:query]})
+    meta, recipes = pagy(Recipe.search(params[:query]), {items: 8, query:params[:query]})
 
     render json: recipes,
            meta: meta,
@@ -68,8 +68,9 @@ class RecipesController < ApplicationController
   end
 
   def ingredient_search
-    ingredient_ids = Ingredient.ids_from_names(params[:query])
-    meta, recipes = pagy(Recipe.with_ingredients(ingredient_ids), {items: 2, query:params[:query]})
+    ingredients = Ingredient.from_names(params[:query])
+    ingredient_ids = ingredients.collect(&:id)
+    meta, recipes = pagy(Recipe.with_ingredients(ingredient_ids), {items: 8, query:params[:query]})
 
     render json: recipes,
            meta: meta,
