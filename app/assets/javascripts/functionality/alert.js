@@ -48,6 +48,28 @@ AlertMessage.createFriendAction = function(type, user) {
 };
 
 
+AlertMessage.createMissingIngredientAction = function(results) {
+  const html = display.template("ingredient_action", results);
+  const alert = this.create(html, "warning");
+  const newQuery = results.ingredients.map(i => i.name);
+
+  alert.setDismissLink("span.close");
+
+  for (const ingredient in results.containing) {
+    results.containing[ingredient].forEach(altIngredient => {
+      alert.setDismissLink(`#ingredient-${altIngredient.id}`, function() {
+        newQuery.push(altIngredient.name);
+        search.fire(newQuery);
+        breadcrumb.addSearch(newQuery.join(", "));
+      });
+    });
+  }
+
+  if (!isEmpty(results.containing) || !isEmpty(results.missing)) {alert.down()}
+
+};
+
+
 AlertMessage.createError = function(message) {
   this.createAutoDismiss(message, "danger");
 };
