@@ -51,12 +51,24 @@ let search = {};
   };
 
 
+  this.fire = function(newQuery) {
+    const search = this;
+
+    $.get(this.searchTypeURL(), { query: newQuery || query })
+      .done(data => {
+        this.evaluateResp(data);
+          goBack.updateCurrentResult(search.resultsData(data.meta));
+          $("#query").val("");
+        });
+  };
+
+
   // Listeners //
 
   this.set = function() {
     const search = this;
 
-    $("#query").on("keyup", function() { $(this).removeClass("is-invalid"); })
+    $("#query").on("keyup", function() { $(this).removeClass("is-invalid"); });
 
     $("#submitSearch").click(e => {
       type = $("#type").val();
