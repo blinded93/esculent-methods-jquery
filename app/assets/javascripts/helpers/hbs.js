@@ -114,5 +114,23 @@ Handlebars.registerHelper("unlessResponse", function(subject, options) {
 Handlebars.registerHelper("isInbox", function(options) {
   if (!!document.getElementById("messageInbox")) {
     return options.fn(this);
-  };
+  }
+});
+
+Handlebars.registerHelper("displayIngredients", function(ingredients) {
+  const lastIndex = ingredients.length - 1;
+  return ingredients.map((ingredient, index) => {
+    name = typeof ingredient === "string" ? ingredient : ingredient.name;
+    return index === lastIndex ? `'${name}'` : `'${name}'`;
+  });
+});
+
+Handlebars.registerHelper("unlessEmpty", function(obj, options) {
+  if (!isEmpty(obj)) { return options.fn(this) };
+});
+
+Handlebars.registerHelper("containingLink", function(ingredients, options) {
+  options.data.key
+  debugger;
+
 });
