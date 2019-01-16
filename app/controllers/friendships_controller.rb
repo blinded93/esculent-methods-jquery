@@ -16,9 +16,9 @@ class FriendshipsController < ApplicationController
   end
 
   def destroy
+    binding.pry
     friendship = Friendship.find_by({user_id: params[:user_id],
                                    friend_id: params[:friend_id]}).destroy
-
     render json: friendship,
            status: 200
 
