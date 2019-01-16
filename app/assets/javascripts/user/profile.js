@@ -36,16 +36,6 @@ let profile = {};
   };
 
 
-  this.displayUnreadCount = function(count) {
-    let num;
-    const f = (count) => $("#unreadCount").text(count);
-
-    if (count) { f(count) }
-    else { owner.getUnreadCount().done(data => f(data.unread_count)); }
-    return this;
-  };
-
-
   this.imageValidate = function() {
     $("#profileImageInput").change(function(e) {
       const imgName = this.value.replace(/^.*[\\\/]/, '');

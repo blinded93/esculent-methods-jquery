@@ -50,6 +50,15 @@ let inbox = {};
     });
   };
 
+
+  this.displayUnreadCount = function(count) {
+    let num;
+    const f = (count) => $(".unreadCount").text(count);
+
+    if (count) { f(count) }
+    else { owner.getUnreadCount().done(data => f(data.unread_count)) ;}
+  }
+
   // Listeners //
 
   this.setLink = function(linkSelector, destination) {
