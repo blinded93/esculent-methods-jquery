@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   delete '/logout' => 'sessions#destroy'
   get '/current_user' => 'sessions#current_session_user'
   get '/recipes/search' => 'recipes#search'
-  get '/ingredients/search' => 'recipes#ingredient_search'
+  get '/ingredients/search' => 'ingredients#search'
   get '/users/search' => 'users#search'
 
   resources :recipes, only: [:index] do
