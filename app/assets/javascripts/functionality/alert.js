@@ -80,9 +80,8 @@ AlertMessage.prototype.setDismissLink = function(dismisser, afterDismissFunc) {
 
   $(dismisser).one("click", (e) => {
     e.preventDefault();
-    alert.element.slideUp(200, function() {
-      $("#mainContent").animate({'padding-top':16}, 200);
-      if (typeof afterDismissFunc == "function") { afterDismissFunc(); }
+    alert.element.slideUp(200, function(e) {
+      if (typeof afterDismissFunc == "function") { afterDismissFunc(e); }
     });
   });
   return this;
