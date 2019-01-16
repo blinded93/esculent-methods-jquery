@@ -42,8 +42,8 @@ AlertMessage.createFriendAction = function(type, user) {
   const html = `${messages[type]} <span class='float-right'><a href='' id='confirm'>Yes</a> / <a href='' id='deny'>No</a></span>`;
   const alert = this.create(html, "warning");
 
-  this.toggle();
-  alert.setDismissLink("#confirm", user[`${type}Friend`](currentUserId))
+  alert.toggle()
+       .setDismissLink("#confirm", user[`${type}Friend`](currentUserId))
        .setDismissLink("#deny");
 };
 
