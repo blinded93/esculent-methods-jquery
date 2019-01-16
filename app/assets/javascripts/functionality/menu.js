@@ -42,7 +42,8 @@ let menu = {};
         } else {
           const user = new User(resp.user);
 
-          inbox.assignOwner(user);
+          inbox.assignOwner(user)
+               .displayUnreadCount();
           this.setNav(user);
           dfd.resolve(user);
         }
