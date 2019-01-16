@@ -162,7 +162,7 @@ User.prototype.removeFriend = function(currentUserId) {
 
 
 User.prototype.setLoggedInAs = function() {
-  const html = `<small class='blue'>Logged in as:</small> <a href="" id="loggedInUser" class="black userLink">${this.username}</a>`;
+  const html = `<small>Logged in as:</small> <a href="" id="loggedInUser" class="blue userLink">${this.username}</a>`;
   const linkFunc = linkSelectorFunction("#loggedInAs");
 
   $("#loggedInAs").html(html);
