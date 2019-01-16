@@ -21,7 +21,7 @@ class Ingredient < ApplicationRecord
   def self.from_like_name(n)
     name = self.arel_table[:name]
     n = "%#{n.singularize}%"
-
+    
     self.where(name.matches(n))
   end
 end

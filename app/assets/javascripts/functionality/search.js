@@ -22,7 +22,7 @@ let search = {};
   this.evaluateResp = function(resp) {
     const modelType = Object.keys(resp)[0];
     const displayFunc = modelType === "recipes" ? Recipe.displayAll : User.displayAll;
-
+    
     if (!!resp[modelType].length) {
       displayFunc(resp, modelType, "#mainContent")
         .done(pageObj => {
@@ -30,9 +30,9 @@ let search = {};
           pageObj.setLinks(this.searchTypeURL(), {query: query});
           breadcrumb.addSearch(query);
         });
-    } else {
-      this.displayErrors();
-    }
+      } else {
+        this.displayErrors();
+      }
       if (type === "ingredients") { AlertMessage.createMissingIngredientAction(resp.meta.vars.results) };
     return this;
   };
