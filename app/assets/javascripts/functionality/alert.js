@@ -82,3 +82,6 @@ AlertMessage.prototype.toggle = function() {
 AlertMessage.toggle = function() {
   (new this()).toggle();
 };
+
+AlertMessage.prototype.down = function() { this.element.slideDown(200); };
+AlertMessage.prototype.up = function() { this.element.slideUp(200); };
