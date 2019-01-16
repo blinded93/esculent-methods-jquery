@@ -33,6 +33,7 @@ let search = {};
     } else {
       this.displayErrors();
     }
+      if (type === "ingredients") { AlertMessage.createMissingIngredientAction(resp.meta.vars.results) };
     return this;
   };
 
