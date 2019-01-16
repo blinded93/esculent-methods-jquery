@@ -30,7 +30,7 @@ let profile = {};
     } else if (type === "users") {
       User.displayAll(owner, tab.toLowerCase(), destination);
     } else if (type === "messages") {
-      profile.displayUnreadCount(owner.meta.count);
+      inbox.displayUnreadCount(owner.meta.count);
       owner.displayMessages(destination);
     }
   };
@@ -71,7 +71,7 @@ let profile = {};
                                e.preventDefault();
                                user.getSelf()
                                 .done(data => profile.display(user, data));
-                             }).addClass("linkCursor");
+                             });
     return this;
   };
 
@@ -84,8 +84,8 @@ let profile = {};
         owner.recipes = data.recipes;
         this.displayPreview("Recipes", "recipes");
       });
-    this.displayUnreadCount()
-        .setEditImageBtn()
+    inbox.displayUnreadCount()
+    this.setEditImageBtn()
         .setTabs(owner);
     owner.setFriendBtn("add", linkFunc)
   };
