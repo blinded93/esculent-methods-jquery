@@ -50,7 +50,7 @@ Message.prototype.display = function() {
 
 Message.prototype.markAsRead = function() {
   const message = this;
-  const countStr = $("#unreadCount").text();
+  const countStr = $(".unreadCount").text();
 
   if (currentUser("id") !== this.sender.id && !this.readAt) {
     $.post(`/users/${currentUser("id")}/messages/${this.id}/read`)
@@ -60,7 +60,7 @@ Message.prototype.markAsRead = function() {
         if (!isEmpty(countStr)) {
           let unreadCount = parseInt(countStr);
 
-          $("#unreadCount").text(unreadCount -= 1);
+          $(".unreadCount").text(unreadCount -= 1);
         }
       });
   }
@@ -119,7 +119,7 @@ Message.deleteAll = function(ids) {
 
 Message.deleteSuccess = function(resp) {
   const messagesDeletedCount = resp.message_ids.length;
-  let unread = parseInt($("#unreadCount").text());
+  let unread = parseInt($(".unreadCount").text());
 
   inbox.deleteMessageRows(resp);
   $("#messageDropdown").slideUp(200);

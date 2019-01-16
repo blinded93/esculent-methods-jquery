@@ -5,6 +5,8 @@ let inbox = {};
 
   this.assignOwner = function(user) {
     owner = user;
+
+    return this;
   };
 
 
