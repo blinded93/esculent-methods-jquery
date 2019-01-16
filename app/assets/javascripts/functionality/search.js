@@ -76,12 +76,9 @@ let search = {};
 
       e.preventDefault();
       if (!!query) {
-        $.get(this.searchTypeURL(), {query: query})
-          .done(data => {
-            this.evaluateResp(data);
-            goBack.updateCurrentResult(search.resultsData(data.meta));
-            $("#query").val("");
-          });
+        query = typeof query === "string" ? query.trim() : query.filter(n =>n);
+
+        this.fire();
       } else {
         $("#query").addClass("is-invalid");
         AlertMessage.createError("As search term is required.");
