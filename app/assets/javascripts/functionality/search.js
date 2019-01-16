@@ -26,8 +26,9 @@ let search = {};
     if (!!resp[modelType].length) {
       displayFunc(resp, modelType, "#mainContent")
         .done(pageObj => {
+          query = pageObj.query.join(", ");
           pageObj.setLinks(this.searchTypeURL(), {query: query});
-          breadcrumb.addSearch();
+          breadcrumb.addSearch(query);
         });
     } else {
       this.displayErrors();
