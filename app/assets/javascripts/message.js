@@ -219,7 +219,7 @@ Message.prototype.setReply = function() {
 
   $("#reply").click(e => {
     this.close(function() {
-      const html = display.template("message_reply", this);
+      const html = display.template("message_reply", message);
       $(this).html(html).slideDown(200)
       message.setReplyCancel()
              .setReplySubmit()
