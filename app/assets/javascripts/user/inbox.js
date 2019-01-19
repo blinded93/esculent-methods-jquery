@@ -16,6 +16,7 @@ let inbox = {};
     owner.assignAssetsAndMeta(data);
     breadcrumb.addUserAssets(owner, "Messages");
     goBack.updateCurrentResult(Message.resultsData(data, owner));
+    this.displayUnreadCount();
     display.fromTemplate("inbox", {recipients: recipients})
       .toElement(destination, "", true)
         .done(() => {
