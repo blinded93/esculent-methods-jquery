@@ -50,7 +50,7 @@ class UsersController < ApplicationController
 
   def messages
     message_scope = MessagesService.new(params, current_user)
-    pagy, messages = pagy(message_scope.filter, {items:2,
+    pagy, messages = pagy(message_scope.filter, {items:10,
                                                  assets:params[:action],
                                                  scope: params[:scope]})
 
