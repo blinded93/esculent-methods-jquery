@@ -53,7 +53,6 @@ User.prototype.displayMessages = function(destination) {
              .done(function() {
                Message.setAll(user.messages);
                if (pageObj.last > 1) { pageObj.displayLinks(dfd, destination) }
-               else { $(".deleteCheckSpans").remove(); }
              });
   }
   return dfd.promise();
