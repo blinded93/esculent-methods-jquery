@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.1'
+ruby '2.5.7'
 
 gem 'rails', '~> 5.2.1.1'
 gem 'puma', '~> 3.11'
@@ -9,7 +9,6 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-validation-rails'
 gem 'jquery-rails'
-# gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'bcrypt', '~> 3.1.7'
@@ -18,7 +17,6 @@ gem 'mini_magick', '~> 4.8'
 gem 'handlebars_assets'
 gem 'carrierwave'
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'rspec-rails'
 gem 'sprockets', '~> 3.7.2'
 gem 'pagy'
 
@@ -36,7 +34,7 @@ group :development do
 end
 
 group :production do
-  gem 'pg', '1.1.3'
+  gem 'pg'
 end
 
 group :test do
