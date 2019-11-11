@@ -1,0 +1,23 @@
+<div id="messageView">
+  <input name="message_ids[]" value="{{id}}" hidden>
+  <span class="font-weight-bold large mt-2">{{subject}}</span>
+  <a href="" class="black closeMessage float-right closeMessageDisplay">&times;</a>
+  <br>
+  <span class="small">from: </span><span class="small blue">{{sender.username}}</span>
+  <hr class="mb-1 mt-1">
+  <p id="messageBody">
+  {{body}}
+  </p>
+  <span class="buttons float-right">
+    {{#if recipe}}
+      <button id="view" class="btn btn-sm btn-outline-primary">View</button>
+    {{else if user}}
+      {{#unlessResponse subject}}
+        <button id="accept" class="btn btn-sm btn-outline-primary">Accept</button>
+      {{/unlessResponse}}
+    {{else}}
+      <button id="reply" class="btn btn-sm btn-outline-primary">Reply</button>
+    {{/if}}
+    <button id="delete" class="btn btn-sm btn-outline-danger">Delete</button>
+  </span>
+</div>

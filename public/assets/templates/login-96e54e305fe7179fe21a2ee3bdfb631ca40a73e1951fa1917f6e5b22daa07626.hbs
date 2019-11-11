@@ -1,0 +1,21 @@
+<form id="logIn" class="needs-validiation menuForm px-3 py-2">
+  <h5 >Login</h5>
+  <div id="formErrors"></div>
+  <div class="form-group">
+    <input type="text" class="form-control form-control-sm" id="identifier" placeholder="Username or Email" name="identifier" autofocus>
+    <div class="invalid-feedback">
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control form-control-sm" id="password" placeholder="Password" name="password">
+    <div class="invalid-feedback">
+    </div>
+  </div>
+  <button id="menuSubmit" class="btn btn-sm btn-outline-primary">Log In</button>
+</form>
+<div id="loginErrors" class="pr-3 pl-3 small text-danger">
+  <dl class="menuErrors">
+  </dl>
+</div>
+<div class="dropdown-divider"></div>
+<a id="toSignUp" class="dropdown-item small" href="">Don't have an account? <span class="blue">Sign Up</span></a>

@@ -1,0 +1,40 @@
+{{#showIfMoreThanOnePage last}}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination pageination-sm justify-content-center">
+      {{#direction prev}}
+        <li class="page-item">
+          <a data-page="{{prev}}" class="page-link" href aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+      {{/direction}}
+
+      {{#firstLast first current}}
+        <li class="page-item"><a data-page="{{first}}" class="page-link" href>First</a></li>
+      {{/firstLast}}
+
+      {{#prevNext prev}}
+        <li class="page-item"><a data-page="{{prev}}" class="page-link" href></a></li>
+      {{/prevNext}}
+
+      <li class="page-item active"><a style="cursor:default" class="page-link">{{current}}</a></li>
+      {{#prevNext next}}
+        <li class="page-item"><a data-page="{{next}}" class="page-link" href></a></li>
+      {{/prevNext}}
+
+      {{#firstLast last current}}
+        <li class="page-item"><a data-page="{{last}}" class="page-link" href>Last</a></li>
+      {{/firstLast}}
+
+      {{#direction next}}
+        <li class="page-item">
+          <a data-page="{{next}}" class="page-link" href aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      {{/direction}}
+    </ul>
+  </nav>
+{{/showIfMoreThanOnePage}}

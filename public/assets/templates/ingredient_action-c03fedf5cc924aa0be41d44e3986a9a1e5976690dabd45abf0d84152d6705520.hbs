@@ -1,0 +1,28 @@
+<span class="float-right close" >&times;</span>
+<ul style="list-style-type:circle">
+  {{#unlessEmpty ingredients}}
+    <li id='foundIngredients'>
+        Recipe results include <span class="black">{{displayIngredients ingredients}}</span>.
+    </li>
+  {{/unlessEmpty}}
+
+  {{#unlessEmpty containing}}
+    <li id='containingIngredients'>
+      Could not find the following ingredients, add one to your search by clicking a link below.
+      {{#each containing as |ingredient index|}}
+        <dl>
+          <dt>{{index}}</dt>
+          {{#each ingredient}}
+            <dd style="margin:0 0 0 20px"><a href='' id='ingredient-{{id}}'>{{name}}</a></dd> 
+          {{/each}}
+        </dl>
+      {{/each}}
+    </li>
+  {{/unlessEmpty}}
+
+  {{#unlessEmpty missing}}
+    <li id='missingIngredients'>
+      Unable to find {{displayIngredients missing}} in the ingredient database.
+    </li>
+  {{/unlessEmpty}}
+</ul>

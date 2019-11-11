@@ -1,0 +1,93 @@
+<form class="needs-validation" id="recipeForm" novalidate>
+  <div id="recipeFormErrors">
+  </div>
+  <input type="hidden" name="authenticity_token">
+  <div class="form-group">
+    <label for="recipeName" class="font-weight-bold small">
+      Name
+    </label>
+    <input type="text" name="recipe[name]" class="col-12 form-control form-control-sm" id="recipeName" value="{{name}}" autofocus required>
+  </div>
+  <div class="form-group form-row">
+    <div class="col-6">
+      <label for="recipeCookTime" class="font-weight-bold small">
+        Cook Time
+      </label>
+      <input type="number" name="recipe[cook_time]" class="form-control form-control-sm" id="recipeCookTime" min="0" value="{{cookTime}}" required>
+    </div>
+    <div class="col-6">
+      <label for="recipePrepTime" class="font-weight-bold small">
+        Prep Time
+      </label>
+      <input type="number" name="recipe[prep_time]" class="form-control form-control-sm" id="recipePrepTime" min="0" value="{{prepTime}}" required>
+    </div>
+  </div>
+  <div class="form-group form-row">
+    <div class="col-6">
+      <label for="recipeServings" class="font-weight-bold small">
+        Servings
+      </label>
+      <input type="number" name="recipe[servings]" class="col-12 form-control form-control-sm" id="recipeServings" min="0" value="{{servings}}" required>
+    </div>
+    <div class="col-6">
+      <label for="recipeSkillLevel" class="font-weight-bold small">
+        Skill Level
+      </label>
+      <select name="recipe[skill_level]" class="col-12 form-control form-control-sm" id="recipeSkillLevel" required>
+        {{#selectAttribute skillLevel}}
+          <option value="Easy">Easy</option>
+          <option value="Average">Average</option>
+          <option value="Difficult">Difficult</option>
+        {{/selectAttribute}}
+      </select>
+    </div>
+  </div>
+  <div class="form-group form-row">
+    <label class="small pl-1"><span class="font-weight-bold">Image</span></label>
+    <div class="col-12">
+      <input type="file" name="recipe[image]" class="col-12 custom-file-input" id="recipeImage">
+      <label for="recipeImage" class="custom-file-label small form-control-sm d-inline-block">
+        {{#if imageUrl}}
+          {{shortenString 48 (getFilename imageUrl )}}
+        {{else}}
+          Choose file (opt)...
+        {{/if}}
+      </label>
+    </div>
+  </div>
+  <label class="font-weight-bold small">
+    Ingredients &nbsp;&nbsp; <a href="" id="addIngredient" class="blue font-weight-bold h6">+</a>
+  </label>
+  <div id="recipeIngredients">
+    {{#if ingredients}}
+      {{#each ingredients}}
+        {{> ingredient this}}
+      {{/each}}
+    {{else}}
+      {{> ingredient id=1}}
+    {{/if}}
+  </div>
+  <div class="form-group">
+    <label class="font-weight-bold small">
+      Directions &nbsp;&nbsp; <a href="" id="addDirection" class="blue font-weight-bold h6">+</a>
+    </label>
+    <ol id="recipeDirections">
+      {{#if directions}}
+        {{#each directions}}
+          {{> direction this}}
+        {{/each}}
+      {{else}}
+        {{> direction id=2}}
+      {{/if}}
+    </ol>
+  </div>
+  <div class="form-group">
+    <button id="submitRecipeForm" type="submit" class="col-2 btn btn-sm btn-outline-primary">
+      {{#if name}}
+        Update
+      {{else}}
+        Create
+      {{/if}}
+    </button>
+  </div>
+</form>

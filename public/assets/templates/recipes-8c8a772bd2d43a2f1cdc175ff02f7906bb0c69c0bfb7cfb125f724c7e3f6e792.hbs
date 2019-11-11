@@ -1,0 +1,20 @@
+{{#recipes}}
+  <div id="recipe-{{id}}" class="result imageBox">
+    <img src="{{thumbUrl}}" alt="Recipe Thumbnail">
+    <div class="ml-3 small">
+      <a href="" class="recipeLink black h6">{{name}}</a><br>
+      <div id="recipeInfo" class="small">
+        Cook Time: <span class="blue">{{cookTime}} min</span> |
+        Prep Time: <span class="blue">{{prepTime}} min</span> |
+        Difficulty: <span class="blue">{{skillLevel}}</span>
+      </div>
+      <div id="recipe-{{id}}-owner">
+        {{#ifUnowned id}}
+          <a href="" class="small userLink recipeOwnerLink">{{owner.username}}</a>
+        {{/ifUnowned}}
+      </div>
+    </div>
+  </div>
+{{/recipes}}
+<div id="paginationNav">
+</div>
