@@ -5,7 +5,7 @@
       {{#ifLoggedIn}}
         {{#ifFriend id}}
           <a href="" class="removeFriend">
-            <img src="/assets/icons/remove-friend-bw.png" alt="Remove Friend" class="friendIcon removeFriendImg" title="Remove Friend">
+            <img src="/icons/remove-friend-bw.png" alt="Remove Friend" class="friendIcon removeFriendImg" title="Remove Friend">
           </a>
           {{#ifPending id}}
             <small class="text-success">Pending</small>
@@ -13,7 +13,7 @@
         {{else}}
           <div>
             <a href="" class="addFriend">
-              <img src="/assets/icons/add-friend-bw.png" alt="Add Friend" class="friendIcon addFriendImg" title="Add Friend">
+              <img src="/icons/add-friend-bw.png" alt="Add Friend" class="friendIcon addFriendImg" title="Add Friend">
             </a>
           </div>
         {{/ifFriend}}
@@ -21,7 +21,7 @@
           <form id="editProfileImage">
             <input type="hidden" name="authenticity_token">
             <label id="profileImageLabel" for="profileImageInput">
-              <img id="upload" src="/assets/icons/upload-bw.png" alt="Upload Image" title="Edit image">
+              <img id="upload" src="/icons/upload-bw.png" alt="Upload Image" title="Edit image">
             </label>
             <input type="file" name="avatar" id="profileImageInput">
           </form>
